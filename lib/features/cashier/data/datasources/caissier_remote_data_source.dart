@@ -1,6 +1,7 @@
 import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
 import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dart';
+import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 
 class CaissierRemoteDataSource {
   final supabase = SupabaseService.client;
@@ -90,6 +91,52 @@ class CaissierRemoteDataSource {
     }
   }
 
+  Future<int> getClientPoints({
+    required String clientId,
+    required String magasinId,
+  }) async {
+    try {
+      final response = await supabase
+          .from('clientmagasin')
+          .select('cumulpoint')
+          .eq('client_id', clientId)
+          .eq('magasin_id', magasinId)
+          .maybeSingle();
+
+      if (response != null) {
+        return (response['cumulpoint'] as int?) ?? 0;
+      }
+      return 0;
+    } catch (e) {
+      throw Exception('Erreur lors de la récupération des points: ${e.toString()}');
+    }
+  }
+
+  Future<List<Reward>> getAvailableRewards({
+    required String clientId,
+    required String magasinId,
+  }) async {
+    try {
+      // Get client points
+      final clientPoints = await getClientPoints(
+        clientId: clientId,
+        magasinId: magasinId,
+      );
+
+      // Get all rewards for shop where client has enough points
+      final response = await supabase
+          .from('rewards')
+          .select()
+          .eq('magasin_id', magasinId)
+          .lte('points_required', clientPoints)
+          .order('points_required', ascending: true);
+
+      return response.map((json) => Reward.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Erreur lors du chargement des récompenses: ${e.toString()}');
+    }
+  }
+
   Future<void> echangerOffre({
     required String clientId,
     required String magasinId,
@@ -125,16 +172,55 @@ class CaissierRemoteDataSource {
       );
 
       // 4. Record the exchange transaction
-      // await supabase.from('echanges').insert({
-      //   'client_id': clientId,
-      //   'magasin_id': magasinId,
-      //   'offre_id': offreId,
-      //   'montant_solde': montantSolde,
-      //   'points_obtenus': points,
-      //   'date_echange': DateTime.now().toIso8601String(),
-      // });
+      await supabase.from('offer_exchanges').insert({
+        'client_id': clientId,
+        'magasin_id': magasinId,
+        'offre_id': offreId,
+        'montant_solde': montantSolde,
+        'points_obtenus': points,
+        'date_echange': DateTime.now().toIso8601String(),
+      });
     } catch (e) {
       throw Exception('Erreur lors de l\'échange: ${e.toString()}');
+    }
+  }
+
+  Future<void> claimReward({
+    required String clientId,
+    required String magasinId,
+    required String rewardId,
+    required int pointsRequired,
+  }) async {
+    try {
+      // 1. Get current client points
+      final currentPoints = await getClientPoints(
+        clientId: clientId,
+        magasinId: magasinId,
+      );
+
+      if (currentPoints < pointsRequired) {
+        throw Exception('Points insuffisants');
+      }
+
+      // 2. Subtract points from client
+      final newPoints = currentPoints - pointsRequired;
+      await supabase
+          .from('clientmagasin')
+          .update({'cumulpoint': newPoints})
+          .eq('client_id', clientId)
+          .eq('magasin_id', magasinId);
+
+      // 3. Record the reward claim
+      await supabase.from('reward_claims').insert({
+        'client_id': clientId,
+        'magasin_id': magasinId,
+        'reward_id': rewardId,
+        'points_used': pointsRequired,
+        'claimed_at': DateTime.now().toIso8601String(),
+        'status': 'claimed',
+      });
+    } catch (e) {
+      throw Exception('Erreur lors de la récupération de la récompense: ${e.toString()}');
     }
   }
 

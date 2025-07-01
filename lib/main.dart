@@ -47,6 +47,9 @@ void main() async {
             ajouterSolde: getIt(),
             chargerOffresClient: getIt(),
             echangerOffre: getIt(),
+
+            chargerRecompensesClient: getIt(),
+            reclamerRecompense: getIt(),
           ),
         ),
       ],

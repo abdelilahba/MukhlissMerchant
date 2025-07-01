@@ -3,6 +3,7 @@ import 'package:mukhlissmagasin/features/cashier/data/datasources/caissier_remot
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dart';
+import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 
 class CaissierRepositoryImpl implements CaissierRepository {
   final CaissierRemoteDataSource remoteDataSource;
@@ -43,6 +44,28 @@ class CaissierRepositoryImpl implements CaissierRepository {
   }
 
   @override
+  Future<int> getClientPoints({
+    required String clientId,
+    required String magasinId,
+  }) async {
+    return await remoteDataSource.getClientPoints(
+      clientId: clientId,
+      magasinId: magasinId,
+    );
+  }
+
+  @override
+  Future<List<Reward>> getAvailableRewards({
+    required String clientId,
+    required String magasinId,
+  }) async {
+    return await remoteDataSource.getAvailableRewards(
+      clientId: clientId,
+      magasinId: magasinId,
+    );
+  }
+
+  @override
   Future<void> echangerOffre({
     required String clientId,
     required String magasinId,
@@ -56,6 +79,21 @@ class CaissierRepositoryImpl implements CaissierRepository {
       offreId: offreId,
       montantSolde: montantSolde,
       points: points,
+    );
+  }
+
+  @override
+  Future<void> claimReward({
+    required String clientId,
+    required String magasinId,
+    required String rewardId,
+    required int pointsRequired,
+  }) async {
+    return await remoteDataSource.claimReward(
+      clientId: clientId,
+      magasinId: magasinId,
+      rewardId: rewardId,
+      pointsRequired: pointsRequired,
     );
   }
 }

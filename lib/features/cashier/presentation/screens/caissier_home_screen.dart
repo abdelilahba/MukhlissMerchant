@@ -202,7 +202,7 @@ class CaissierHomeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Action Principale',
+          'Actions Principales',
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -211,6 +211,8 @@ class CaissierHomeScreen extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         _buildAddBalanceCard(context),
+        const SizedBox(height: 16),
+        _buildRewardsCard(context),
       ],
     );
   }
@@ -369,6 +371,119 @@ class CaissierHomeScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildRewardsCard(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.15),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.purple[400]!, Colors.purple[600]!],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Icon(
+                    Icons.card_giftcard,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Gérer les Récompenses',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'Aidez les clients à consulter et réclamer leurs récompenses',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.purple[50],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.purple[200]!),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.stars, size: 20, color: Colors.purple[600]),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Scannez le QR code du client pour accéder à ses récompenses',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.purple,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _handleViewRewards(context),
+                icon: const Icon(Icons.qr_code_scanner, size: 24),
+                label: const Text(
+                  'Scanner pour Récompenses',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple[600],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildHelpSection() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -397,20 +512,20 @@ class CaissierHomeScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _buildHelpStep(
             number: '1',
-            title: 'Entrer le montant',
-            description: 'Saisissez le montant à ajouter au compte client',
+            title: 'Ajouter du solde',
+            description: 'Entrez le montant et scannez le QR code pour recharger le compte client',
           ),
           const SizedBox(height: 12),
           _buildHelpStep(
             number: '2',
-            title: 'Scanner le QR code',
-            description: 'Utilisez la caméra pour scanner le code QR du client',
+            title: 'Gérer les récompenses',
+            description: 'Scannez le QR code pour voir les récompenses disponibles du client',
           ),
           const SizedBox(height: 12),
           _buildHelpStep(
             number: '3',
-            title: 'Confirmation',
-            description: 'Validez la transaction et informez le client du nouveau solde',
+            title: 'Validation',
+            description: 'Confirmez les transactions et informez le client des changements',
           ),
         ],
       ),
@@ -519,4 +634,48 @@ class CaissierHomeScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _handleViewRewards(BuildContext context) async {
+    // Pour l'instant, nous naviguons vers un écran temporaire
+    // En réalité, vous devriez scanner le QR code du client d'abord
+    // puis naviguer vers ClientRewardsScreen avec les données du client
+    
+    // Exemple de navigation (à adapter selon votre logique de scan)
+    /*
+    final clientData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScanClientForRewardsScreen(), // Écran de scan spécifique
+      ),
+    );
+    
+    if (clientData != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ClientRewardsScreen(
+            clientId: clientData['clientId'],
+            magasinId: clientData['magasinId'],
+            clientName: clientData['clientName'],
+          ),
+        ),
+      );
+    }
+    */
+    
+    // Pour les tests, vous pouvez naviguer directement :
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.info, color: Colors.white),
+            SizedBox(width: 12),
+            Text('Fonctionnalité de scan pour récompenses à implémenter'),
+          ],
+        ),
+        backgroundColor: Colors.purple,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
 }
