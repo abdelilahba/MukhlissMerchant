@@ -1,22 +1,20 @@
 import 'dart:convert';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
-import 'package:mukhlissmagasin/features/cashier/presentation/screens/offres_disponibles_screen.dart';
+import 'package:mukhlissmagasin/features/cashier/presentation/screens/client_dashboard_screen.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 /// Screen for scanning client QR codes to add balance or view offers
 class ScanClientScreen extends StatefulWidget {
-  final double? montant;  // Nullable for offers mode
+  final double? montant; // Nullable for offers mode
 
-  const ScanClientScreen({
-    super.key,
-    this.montant,
-  });
+  const ScanClientScreen({super.key, this.montant});
 
   @override
   State<ScanClientScreen> createState() => _ScanClientScreenState();
@@ -43,6 +41,16 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
 
   // Check if we're in balance mode (montant is provided) or offers mode
   bool get _isBalanceMode => widget.montant != null;
+  final AudioPlayer _audioPlayer =
+      AudioPlayer()..setReleaseMode(ReleaseMode.stop);
+  Future<void> _playSuccessSound() async {
+    try {
+      await _audioPlayer.stop(); // au cas où un son joue déjà
+      await _audioPlayer.play(AssetSource('audio/success.mp3'));
+    } catch (_) {
+      // en production vous pourriez logger l’erreur
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +81,11 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
   /// Builds the app bar with camera switch button
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: Text(_isBalanceMode ? 'Scanner Client - Ajouter Solde' : 'Scanner Client - Voir Offres'),
+      title: Text(
+        _isBalanceMode
+            ? 'Scanner Client - Ajouter Solde'
+            : 'Scanner Client - Voir Offres',
+      ),
       elevation: 0,
       actions: [
         IconButton(
@@ -87,12 +99,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
 
   /// Builds the main content with QR scanner and info
   Widget _buildMainContent() {
-    return Column(
-      children: [
-        _buildQRScanner(),
-        _buildInfoSection(),
-      ],
-    );
+    return Column(children: [_buildQRScanner(), _buildInfoSection()]);
   }
 
   /// Builds the QR scanner section
@@ -136,13 +143,10 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              _isBalanceMode 
-                ? 'Scannez le QR code du client pour ajouter du solde'
-                : 'Scannez le QR code du client pour voir les offres',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+              _isBalanceMode
+                  ? 'Scannez le QR code du client pour ajouter du solde'
+                  : 'Scannez le QR code du client pour voir les offres',
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
@@ -197,20 +201,16 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              _isBalanceMode ? 'Ajout du solde en cours...' : 'Traitement en cours...',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
+              _isBalanceMode
+                  ? 'Ajout du solde en cours...'
+                  : 'Traitement en cours...',
+              style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
             if (_isBalanceMode) ...[
               const SizedBox(height: 8),
               const Text(
                 'Redirection vers les offres après ajout...',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.white70, fontSize: 14),
               ),
             ],
           ],
@@ -234,42 +234,24 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
   }
 
   /// Handles successful balance addition - automatically redirects to offers
-  void _handleBalanceAdded() {
+  /// Handles successful balance addition - automatically redirects to offers and rewards
+  Future<void> _handleBalanceAdded() async {
+    await _playSuccessSound();
     _showSnackBar(
-      message: 'Solde ajouté avec succès! Redirection vers les offres...',
+      message: 'Parfait ! Solde ajouté ✔️',
       backgroundColor: Colors.green,
     );
 
-    // Navigate to offers screen with the scanned client data
-    if (_lastScannedClientData != null && _lastClientId != null && _lastMagasinId != null) {
-      // Use a short delay to let the user see the success message
-      Future.delayed(const Duration(milliseconds: 1500), () {
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ClientOffersScreen(
-                clientId: _lastClientId!,
-                magasinId: _lastMagasinId!,
-                clientData: _lastScannedClientData!,
-              ),
-            ),
-          );
-        }
-      });
-    } else {
-      // Fallback - just pop with success
-      Navigator.pop(context, true);
-    }
+    // Laissez à l’utilisateur le temps de lire le toast
+    Future.delayed(const Duration(milliseconds: 1200), () {
+      if (mounted) Navigator.pop(context, true); // ← renvoie « true » au caller
+    });
   }
 
   /// Handles errors
   void _handleError(String message) {
     _setProcessing(false);
-    _showSnackBar(
-      message: 'Erreur: $message',
-      backgroundColor: Colors.red,
-    );
+    _showSnackBar(message: 'Erreur: $message', backgroundColor: Colors.red);
     _resumeCamera();
   }
 
@@ -325,14 +307,14 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
   Future<void> _processQRCode(String qrCode) async {
     final clientData = _parseQRCode(qrCode);
     final currentUser = _getCurrentUser();
-    
+
     _validateData(clientData, currentUser);
-    
+
     // Store the client data for potential navigation
     _lastScannedClientData = clientData;
     _lastClientId = clientData['user_id'].toString();
     _lastMagasinId = currentUser.id;
-    
+
     if (_isBalanceMode) {
       // Add balance mode - will auto-redirect to offers after success
       await _cubit.ajouterSoldeClient(
@@ -342,22 +324,12 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
       );
     } else {
       // Direct offers mode - navigate immediately
-      _navigateToOffers(clientData, currentUser);
+      await _playSuccessSound();
+      _showSnackBar(message: 'QR reconnu ✔️', backgroundColor: Colors.green);
+      Future.delayed(const Duration(milliseconds: 800), () {
+        if (mounted) Navigator.pop(context); // ← pas de valeur de retour
+      });
     }
-  }
-
-  /// Navigates directly to offers screen
-  void _navigateToOffers(Map<String, dynamic> clientData, dynamic currentUser) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ClientOffersScreen(
-          clientId: clientData['user_id'].toString(),
-          magasinId: currentUser.id,
-          clientData: clientData,
-        ),
-      ),
-    );
   }
 
   /// Parses QR code JSON data
@@ -381,7 +353,9 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
 
     final userId = clientData['user_id'];
     if (userId == null || userId.toString().isEmpty) {
-      throw const FormatException('Le QR code ne contient pas de user_id valide');
+      throw const FormatException(
+        'Le QR code ne contient pas de user_id valide',
+      );
     }
   }
 
@@ -389,10 +363,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
   void _handleScanError(String message, dynamic error) {
     debugPrint('Scan Error: $error');
     _setProcessing(false);
-    _showSnackBar(
-      message: message,
-      backgroundColor: Colors.red,
-    );
+    _showSnackBar(message: message, backgroundColor: Colors.red);
     _resumeCamera();
   }
 

@@ -172,14 +172,14 @@ class CaissierRemoteDataSource {
       );
 
       // 4. Record the exchange transaction
-      await supabase.from('offer_exchanges').insert({
-        'client_id': clientId,
-        'magasin_id': magasinId,
-        'offre_id': offreId,
-        'montant_solde': montantSolde,
-        'points_obtenus': points,
-        'date_echange': DateTime.now().toIso8601String(),
-      });
+      // await supabase.from('offer_exchanges').insert({
+      //   'client_id': clientId,
+      //   'magasin_id': magasinId,
+      //   'offre_id': offreId,
+      //   'montant_solde': montantSolde,
+      //   'points_obtenus': points,
+      //   'date_echange': DateTime.now().toIso8601String(),
+      // });
     } catch (e) {
       throw Exception('Erreur lors de l\'échange: ${e.toString()}');
     }
@@ -211,14 +211,14 @@ class CaissierRemoteDataSource {
           .eq('magasin_id', magasinId);
 
       // 3. Record the reward claim
-      await supabase.from('reward_claims').insert({
-        'client_id': clientId,
-        'magasin_id': magasinId,
-        'reward_id': rewardId,
-        'points_used': pointsRequired,
-        'claimed_at': DateTime.now().toIso8601String(),
-        'status': 'claimed',
-      });
+      // await supabase.from('reward_claims').insert({
+      //   'client_id': clientId,
+      //   'magasin_id': magasinId,
+      //   'reward_id': rewardId,
+      //   'points_used': pointsRequired,
+      //   'claimed_at': DateTime.now().toIso8601String(),
+      //   'status': 'claimed',
+      // });
     } catch (e) {
       throw Exception('Erreur lors de la récupération de la récompense: ${e.toString()}');
     }
@@ -258,4 +258,16 @@ class CaissierRemoteDataSource {
           });
     }
   }
+Future<ClientMagasinEntity> ajouterSoldeEtAppliquerOffres({
+  required String clientId,
+  required String magasinId,
+  required double montant,
+}) async {
+  return await supabase.rpc('apply_offers_auto', params: {
+    'p_client_id': clientId,
+    'p_magasin_id': magasinId,
+    'p_montant': montant,
+  }).single().then(ClientMagasinEntity.fromJson);
+}
+  
 }

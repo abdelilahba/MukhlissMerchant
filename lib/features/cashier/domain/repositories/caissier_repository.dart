@@ -40,4 +40,10 @@ abstract class CaissierRepository {
     required String rewardId,
     required int pointsRequired,
   });
+
+  Future<ClientMagasinEntity> ajouterSoldeEtAppliquerOffres({
+    required String clientId,
+    required String magasinId,
+    required double montant,
+  });
 }

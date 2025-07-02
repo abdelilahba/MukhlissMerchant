@@ -11,7 +11,7 @@ Future<ClientMagasinEntity> execute({
   required String magasinId,
   required double montant,
 }) async {
-  return await repository.ajouterSolde(
+  return await repository.ajouterSoldeEtAppliquerOffres(
     clientId: clientId,
     magasinId: magasinId,
     montant: montant,

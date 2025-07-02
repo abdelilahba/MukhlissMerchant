@@ -96,4 +96,16 @@ class CaissierRepositoryImpl implements CaissierRepository {
       pointsRequired: pointsRequired,
     );
   }
+   @override
+  Future<ClientMagasinEntity> ajouterSoldeEtAppliquerOffres({
+    required String clientId,
+    required String magasinId,
+    required double montant,
+  }) {
+    return remoteDataSource.ajouterSoldeEtAppliquerOffres(
+      clientId: clientId,
+      magasinId: magasinId,
+      montant: montant,
+    );
+  }
 }
