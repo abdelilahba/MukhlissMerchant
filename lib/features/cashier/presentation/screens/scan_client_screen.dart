@@ -5,16 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/client_dashboard_screen.dart';
+import 'package:mukhlissmagasin/features/cashier/presentation/screens/success_screen.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+
+enum ScanMode { balance, rewards }
 
 /// Screen for scanning client QR codes to add balance or view offers
 class ScanClientScreen extends StatefulWidget {
   final double? montant; // Nullable for offers mode
+  final ScanMode mode;
 
-  const ScanClientScreen({super.key, this.montant});
+  const ScanClientScreen.balance(this.montant) : mode = ScanMode.balance;
+
+  const ScanClientScreen.rewards() : mode = ScanMode.rewards, montant = null;
 
   @override
   State<ScanClientScreen> createState() => _ScanClientScreenState();
@@ -223,7 +230,11 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
   void _handleStateChanges(BuildContext context, CaissierState state) {
     switch (state) {
       case SoldeAjoute():
-        _handleBalanceAdded();
+        final pointsGagnes =
+            state.clientMagasin.cumulePoint; // Adjust property name as needed
+        final soldeRestant =
+            state.clientMagasin.solde; // Adjust property name as needed
+        _handleBalanceAdded(pointsGagnes, soldeRestant);
         break;
       case CaissierError():
         _handleError(state.message);
@@ -235,17 +246,21 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
 
   /// Handles successful balance addition - automatically redirects to offers
   /// Handles successful balance addition - automatically redirects to offers and rewards
-  Future<void> _handleBalanceAdded() async {
-    await _playSuccessSound();
-    _showSnackBar(
-      message: 'Parfait ! Solde ajouté ✔️',
-      backgroundColor: Colors.green,
+  Future<void> _handleBalanceAdded(
+    double pointsGagnes,
+    double soldeRestant,
+  ) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (_) => FelicitationScreen(
+              pointsGagnes: pointsGagnes,
+              soldeRestant: soldeRestant,
+            ),
+      ),
     );
-
-    // Laissez à l’utilisateur le temps de lire le toast
-    Future.delayed(const Duration(milliseconds: 1200), () {
-      if (mounted) Navigator.pop(context, true); // ← renvoie « true » au caller
-    });
+    if (mounted) Navigator.pop(context, true); // retour à la Home
   }
 
   /// Handles errors
@@ -307,27 +322,44 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
   Future<void> _processQRCode(String qrCode) async {
     final clientData = _parseQRCode(qrCode);
     final currentUser = _getCurrentUser();
-
     _validateData(clientData, currentUser);
 
-    // Store the client data for potential navigation
-    _lastScannedClientData = clientData;
+    // mémos
     _lastClientId = clientData['user_id'].toString();
     _lastMagasinId = currentUser.id;
 
-    if (_isBalanceMode) {
-      // Add balance mode - will auto-redirect to offers after success
+    //--------------------------------------------------------
+    // 1️⃣  MODE « BALANCE » : on crédite et on laisse
+    //     _handleStateChanges gérer la suite
+    //--------------------------------------------------------
+    if (widget.mode == ScanMode.balance) {
       await _cubit.ajouterSoldeClient(
         clientId: _lastClientId!,
         magasinId: _lastMagasinId!,
         montant: widget.montant!,
       );
-    } else {
-      // Direct offers mode - navigate immediately
-      await _playSuccessSound();
-      _showSnackBar(message: 'QR reconnu ✔️', backgroundColor: Colors.green);
-      Future.delayed(const Duration(milliseconds: 800), () {
-        if (mounted) Navigator.pop(context); // ← pas de valeur de retour
+      return; // on s’arrête là
+    }
+
+    //--------------------------------------------------------
+    // 2️⃣  MODE « REWARDS » : on renvoie les infos vers la Home
+    //--------------------------------------------------------
+    final points = await getIt<CaissierRepository>().getClientPoints(
+      clientId: _lastClientId!,
+      magasinId: _lastMagasinId!,
+    );
+
+    await _playSuccessSound();
+    _showSnackBar(message: 'QR reconnu ✔️', backgroundColor: Colors.green);
+
+    // petite pause esthétique
+    await Future.delayed(const Duration(milliseconds: 600));
+
+    if (mounted) {
+      Navigator.pop(context, {
+        'clientId': _lastClientId!,
+        'magasinId': _lastMagasinId!,
+        'clientPoints': points.toString(),
       });
     }
   }

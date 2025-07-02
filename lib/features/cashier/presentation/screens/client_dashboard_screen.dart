@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:mukhlissmagasin/features/cashier/presentation/screens/offres_disponibles_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/recompenses_disponibles_screen.dart';
 
 class ClientOffersRewardsScreen extends StatefulWidget {
@@ -53,18 +52,18 @@ class _ClientOffersRewardsScreenState extends State<ClientOffersRewardsScreen>
         controller: _tabController,
         children: [
           // Onglet Offres
-          ClientOffersScreen(
-            clientId: widget.clientId,
-            magasinId: widget.magasinId,
-            clientData: widget.clientData,
-          ),
+          // ClientOffersScreen(
+          //   clientId: widget.clientId,
+          //   magasinId: widget.magasinId,
+          //   clientData: widget.clientData,
+          // ),
           
           // Onglet Récompenses
-          ClientRewardsScreen(
-            clientId: widget.clientId,
-            magasinId: widget.magasinId,
-            clientName: widget.clientData['nom'] ?? 'Client',
-          ),
+          // ClientRewardsScreen(
+          //   clientId: widget.clientId,
+          //   magasinId: widget.magasinId,
+          //   clientName: widget.clientData['nom'] ?? 'Client',
+          // ),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mukhlissmagasin/features/cashier/presentation/screens/recompenses_disponibles_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
 
 class CaissierHomeScreen extends StatelessWidget {
@@ -587,95 +588,75 @@ class CaissierHomeScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _handleAddBalance(BuildContext context) async {
-    final montant = double.tryParse(_montantController.text);
-    if (montant != null && montant > 0) {
-      // Navigate to scanner with amount
-      final result = await Navigator.push<bool>(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ScanClientScreen(montant: montant),
-        ),
-      );
+ Future<void> _handleAddBalance(BuildContext context) async {
+  // 1️⃣  Parse du montant (on accepte aussi la virgule comme séparateur)
+  final montantTxt = _montantController.text.replaceAll(',', '.');
+  final montant = double.tryParse(montantTxt);
 
-      // Handle the result
-      if (result == true && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 12),
-                Text('Solde de ${montant.toStringAsFixed(2)} DH ajouté avec succès!'),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-        );
-        _montantController.clear();
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
-            children: [
-              Icon(Icons.error, color: Colors.white),
-              SizedBox(width: 12),
-              Text('Veuillez entrer un montant valide (supérieur à 0)'),
-            ],
-          ),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
-    }
-  }
-
-  Future<void> _handleViewRewards(BuildContext context) async {
-    // Pour l'instant, nous naviguons vers un écran temporaire
-    // En réalité, vous devriez scanner le QR code du client d'abord
-    // puis naviguer vers ClientRewardsScreen avec les données du client
-    
-    // Exemple de navigation (à adapter selon votre logique de scan)
-    /*
-    final clientData = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ScanClientForRewardsScreen(), // Écran de scan spécifique
-      ),
-    );
-    
-    if (clientData != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ClientRewardsScreen(
-            clientId: clientData['clientId'],
-            magasinId: clientData['magasinId'],
-            clientName: clientData['clientName'],
-          ),
-        ),
-      );
-    }
-    */
-    
-    // Pour les tests, vous pouvez naviguer directement :
+  if (montant == null || montant <= 0) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Row(
           children: [
-            Icon(Icons.info, color: Colors.white),
+            Icon(Icons.error, color: Colors.white),
             SizedBox(width: 12),
-            Text('Fonctionnalité de scan pour récompenses à implémenter'),
+            Text('Veuillez entrer un montant valide (> 0)'),
           ],
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
+    return;
   }
+
+  // 2️⃣  Navigation vers le scanner en mode « balance »
+  final success = await Navigator.push<bool>(
+    context,
+    MaterialPageRoute(
+      builder: (_) => ScanClientScreen.balance(montant),
+    ),
+  );
+
+  // 3️⃣  Feedback si le solde a bien été ajouté
+  if (success == true && context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 12),
+            Text('Solde de ${montant.toStringAsFixed(2)} DH ajouté avec succès !'),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+    _montantController.clear();
+  }
+}
+
+Future<void> _handleViewRewards(BuildContext context) async {
+  final data = await Navigator.push<Map<String, String>>(
+    context,
+    MaterialPageRoute(builder: (_) => const ScanClientScreen.rewards()),
+  );
+
+  if (data != null) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => RewardSelectionScreen(
+          clientId:  data['clientId']!,
+          magasinId: data['magasinId']!,
+          clientPoints: int.parse(data['clientPoints']!),
+        ),
+      ),
+    );
+  }
+}
+
 }
