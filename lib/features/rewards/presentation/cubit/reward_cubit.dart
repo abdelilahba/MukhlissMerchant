@@ -40,7 +40,6 @@ class RewardCubit extends Cubit<RewardState> {
         title: title,
         description: description,
         requiredPoints: requiredPoints,
-        imagePath: imagePath, // Passage du chemin du fichier
       );
       await loadShopRewards(); // Recharge la liste mise à jour
     } catch (e) {

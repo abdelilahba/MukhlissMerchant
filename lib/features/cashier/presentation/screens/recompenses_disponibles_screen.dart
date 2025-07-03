@@ -6,7 +6,7 @@ import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_sta
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/success_screen.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 
-/// Affiche la liste des récompenses disponibles pour un client
+
 /// et permet au caissier d'en sélectionner une à réclamer.
 class RewardSelectionScreen extends StatefulWidget {
   final String clientId;
@@ -72,7 +72,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen> {
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(
               leading: const Icon(Icons.card_giftcard),
-              title: Text(r.name ?? 'Récompense'),
+              title: Text(r.name ),
               subtitle: Text('${r.requiredPoints} pts'),
               trailing: disponible
                   ? const Icon(Icons.chevron_right)
@@ -102,7 +102,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen> {
       _cubit.claimReward(
         clientId: widget.clientId,
         magasinId: widget.magasinId,
-        rewardId: reward.id!,
+        rewardId: reward.id,
         pointsRequired: reward.requiredPoints,
       );
     }
@@ -120,6 +120,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen> {
           ),
         ),
       );
+      // ignore: use_build_context_synchronously
       if (mounted) Navigator.pop(context, true);
     } else if (state is CaissierError) {
       ScaffoldMessenger.of(context).showSnackBar(

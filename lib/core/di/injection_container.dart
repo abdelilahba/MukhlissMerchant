@@ -10,9 +10,7 @@ import 'package:mukhlissmagasin/features/cashier/data/datasources/caissier_remot
 import 'package:mukhlissmagasin/features/cashier/data/repositories/caissier_repository_impl.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/ajouter_solde.dart';
-import 'package:mukhlissmagasin/features/cashier/domain/usecases/charger_offres_client.dart';
-import 'package:mukhlissmagasin/features/cashier/domain/usecases/charger_recompenses_client_usecase.dart';
-import 'package:mukhlissmagasin/features/cashier/domain/usecases/echanger_offre.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/usecases/charger_recompenses_usecase.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/reclamer_recompense_usecase.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/offers/data/datasources/offer_remote_data_source.dart';
@@ -102,15 +100,9 @@ Future<void> initDependencies() async {
     repository: getIt(),
     authRepository: getIt(),
   ));
-     getIt.registerLazySingleton(() => EchangerOffreUseCase(
-    repository: getIt(),
-    authRepository: getIt(),
-  ));
 
-       getIt.registerLazySingleton(() => ChargerOffresClientUseCase(
-    repository: getIt(),
-    authRepository: getIt(),
-  ));
+
+
   getIt.registerFactory(() => RewardCubit(
     getShopRewardsUseCase: getIt(),
     addRewardUseCase: getIt(),
@@ -137,8 +129,6 @@ getIt.registerLazySingleton(() => ReclamerRecompenseUseCase(repository: getIt())
 // Caissier Cubit
 getIt.registerFactory(() => CaissierCubit(
   ajouterSolde: getIt(),
-  chargerOffresClient: getIt(),
-  echangerOffre: getIt(),
   chargerRecompensesClient: getIt(),
   reclamerRecompense: getIt(),
 ));

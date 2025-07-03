@@ -15,23 +15,23 @@ class RewardRepositoryImpl implements RewardRepository {
 
   @override
   Future<List<Reward>> getShopRewards() async {
-    final currentUser = await authRepository.getCurrentUser();
+    final currentUser =  authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('Utilisateur non connecté');
     return await remoteDataSource.getRewardsByStore(currentUser.id);
   }
 
   @override
-  Future<void> addReward(Reward reward, {String? imagePath}) async {
-    final currentUser = await authRepository.getCurrentUser();
+  Future<void> addReward(Reward reward) async {
+    final currentUser =  authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('Utilisateur non connecté');
     
     final rewardWithShopId = reward.copyWith(shopId: currentUser.id);
-    await remoteDataSource.addReward(rewardWithShopId, imagePath: imagePath);
+    await remoteDataSource.addReward(rewardWithShopId,);
   }
 
   @override
   Future<void> updateReward(Reward reward) async {
-    final currentUser = await authRepository.getCurrentUser();
+    final currentUser =  authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('Utilisateur non connecté');
     
     final rewardWithShopId = reward.copyWith(shopId: currentUser.id);

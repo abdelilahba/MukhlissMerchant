@@ -8,7 +8,6 @@ import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repositor
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
-import 'package:mukhlissmagasin/features/cashier/presentation/screens/client_dashboard_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/success_screen.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
@@ -42,7 +41,6 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
   bool _isProcessing = false;
 
   // Store client data for navigation
-  Map<String, dynamic>? _lastScannedClientData;
   String? _lastClientId;
   String? _lastMagasinId;
 

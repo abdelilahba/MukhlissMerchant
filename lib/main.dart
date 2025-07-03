@@ -45,9 +45,6 @@ void main() async {
           BlocProvider(
           create: (context) => CaissierCubit(
             ajouterSolde: getIt(),
-            chargerOffresClient: getIt(),
-            echangerOffre: getIt(),
-
             chargerRecompensesClient: getIt(),
             reclamerRecompense: getIt(),
           ),
