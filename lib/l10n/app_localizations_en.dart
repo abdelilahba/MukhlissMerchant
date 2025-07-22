@@ -1,0 +1,324 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
+class AppLocalizationsEn extends AppLocalizations {
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
+
+  @override
+  String get appTitle => 'My App';
+
+  @override
+  String get welcome => 'Welcome';
+
+  @override
+  String get setting => 'Settings';
+
+  @override
+  String get selectiondelaluangue => 'Choose language';
+
+  @override
+  String get luangue => 'Language';
+
+  @override
+  String get offrespeciale => 'Special offers';
+
+  @override
+  String get pointfidelite => 'loyalty points';
+
+  @override
+  String get pts => 'pts';
+
+  @override
+  String get modifier => 'Modify';
+
+  @override
+  String get supprimer => 'Delete';
+
+  @override
+  String get ajouteroffre => 'Add an offer';
+
+  @override
+  String get nouvelleoffre => 'New Offer';
+
+  @override
+  String get modifieroffre => 'Modifier Offre';
+
+  @override
+  String get modifieroffreexiste => 'Modify your existing offer';
+
+  @override
+  String get ajouternoouveauoffre =>
+      'Create an attractive offer for your customers';
+
+  @override
+  String get bostezlesventes => 'Boost your sales';
+
+  @override
+  String get optimizeroffre => 'Optimize your offer';
+
+  @override
+  String get ajouterdetails => 'Adjust the details to maximize impact';
+
+  @override
+  String get credesoffre => 'Create irresistible offers that convert';
+
+  @override
+  String get detailoffre => 'Offer details';
+
+  @override
+  String get creationencours => 'Creation in progress...';
+
+  @override
+  String get creeoffre => 'Create the offer';
+
+  @override
+  String get ajusterlesdetails =>
+      'Ajustez les détails pour maximiser l\'impact';
+
+  @override
+  String get mantant => 'Amount (DH)';
+
+  @override
+  String get requis => 'Required';
+
+  @override
+  String get point => 'Points';
+
+  @override
+  String get menuprincipale => 'Main Menu';
+
+  @override
+  String get acceuil => 'Welcome';
+
+  @override
+  String get offre => 'Offers';
+
+  @override
+  String get recompences => 'Awards';
+
+  @override
+  String get caissier => 'Cashier';
+
+  @override
+  String get deconnexion => 'Disconnect';
+
+  @override
+  String get ajouterrecompence => 'New Reward';
+
+  @override
+  String get echange => 'Exchangeable with';
+
+  @override
+  String get modifierrecompence => 'Edit Reward';
+
+  @override
+  String get creeunerecompenceattractive =>
+      'Create an attractive reward to build loyalty';
+
+  @override
+  String get modifierrecompenceexiste => 'Edit your existing reward';
+
+  @override
+  String get fidelisezclient => 'Build customer loyalty';
+
+  @override
+  String get peaufinez => 'Refine your reward';
+
+  @override
+  String get creerecompencesquiincitent =>
+      'Create rewards that encourage return visits';
+
+  @override
+  String get ajuusterlesdetails => 'Adjust the details to optimize engagement';
+
+  @override
+  String get detailsrecompence => 'Reward Details';
+
+  @override
+  String get descriptionrecompence => 'Description of the reward';
+
+  @override
+  String get exemplerecompence =>
+      'Ex: 1 burger gratuit, Café offert, 10% de réduction';
+
+  @override
+  String get entrerladescription => 'Enter the reward description...';
+
+  @override
+  String get descriptionrequise => 'Description is required';
+
+  @override
+  String get pointrequise => 'Points required';
+
+  @override
+  String get pointrequismessage => 'Points are required';
+
+  @override
+  String get nombreinvaliide => 'Invalid number';
+
+  @override
+  String get doitetresuperieur => 'Must be greater than 0';
+
+  @override
+  String get modificationencour => 'Modification in progress...';
+
+  @override
+  String get creerecompence => 'Create the reward';
+
+  @override
+  String get enredisterlesmodifiaction => 'Save changes';
+
+  @override
+  String get espacecaisier => 'Cashier area';
+
+  @override
+  String get bienvenucaissier => 'Welcome to your space';
+
+  @override
+  String get interfacecaissier => 'Cashier Interface';
+
+  @override
+  String get gererfacilementcomptes =>
+      'Easily manage customer accounts and their balances';
+
+  @override
+  String get solde => 'Sales';
+
+  @override
+  String get gerer => 'Managed today';
+
+  @override
+  String get transaction => 'Transactions';
+
+  @override
+  String get effectuee => 'Performed';
+
+  @override
+  String get actionprincipale => 'Main Actions';
+
+  @override
+  String get ajoutersolde => 'Add Balance';
+
+  @override
+  String get rechargezcompte =>
+      'Top up a customer\'s account by scanning their QR code';
+
+  @override
+  String get montantajouter => 'Amount to add';
+
+  @override
+  String get scanerajoutermontant =>
+      'Enter the amount then scan the customer\'s QR code';
+
+  @override
+  String get scannercleint => 'Client Scanner';
+
+  @override
+  String get gererrecompence => 'Manage Rewards';
+
+  @override
+  String get aidezclientconsulterrecompence =>
+      'Help customers view and claim their rewards';
+
+  @override
+  String get scannerrecompence =>
+      'Scan the customer\'s QR code to access their rewards';
+
+  @override
+  String get scannerrecompenceqr => 'Scanner for Rewards';
+
+  @override
+  String get commentmarche => 'How does it work?';
+
+  @override
+  String get validation => 'Validation';
+
+  @override
+  String get confiremeztransaction =>
+      'Confirm transactions and notify the customer of changes';
+
+  @override
+  String get veuillez => 'Please enter a valid amount (> 0)';
+
+  @override
+  String get soldede => 'Balance of';
+
+  @override
+  String get dhajoute => 'DH added successfully!';
+
+  @override
+  String get gerervospreference => 'Manage your preferences';
+
+  @override
+  String get general => 'General';
+
+  @override
+  String get langue => 'Language';
+
+  @override
+  String get magazin => 'Mukhlis shop';
+
+  @override
+  String get compte => 'Account';
+
+  @override
+  String get profil => 'Profile';
+
+  @override
+  String get informationpers => 'Personal information';
+
+  @override
+  String get securite => 'Security';
+
+  @override
+  String get motpassesecurise => 'Mot de passe et sécurité';
+
+  @override
+  String get confidentialite => 'Confidentiality';
+
+  @override
+  String get paramconfidentialite => 'Privacy Settings';
+
+  @override
+  String get nomcomplet => 'Full name';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get phone => 'Phone Number';
+
+  @override
+  String get addresse => 'Address';
+
+  @override
+  String get ville => 'City';
+
+  @override
+  String get codepostale => 'Postal Code';
+
+  @override
+  String get nouveaumotpasse => 'New Password';
+
+  @override
+  String get laisserviede => 'Leave blank to not change';
+
+  @override
+  String get confirmer => 'Confirm password';
+
+  @override
+  String get champsrequis => 'This field is required';
+
+  @override
+  String get necorrespontpas => 'Passwords do not match';
+
+  @override
+  String get changerimage => 'Change profile picture';
+
+  @override
+  String get galerie => 'Gallery';
+}

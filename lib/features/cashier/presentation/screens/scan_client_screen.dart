@@ -103,40 +103,20 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
   }
 
   /// Builds the main content with QR scanner and info
-  Widget _buildMainContent() {
-    return Column(children: [_buildQRScanner(), _buildInfoSection()]);
-  }
-
-  /// Builds the QR scanner section
-  Widget _buildQRScanner() {
-    return Expanded(
-      flex: 5,
-      child: QRView(
-        key: _qrKey,
-        onQRViewCreated: _onQRViewCreated,
-        overlay: _buildScannerOverlay(),
-        cameraFacing: CameraFacing.front,
-        formatsAllowed: const [BarcodeFormat.qrcode],
+Widget _buildMainContent() {
+  return Column(
+    children: [
+      Expanded(
+        flex: 3,
+        child: QRView(
+          key: _qrKey,
+          onQRViewCreated: _onQRViewCreated,
+          overlay: _buildScannerOverlay(),
+          cameraFacing: CameraFacing.front,
+          formatsAllowed: const [BarcodeFormat.qrcode],
+        ),
       ),
-    );
-  }
-
-  /// Builds the scanner overlay
-  QrScannerOverlayShape _buildScannerOverlay() {
-    return QrScannerOverlayShape(
-      borderColor: Theme.of(context).primaryColor,
-      borderRadius: _borderRadius,
-      borderLength: _borderLength,
-      borderWidth: _borderWidth,
-      cutOutSize: _cutOutSize,
-    );
-  }
-
-  /// Builds the information section below the scanner
-  Widget _buildInfoSection() {
-    return Expanded(
-      flex: 1,
-      child: Container(
+      Container( // Remplacez le Expanded par un Container simple
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -171,8 +151,25 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
           ],
         ),
       ),
+    ],
+  );
+}
+
+// Supprimez complètement la méthode _buildInfoSection() existante
+
+
+  /// Builds the scanner overlay
+  QrScannerOverlayShape _buildScannerOverlay() {
+    return QrScannerOverlayShape(
+      borderColor: Theme.of(context).primaryColor,
+      borderRadius: _borderRadius,
+      borderLength: _borderLength,
+      borderWidth: _borderWidth,
+      cutOutSize: _cutOutSize,
     );
   }
+
+ 
 
   /// Builds the amount display (only shown in balance mode)
   Widget _buildAmountDisplay() {

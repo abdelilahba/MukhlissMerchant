@@ -5,6 +5,7 @@ import 'package:mukhlissmagasin/core/widgets/reward_card.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_cubit.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_state.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/managers/reward_manager.dart';
+import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
 class RewardsScreen extends StatelessWidget {
   const RewardsScreen({super.key});
@@ -23,8 +24,9 @@ class RewardsScreen extends StatelessWidget {
   }
 
   AppBar _buildAppBar(BuildContext context) {
+     final l10n = AppLocalizations.of(context)!;
     return AppBar(
-      title: const Text('Récompenses'),
+      title:  Text(l10n.recompences),
       leading: Builder(
         builder:
             (context) => IconButton(
