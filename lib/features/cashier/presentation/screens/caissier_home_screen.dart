@@ -5,7 +5,7 @@ import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_clien
 class CaissierHomeScreen extends StatelessWidget {
   final _montantController = TextEditingController();
 
-  CaissierHomeScreen({Key? key}) : super(key: key);
+  CaissierHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -647,6 +647,7 @@ Future<void> _handleViewRewards(BuildContext context) async {
 
   if (data != null) {
     Navigator.push(
+
       context,
       MaterialPageRoute(
         builder: (_) => RewardSelectionScreen(

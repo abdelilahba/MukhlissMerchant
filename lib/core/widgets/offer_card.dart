@@ -7,11 +7,11 @@ class OfferCard extends StatefulWidget {
   final VoidCallback onDelete;
 
   const OfferCard({
-    Key? key,
+    super.key,
     required this.offer,
     required this.onEdit,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   State<OfferCard> createState() => _OfferCardState();

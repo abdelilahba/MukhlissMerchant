@@ -45,9 +45,9 @@ class Reward {
   }) {
     return Reward(
       id: id ?? this.id,
-      name: title ?? this.name,
+      name: title ?? name,
       requiredPoints: requiredPoints ?? this.requiredPoints,
-      imagePath: imageUrl ?? this.imagePath,
+      imagePath: imageUrl ?? imagePath,
       shopId:
           shopId ??
           this.shopId, // Conservation de la valeur existante si non fournie

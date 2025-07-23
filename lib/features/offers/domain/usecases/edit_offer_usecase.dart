@@ -12,7 +12,7 @@ class UpdateOfferUseCase {
     required double minAmount,
     required int pointsGiven,
   }) async {
-        final currentUser = await authRepository.getCurrentUser();
+        final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('User not authenticated');
     if (pointsGiven <= 0) throw ArgumentError('Points must be > 0');
     if (pointsGiven <= 0) throw ArgumentError('Points must be > 0');

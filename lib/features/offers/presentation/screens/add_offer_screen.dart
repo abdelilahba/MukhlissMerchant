@@ -8,7 +8,7 @@ import 'package:mukhlissmagasin/features/offers/presentation/cubit/offer_cubit.d
 class AddOfferScreen extends StatefulWidget {
       final Offer? offer; // Add optional offer parameter for editing
  
-  const AddOfferScreen({Key? key , this.offer }) : super(key: key);
+  const AddOfferScreen({super.key , this.offer });
 
 
   @override

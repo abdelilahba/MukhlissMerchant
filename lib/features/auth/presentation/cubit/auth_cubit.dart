@@ -20,7 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> checkAuthStatus() async {
     emit(AuthLoading());
     try {
-      final currentUser = await repository.getCurrentUser(); // Implémentez cette méthode dans votre repository
+      final currentUser = repository.getCurrentUser(); // Implémentez cette méthode dans votre repository
       if (currentUser != null) {
         emit(AuthAuthenticated(user: currentUser));
       } else {

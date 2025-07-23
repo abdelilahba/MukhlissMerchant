@@ -7,7 +7,7 @@ import 'package:mukhlissmagasin/features/offers/presentation/cubit/offer_cubit.d
 import 'package:mukhlissmagasin/features/offers/presentation/managers/offer_manager.dart';
 
 class OffersScreen extends StatelessWidget {
-  const OffersScreen({Key? key}) : super(key: key);
+  const OffersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

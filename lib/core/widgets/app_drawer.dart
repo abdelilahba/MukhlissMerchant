@@ -74,7 +74,6 @@ class AppDrawer extends StatelessWidget {
                   builder: (_) => CaissierHomeScreen(),
                 ),
               );
-              // Navigation vers les paramètres
             },
           ),
           // Ajout du bouton de déconnexion

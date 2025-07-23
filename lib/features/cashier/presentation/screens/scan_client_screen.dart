@@ -18,9 +18,9 @@ class ScanClientScreen extends StatefulWidget {
   final double? montant; // Nullable for offers mode
   final ScanMode mode;
 
-  const ScanClientScreen.balance(this.montant) : mode = ScanMode.balance;
+  const ScanClientScreen.balance(this.montant, {super.key}) : mode = ScanMode.balance;
 
-  const ScanClientScreen.rewards() : mode = ScanMode.rewards, montant = null;
+  const ScanClientScreen.rewards({super.key}) : mode = ScanMode.rewards, montant = null;
 
   @override
   State<ScanClientScreen> createState() => _ScanClientScreenState();

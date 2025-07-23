@@ -10,8 +10,8 @@ class OfferForm extends StatelessWidget {
     required this.formKey,
     required this.onSubmit,
     required this.manager,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
