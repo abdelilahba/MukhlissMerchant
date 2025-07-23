@@ -4,6 +4,7 @@ import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dar
 import 'package:mukhlissmagasin/features/offers/presentation/managers/offer_manager.dart';
 import 'package:mukhlissmagasin/features/offers/presentation/widgets/offer_form.dart';
 import 'package:mukhlissmagasin/features/offers/presentation/cubit/offer_cubit.dart';
+import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
 class AddOfferScreen extends StatefulWidget {
       final Offer? offer; // Add optional offer parameter for editing
@@ -186,7 +187,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
 
   Widget _buildModernAppBar() {
         final isEditing = widget.offer != null;
-
+  final l10n=AppLocalizations.of(context)!;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
@@ -218,7 +219,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
               child: Column(
                 children: [
                   Text(
-                    isEditing ? 'Modifier Offre' : 'Nouvelle Offre',
+                    isEditing ? l10n.modifieroffre: l10n.nouvelleoffre,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -228,8 +229,8 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                   SizedBox(height: 2),
                   Text(
                    isEditing 
-                        ? 'Modifiez votre offre existante'
-                        : 'Créez une offre attractive pour vos clients',
+                        ?l10n.modifieroffreexiste 
+                        : l10n.credesoffre,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade600,
@@ -289,7 +290,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
 
   Widget _buildWelcomeSection() {
         final isEditing = widget.offer != null;
-
+ final l10n=AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -327,7 +328,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isEditing ? 'Optimisez votre offre' : 'Boostez vos ventes',
+                  isEditing ?l10n.optimizeroffre: l10n.bostezlesventes ,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -337,8 +338,8 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                 SizedBox(height: 4),
                 Text(
                  isEditing
-                      ? 'Ajustez les détails pour maximiser l\'impact'
-                      : 'Créez des offres irrésistibles qui convertissent',
+                      ?l10n.ajouterdetails 
+                      :l10n.credesoffre ,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.9),
                     fontSize: 14,
@@ -353,6 +354,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
   }
 
   Widget _buildFormCard() {
+    final l10n =AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -386,7 +388,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                 ),
                 SizedBox(width: 12),
                 Text(
-                  'Détails de l\'offre',
+                 l10n.detailoffre ,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -408,6 +410,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
   }
 
   Widget _buildSubmitSection() {
+    final l10n=AppLocalizations.of(context)!;
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -457,7 +460,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                         ),
                         SizedBox(width: 12),
                         Text(
-                          'Création en cours...',
+                          l10n.creationencours,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -472,7 +475,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                         ),
                         SizedBox(width: 12),
                         Text(
-                          'Créer l\'offre',
+                         l10n.creeoffre ,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

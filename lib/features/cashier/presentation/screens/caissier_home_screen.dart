@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/recompenses_disponibles_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
+import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
 class CaissierHomeScreen extends StatelessWidget {
   final _montantController = TextEditingController();
@@ -9,11 +10,12 @@ class CaissierHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text(
-          'Espace Caissier',
+        title:  Text(
+        l10n.espacecaisier  ,
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.white,
@@ -39,20 +41,21 @@ class CaissierHomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildWelcomeHeader(),
+            _buildWelcomeHeader(context),
             const SizedBox(height: 24),
-            _buildQuickStats(),
+            _buildQuickStats(context),
             const SizedBox(height: 32),
             _buildMainActions(context),
             const SizedBox(height: 24),
-            _buildHelpSection(),
+            _buildHelpSection(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildWelcomeHeader() {
+  Widget _buildWelcomeHeader(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -89,8 +92,8 @@ class CaissierHomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Bienvenue dans votre espace',
+          Text(
+           l10n.bienvenucaissier ,
             style: TextStyle(
               fontSize: 18,
               color: Colors.white70,
@@ -98,8 +101,8 @@ class CaissierHomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Interface Caissier',
+           Text(
+           l10n.interfacecaissier ,
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -107,8 +110,8 @@ class CaissierHomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Gérez facilement les comptes clients et leurs soldes',
+           Text(
+         l10n.gererfacilementcomptes  ,
             style: TextStyle(
               fontSize: 16,
               color: Colors.white70,
@@ -120,14 +123,15 @@ class CaissierHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickStats() {
+  Widget _buildQuickStats(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Expanded(
           child: _buildStatCard(
             icon: Icons.account_balance_wallet,
-            title: 'Soldes',
-            subtitle: 'Gérés aujourd\'hui',
+            title: l10n.solde,
+            subtitle:l10n.gerer,
             color: Colors.green,
           ),
         ),
@@ -135,8 +139,8 @@ class CaissierHomeScreen extends StatelessWidget {
         Expanded(
           child: _buildStatCard(
             icon: Icons.trending_up,
-            title: 'Transactions',
-            subtitle: 'Effectuées',
+            title:l10n.transaction ,
+            subtitle: l10n.effectuee,
             color: Colors.blue,
           ),
         ),
@@ -199,11 +203,12 @@ class CaissierHomeScreen extends StatelessWidget {
   }
 
   Widget _buildMainActions(BuildContext context) {
+     final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Actions Principales',
+         Text(
+          l10n.actionprincipale,
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -219,6 +224,7 @@ class CaissierHomeScreen extends StatelessWidget {
   }
 
   Widget _buildAddBalanceCard(BuildContext context) {
+      final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -253,12 +259,12 @@ class CaissierHomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                const Expanded(
+                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Ajouter du Solde',
+                       l10n.ajoutersolde,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -267,7 +273,7 @@ class CaissierHomeScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'Rechargez le compte d\'un client en scannant son QR code',
+                       l10n.rechargezcompte ,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
@@ -294,7 +300,7 @@ class CaissierHomeScreen extends StatelessWidget {
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     decoration: InputDecoration(
-                      labelText: 'Montant à ajouter',
+                      labelText: l10n.montantajouter,
                       labelStyle: TextStyle(color: Colors.grey[600]),
                       hintText: '0.00',
                       hintStyle: TextStyle(color: Colors.grey[400]),
@@ -332,7 +338,7 @@ class CaissierHomeScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Entrez le montant puis scannez le QR code du client',
+                        l10n.scanerajoutermontant ,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.blue[600],
@@ -351,8 +357,8 @@ class CaissierHomeScreen extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () => _handleAddBalance(context),
                 icon: const Icon(Icons.qr_code_scanner, size: 24),
-                label: const Text(
-                  'Scanner Client',
+                label:  Text(
+                 l10n.scannercleint,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -373,6 +379,7 @@ class CaissierHomeScreen extends StatelessWidget {
   }
 
   Widget _buildRewardsCard(BuildContext context) {
+      final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -407,12 +414,12 @@ class CaissierHomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                const Expanded(
+                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Gérer les Récompenses',
+                     l10n.gererrecompence  ,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -421,7 +428,7 @@ class CaissierHomeScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'Aidez les clients à consulter et réclamer leurs récompenses',
+                     l10n.aidezclientconsulterrecompence  ,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
@@ -445,9 +452,9 @@ class CaissierHomeScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.stars, size: 20, color: Colors.purple[600]),
                   const SizedBox(width: 12),
-                  const Expanded(
+                   Expanded(
                     child: Text(
-                      'Scannez le QR code du client pour accéder à ses récompenses',
+                 l10n.scannerrecompence  ,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -464,8 +471,8 @@ class CaissierHomeScreen extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () => _handleViewRewards(context),
                 icon: const Icon(Icons.qr_code_scanner, size: 24),
-                label: const Text(
-                  'Scanner pour Récompenses',
+                label:  Text(
+                 l10n.scannerrecompenceqr ,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -485,7 +492,8 @@ class CaissierHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHelpSection() {
+  Widget _buildHelpSection(BuildContext context) {
+      final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -501,7 +509,7 @@ class CaissierHomeScreen extends StatelessWidget {
               Icon(Icons.help_outline, color: Colors.blue[600], size: 24),
               const SizedBox(width: 12),
               Text(
-                'Comment ça marche ?',
+              l10n.commentmarche  ,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -513,20 +521,20 @@ class CaissierHomeScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _buildHelpStep(
             number: '1',
-            title: 'Ajouter du solde',
-            description: 'Entrez le montant et scannez le QR code pour recharger le compte client',
+            title: l10n.ajoutersolde,
+            description:l10n.scanerajoutermontant
           ),
           const SizedBox(height: 12),
           _buildHelpStep(
             number: '2',
-            title: 'Gérer les récompenses',
-            description: 'Scannez le QR code pour voir les récompenses disponibles du client',
+            title: l10n.gererrecompence,
+            description: l10n.scannerrecompence,
           ),
           const SizedBox(height: 12),
           _buildHelpStep(
             number: '3',
-            title: 'Validation',
-            description: 'Confirmez les transactions et informez le client des changements',
+            title:l10n.validation ,
+            description:l10n.confiremeztransaction ,
           ),
         ],
       ),
@@ -589,6 +597,7 @@ class CaissierHomeScreen extends StatelessWidget {
   }
 
  Future<void> _handleAddBalance(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
   // 1️⃣  Parse du montant (on accepte aussi la virgule comme séparateur)
   final montantTxt = _montantController.text.replaceAll(',', '.');
   final montant = double.tryParse(montantTxt);
@@ -596,11 +605,11 @@ class CaissierHomeScreen extends StatelessWidget {
   if (montant == null || montant <= 0) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Row(
+        content:  Row(
           children: [
             Icon(Icons.error, color: Colors.white),
             SizedBox(width: 12),
-            Text('Veuillez entrer un montant valide (> 0)'),
+            Text(l10n.veuillez),
           ],
         ),
         backgroundColor: Colors.red,
@@ -627,7 +636,7 @@ class CaissierHomeScreen extends StatelessWidget {
           children: [
             const Icon(Icons.check_circle, color: Colors.white),
             const SizedBox(width: 12),
-            Text('Solde de ${montant.toStringAsFixed(2)} DH ajouté avec succès !'),
+            Text(l10n.soldede+'${montant.toStringAsFixed(2)}'+l10n.dhajoute),
           ],
         ),
         backgroundColor: Colors.green,

@@ -13,6 +13,11 @@ import 'package:mukhlissmagasin/features/cashier/domain/usecases/ajouter_solde.d
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/charger_recompenses_usecase.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/reclamer_recompense_usecase.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
+import 'package:mukhlissmagasin/features/language/data/datasources/locale_datasource.dart';
+import 'package:mukhlissmagasin/features/language/data/datasources/shared_prefs_datasource.dart';
+import 'package:mukhlissmagasin/features/language/data/repositories/locale_repository_impl.dart';
+import 'package:mukhlissmagasin/features/language/domain/repositories/local_repository.dart';
+import 'package:mukhlissmagasin/features/language/domain/usecases/changeluanguage.dart';
 import 'package:mukhlissmagasin/features/offers/data/datasources/offer_remote_data_source.dart';
 import 'package:mukhlissmagasin/features/offers/data/repositories/offer_repository_impl.dart';
 import 'package:mukhlissmagasin/features/offers/domain/repositories/offer_repository.dart';
@@ -20,6 +25,12 @@ import 'package:mukhlissmagasin/features/offers/domain/usecases/add_offer_usecas
 import 'package:mukhlissmagasin/features/offers/domain/usecases/delete_offer_usecase.dart';
 import 'package:mukhlissmagasin/features/offers/domain/usecases/edit_offer_usecase.dart';
 import 'package:mukhlissmagasin/features/offers/domain/usecases/get_offers_usecase.dart';
+import 'package:mukhlissmagasin/features/profile/data/datasource/profile_remote_data_source.dart';
+import 'package:mukhlissmagasin/features/profile/data/repositories/user_repository_impl.dart';
+import 'package:mukhlissmagasin/features/profile/domain/repositories/user_repository.dart';
+import 'package:mukhlissmagasin/features/profile/domain/usescases/get_user_usecase.dart';
+import 'package:mukhlissmagasin/features/profile/domain/usescases/update_user_usecase.dart';
+import 'package:mukhlissmagasin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:mukhlissmagasin/features/rewards/data/datasources/reward_remote_data_source.dart';
 import 'package:mukhlissmagasin/features/rewards/data/repositories/reward_repository_impl.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/repositories/reward_repository.dart';
@@ -132,5 +143,28 @@ getIt.registerFactory(() => CaissierCubit(
   chargerRecompensesClient: getIt(),
   reclamerRecompense: getIt(),
 ));
-  
+// Language dependencies
+getIt.registerLazySingleton<LocaleDatasource>(() => SharedPrefsLocaleDatasource());
+getIt.registerLazySingleton<LocaleRepository>(() => LocaleRepositoryImpl(getIt()));
+getIt.registerLazySingleton(() => GetLocale(getIt()));
+getIt.registerLazySingleton(() => SaveLocale(getIt()));
+  //profile
+getIt.registerLazySingleton<ProfileRemoteDataSource>(
+  () => ProfileRemoteDataSource(), // Make sure this implementation exists
+);
+getIt.registerLazySingleton<UserRepository>(
+  () => UserRepositoryImpl(
+    getIt<ProfileRemoteDataSource>(),
+    getIt<AuthRepository>(),
+  ),
+);
+// Add these right after the UserRepository registration
+getIt.registerLazySingleton(() => UpdateUserUsecase(getIt<UserRepository>()));
+getIt.registerLazySingleton(() => GetUserUsecase(getIt<UserRepository>()));
+
+// Then register the ProfileCubit
+getIt.registerFactory(() => ProfileCubit(
+  getIt<UpdateUserUsecase>(),
+  getIt<GetUserUsecase>(),
+));
 }

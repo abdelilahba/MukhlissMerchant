@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_cubit.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/managers/reward_manager.dart';
+import 'package:mukhlissmagasin/l10n/app_localizations.dart';
+import 'package:mukhlissmagasin/l10n/l10n.dart';
 
 class AddRewardScreen extends StatefulWidget {
   final Reward? reward; // Add optional reward parameter for editing
@@ -184,6 +186,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
 
   Widget _buildModernAppBar() {
     final isEditing = widget.reward != null;
+  final l10n = AppLocalizations.of(context)!;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
@@ -215,7 +218,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               child: Column(
                 children: [
                   Text(
-                    isEditing ? 'Modifier Récompense' : 'Nouvelle Récompense',
+                    isEditing ? l10n.modifierrecompence  :l10n.creerecompence ,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -225,8 +228,8 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                   SizedBox(height: 2),
                   Text(
                     isEditing 
-                        ? 'Modifiez votre récompense existante'
-                        : 'Créez une récompense attractive pour fidéliser',
+                        ?l10n.modifierrecompence 
+                        : l10n.creeunerecompenceattractive ,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade600,
@@ -254,6 +257,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   Widget _buildFormContent() {
+    
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -285,6 +289,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   Widget _buildWelcomeSection() {
+     final l10n = AppLocalizations.of(context)!;
     final isEditing = widget.reward != null;
     return Container(
       padding: EdgeInsets.all(20),
@@ -324,7 +329,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isEditing ? 'Peaufinez votre récompense' : 'Fidélisez vos clients',
+                  isEditing ? l10n.peaufinez : l10n.fidelisezclient,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -334,8 +339,8 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 SizedBox(height: 4),
                 Text(
                   isEditing
-                      ? 'Ajustez les détails pour optimiser l\'engagement'
-                      : 'Créez des récompenses qui incitent au retour',
+                      ? l10n.ajusterlesdetails
+                      :l10n.creerecompencesquiincitent ,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.9),
                     fontSize: 14,
@@ -350,6 +355,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   Widget _buildFormCard() {
+  final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -385,7 +391,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                   ),
                   SizedBox(width: 12),
                   Text(
-                    'Détails de la Récompense',
+                   l10n.detailsrecompence,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -408,6 +414,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   Widget _buildRewardNameField() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -420,7 +427,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
             ),
             SizedBox(width: 8),
             Text(
-              'Description de la récompense',
+            l10n.descriptionrecompence  ,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -431,7 +438,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
         ),
         SizedBox(height: 8),
         Text(
-          'Ex: "1 burger gratuit", "Café offert", "10% de réduction"',
+          l10n.exemplerecompence,
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey.shade600,
@@ -451,7 +458,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               color: Colors.grey.shade800,
             ),
             decoration: InputDecoration(
-              hintText: 'Entrez la description de la récompense...',
+              hintText:l10n.entrerladescription ,
               hintStyle: TextStyle(
                 color: Colors.grey.shade500,
                 fontSize: 15,
@@ -464,7 +471,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 size: 20,
               ),
             ),
-            validator: (value) => value?.isEmpty ?? true ? 'La description est requise' : null,
+            validator: (value) => value?.isEmpty ?? true ?l10n.descriptionrequise : null,
           ),
         ),
       ],
@@ -473,6 +480,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
 
  
   Widget _buildPointsField() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -485,7 +493,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
             ),
             SizedBox(width: 8),
             Text(
-              'Points requis',
+            l10n.pointrequise  ,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
@@ -523,7 +531,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 color: Colors.amber.shade600,
 
               ),
-              suffixText: 'pts',
+              suffixText: l10n.pts,
               suffixStyle: TextStyle(
                 color: Colors.amber.shade600,
                 fontWeight: FontWeight.w600,
@@ -531,9 +539,9 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               ),
             ),
             validator: (value) {
-              if (value?.isEmpty ?? true) return 'Les points sont requis';
-              if (int.tryParse(value!) == null) return 'Nombre invalide';
-              if (int.parse(value) <= 0) return 'Doit être supérieur à 0';
+              if (value?.isEmpty ?? true) return l10n.pointrequismessage;
+              if (int.tryParse(value!) == null) return l10n.nombreinvaliide ;
+              if (int.parse(value) <= 0) return l10n.doitetresuperieur ;
               return null;
             },
           ),
@@ -544,6 +552,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
 
   Widget _buildSubmitSection() {
     final isEditing = widget.reward != null;
+      final l10n = AppLocalizations.of(context)!;
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -593,7 +602,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                         ),
                         SizedBox(width: 12),
                         Text(
-                          isEditing ? 'Modification en cours...' : 'Création en cours...',
+                          isEditing ?l10n.modificationencour  : l10n.creationencours,
                           style: TextStyle(
                             color: Colors.white,
 
@@ -608,7 +617,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                         ),
                         SizedBox(width: 12),
                         Text(
-                          isEditing ? 'Enregistrer les modifications' : 'Créer la récompense',
+                          isEditing ? l10n.enredisterlesmodifiaction  : l10n.creerecompence ,
                           style: TextStyle(
                             color: Colors.white,
             

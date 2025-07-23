@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
+import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
 class RewardCard extends StatefulWidget {
   final Reward reward;
@@ -77,7 +78,7 @@ class _RewardCardState extends State<RewardCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+    final l10n = AppLocalizations.of(context)!;
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -255,8 +256,8 @@ class _RewardCardState extends State<RewardCard>
                                             ),
                                           ),
                                         ),
-                                        const Text(
-                                          'pts',
+                                         Text(
+                                         l10n.point ,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
@@ -298,7 +299,7 @@ class _RewardCardState extends State<RewardCard>
                                   
                                   // Points requirement
                                   Text(
-                                    'Échangeable avec ${widget.reward.requiredPoints} points',
+                                    l10n.echange+' ${widget.reward.requiredPoints}'+l10n.point,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: isDark 
@@ -326,7 +327,7 @@ class _RewardCardState extends State<RewardCard>
                                     children: [
                                       Icon(Icons.edit, size: 20, color: theme.primaryColor),
                                       const SizedBox(width: 8),
-                                      const Text('Modifier'),
+                                       Text(l10n.modifier),
                                     ],
                                   ),
                                 ),
@@ -336,7 +337,7 @@ class _RewardCardState extends State<RewardCard>
                                     children: [
                                       Icon(Icons.delete, size: 20, color: Colors.red),
                                       const SizedBox(width: 8),
-                                      const Text('Supprimer'),
+                                       Text(l10n.supprimer),
                                     ],
                                   ),
                                 ),

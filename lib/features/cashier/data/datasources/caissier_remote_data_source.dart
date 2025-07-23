@@ -197,19 +197,21 @@ class CaissierRemoteDataSource {
       // 3. Invalider les caches liés à ce client
       _invalidateClientCache(clientId, magasinId);
 
-      // 4. Record the reward claim (commenté dans l'original)
-      // await supabase.from('reward_claims').insert({
-      //   'client_id': clientId,
-      //   'magasin_id': magasinId,
-      //   'reward_id': rewardId,
-      //   'points_used': pointsRequired,
-      //   'claimed_at': DateTime.now().toIso8601String(),
-      //   'status': 'claimed',
-      // });
+     // 4. Record the reward claim (commenté dans l'original)
+      await supabase.from('reward_claims').insert({
+        'client_id': clientId,
+        'reward_id': rewardId,
+        'points_used': pointsRequired,
+        'claimed_at': DateTime.now().toIso8601String(),
+        'status': 'claimed',
+      });
+      print('succees');
     } catch (e) {
+      print('Erreur lors de la récupération de la récompense: ${e.toString()}');
       throw Exception(
         'Erreur lors de la récupération de la récompense: ${e.toString()}',
       );
+      
     }
   }
 

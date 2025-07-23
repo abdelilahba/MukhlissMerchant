@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dart';
+import 'package:mukhlissmagasin/l10n/app_localizations.dart';
+
 
 class OfferCard extends StatefulWidget {
   final Offer offer;
@@ -73,7 +75,7 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+   final l10n = AppLocalizations.of(context)!;
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -251,8 +253,8 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                             ),
                                           ),
                                         ),
-                                        const Text(
-                                          'pts',
+                                         Text(
+                                        l10n.pts ,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
@@ -294,7 +296,7 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                   
                                   // Points given
                                   Text(
-                                    '${widget.offer.pointsGiven} points de fidélité',
+                                    '${widget.offer.pointsGiven}'+l10n.pointfidelite,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: isDark 
@@ -322,7 +324,7 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                     children: [
                                       Icon(Icons.edit, size: 20, color: theme.primaryColor),
                                       const SizedBox(width: 8),
-                                      const Text('Modifier'),
+                                       Text(l10n.modifier),
                                     ],
                                   ),
                                 ),
@@ -332,7 +334,7 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                     children: [
                                       Icon(Icons.delete, size: 20, color: Colors.red),
                                       const SizedBox(width: 8),
-                                      const Text('Supprimer'),
+                                       Text(l10n.supprimer),
                                     ],
                                   ),
                                 ),

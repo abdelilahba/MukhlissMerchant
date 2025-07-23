@@ -6,6 +6,8 @@ import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dar
 import 'package:mukhlissmagasin/features/offers/presentation/cubit/offer_cubit.dart';
 import 'package:mukhlissmagasin/features/offers/presentation/managers/offer_manager.dart';
 
+import '../../../../l10n/app_localizations.dart';
+
 class OffersScreen extends StatelessWidget {
   const OffersScreen({super.key});
 
@@ -24,8 +26,9 @@ class OffersScreen extends StatelessWidget {
   }
 
   AppBar _buildAppBar(BuildContext context, OfferManager manager) {
+   final l10n = AppLocalizations.of(context)!;
     return AppBar(
-      title: const Text('Offres spéciales', 
+      title:  Text(l10n.offrespeciale, 
         style: TextStyle(fontWeight: FontWeight.bold)),
       centerTitle: true,
       leading: Builder(
