@@ -4,6 +4,7 @@ import 'package:mukhlissmagasin/core/di/injection_container.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mukhlissmagasin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:mukhlissmagasin/features/auth/presentation/screens/auth_wrapper.dart';
+import 'package:mukhlissmagasin/features/auth/presentation/screens/login_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart' show CaissierCubit;
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/caissier_home_screen.dart';
 import 'package:mukhlissmagasin/features/language/domain/usecases/changeluanguage.dart';
@@ -72,7 +73,8 @@ void main() async {
     getIt(),  // First parameter: UpdateUserUsecase
     getIt(),     // Second parameter: GetUserUsecase
   ),
-)
+)  ,
+ //
       ],
       child: const MyApp(),
     ),
@@ -112,6 +114,7 @@ class _MyAppState extends State<MyApp> {
             '/rewards': (context) => const RewardsScreen(),
             '/caissiers': (context) => CaissierHomeScreen(),
             '/profile':(context)=> ProfileScreen(),
+            '/login' :(context)=>LoginScreen(),
           },
         );
       },

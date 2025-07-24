@@ -136,8 +136,18 @@
 "qrcodeinvalide":"Invalid QR code: Incorrect format",
 "erreurtraitement":"Error while processing:",
 "qrreconu":"QR recognized",
-"navigation":"Navigation"
-
+"navigation":"Navigation",
+"confirmation":"Confirmation",
+"etevoussur":"Are you sure you want to log out?",
+"connecterpourcontinuer":"Log in to continue",
+"email":"E-mail address",
+"veuillezsaisiremail":"Please enter your email",
+"formatinvalid":"Invalid email format",
+"motpasse":"Password",
+"veuillezsaisirpassword":"Please enter your password",
+"motpassecotenir":"Password must contain at least 6 characters",
+"connexion":"Connection...",
+"seconnecter":"Log in"
 
 
 }

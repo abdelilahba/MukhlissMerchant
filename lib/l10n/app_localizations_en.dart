@@ -287,7 +287,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nomcomplet => 'Full name';
 
   @override
-  String get email => 'E-mail';
+  String get email => 'E-mail address';
 
   @override
   String get phone => 'Phone Number';
@@ -420,4 +420,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navigation => 'Navigation';
+
+  @override
+  String get confirmation => 'Confirmation';
+
+  @override
+  String get etevoussur => 'Are you sure you want to log out?';
+
+  @override
+  String get connecterpourcontinuer => 'Log in to continue';
+
+  @override
+  String get veuillezsaisiremail => 'Please enter your email';
+
+  @override
+  String get formatinvalid => 'Invalid email format';
+
+  @override
+  String get motpasse => 'Password';
+
+  @override
+  String get veuillezsaisirpassword => 'Please enter your password';
+
+  @override
+  String get motpassecotenir => 'Password must contain at least 6 characters';
+
+  @override
+  String get connexion => 'Connection...';
+
+  @override
+  String get seconnecter => 'Log in';
 }
