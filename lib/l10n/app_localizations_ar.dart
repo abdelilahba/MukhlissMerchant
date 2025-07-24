@@ -114,8 +114,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get modifierrecompence => 'عدِّل مكافأتك الحالية';
 
   @override
-  String get creeunerecompenceattractive =>
-      ' قم بكسب ولاء عملائك من خلال عرض حصري';
+  String get creeunerecompenceattractive => ' قم بكسب ولاء عملائك من خلال عرض حصري';
 
   @override
   String get modifierrecompenceexiste => 'Edit your existing reward';
@@ -139,8 +138,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get descriptionrecompence => 'وصف المكافأة';
 
   @override
-  String get exemplerecompence =>
-      'على سبيل المثال: برغر مجاني، قهوة مجانية، وخصم 10٪';
+  String get exemplerecompence => 'على سبيل المثال: برغر مجاني، قهوة مجانية، وخصم 10٪';
 
   @override
   String get entrerladescription => 'أدخل وصف المكافأة...';
@@ -200,15 +198,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ajoutersolde => 'إضافة رصيد';
 
   @override
-  String get rechargezcompte =>
-      'اشحن حساب العميل بمسح رمز الاستجابة السريعة الخاص به';
+  String get rechargezcompte => 'اشحن حساب العميل بمسح رمز الاستجابة السريعة الخاص به';
 
   @override
   String get montantajouter => 'المبلغ المراد إضافته';
 
   @override
-  String get scanerajoutermontant =>
-      'أدخل المبلغ ثم امسح رمز الاستجابة السريعة للعميل';
+  String get scanerajoutermontant => 'أدخل المبلغ ثم امسح رمز الاستجابة السريعة للعميل';
 
   @override
   String get scannercleint => 'مسح العميل';
@@ -217,12 +213,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get gererrecompence => 'إدارة المكافآت';
 
   @override
-  String get aidezclientconsulterrecompence =>
-      'ساعد العملاء على الاطلاع والمطالبة بمكافآتهم';
+  String get aidezclientconsulterrecompence => 'ساعد العملاء على الاطلاع والمطالبة بمكافآتهم';
 
   @override
-  String get scannerrecompence =>
-      'امسح رمز الاستجابة السريعة للعميل للوصول إلى مكافآته';
+  String get scannerrecompence => 'امسح رمز الاستجابة السريعة للعميل للوصول إلى مكافآته';
 
   @override
   String get scannerrecompenceqr => 'امسح للمكافآت';

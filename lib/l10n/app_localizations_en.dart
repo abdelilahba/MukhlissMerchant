@@ -51,8 +51,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get modifieroffreexiste => 'Modify your existing offer';
 
   @override
-  String get ajouternoouveauoffre =>
-      'Create an attractive offer for your customers';
+  String get ajouternoouveauoffre => 'Create an attractive offer for your customers';
 
   @override
   String get bostezlesventes => 'Boost your sales';
@@ -76,8 +75,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get creeoffre => 'Create the offer';
 
   @override
-  String get ajusterlesdetails =>
-      'Ajustez les détails pour maximiser l\'impact';
+  String get ajusterlesdetails => 'Ajustez les détails pour maximiser l\'impact';
 
   @override
   String get mantant => 'Amount (DH)';
@@ -116,8 +114,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get modifierrecompence => 'Edit Reward';
 
   @override
-  String get creeunerecompenceattractive =>
-      'Create an attractive reward to build loyalty';
+  String get creeunerecompenceattractive => 'Create an attractive reward to build loyalty';
 
   @override
   String get modifierrecompenceexiste => 'Edit your existing reward';
@@ -129,8 +126,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get peaufinez => 'Refine your reward';
 
   @override
-  String get creerecompencesquiincitent =>
-      'Create rewards that encourage return visits';
+  String get creerecompencesquiincitent => 'Create rewards that encourage return visits';
 
   @override
   String get ajuusterlesdetails => 'Adjust the details to optimize engagement';
@@ -142,8 +138,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get descriptionrecompence => 'Description of the reward';
 
   @override
-  String get exemplerecompence =>
-      'Ex: 1 burger gratuit, Café offert, 10% de réduction';
+  String get exemplerecompence => 'Ex: 1 burger gratuit, Café offert, 10% de réduction';
 
   @override
   String get entrerladescription => 'Enter the reward description...';
@@ -182,8 +177,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get interfacecaissier => 'Cashier Interface';
 
   @override
-  String get gererfacilementcomptes =>
-      'Easily manage customer accounts and their balances';
+  String get gererfacilementcomptes => 'Easily manage customer accounts and their balances';
 
   @override
   String get solde => 'Sales';
@@ -204,15 +198,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ajoutersolde => 'Add Balance';
 
   @override
-  String get rechargezcompte =>
-      'Top up a customer\'s account by scanning their QR code';
+  String get rechargezcompte => 'Top up a customer\'s account by scanning their QR code';
 
   @override
   String get montantajouter => 'Amount to add';
 
   @override
-  String get scanerajoutermontant =>
-      'Enter the amount then scan the customer\'s QR code';
+  String get scanerajoutermontant => 'Enter the amount then scan the customer\'s QR code';
 
   @override
   String get scannercleint => 'Client Scanner';
@@ -221,12 +213,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gererrecompence => 'Manage Rewards';
 
   @override
-  String get aidezclientconsulterrecompence =>
-      'Help customers view and claim their rewards';
+  String get aidezclientconsulterrecompence => 'Help customers view and claim their rewards';
 
   @override
-  String get scannerrecompence =>
-      'Scan the customer\'s QR code to access their rewards';
+  String get scannerrecompence => 'Scan the customer\'s QR code to access their rewards';
 
   @override
   String get scannerrecompenceqr => 'Scanner for Rewards';
@@ -238,8 +228,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validation => 'Validation';
 
   @override
-  String get confiremeztransaction =>
-      'Confirm transactions and notify the customer of changes';
+  String get confiremeztransaction => 'Confirm transactions and notify the customer of changes';
 
   @override
   String get veuillez => 'Please enter a valid amount (> 0)';

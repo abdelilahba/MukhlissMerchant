@@ -51,8 +51,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get modifieroffreexiste => 'Modifiez votre offre existante';
 
   @override
-  String get ajouternoouveauoffre =>
-      'Créez une offre attractive pour vos clients';
+  String get ajouternoouveauoffre => 'Créez une offre attractive pour vos clients';
 
   @override
   String get bostezlesventes => 'Boostez vos ventes';
@@ -76,8 +75,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get creeoffre => 'Créer l\'offre';
 
   @override
-  String get ajusterlesdetails =>
-      'Ajustez les détails pour maximiser l\'impact';
+  String get ajusterlesdetails => 'Ajustez les détails pour maximiser l\'impact';
 
   @override
   String get mantant => 'Montant (DH)';
@@ -116,8 +114,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get modifierrecompence => 'Modifier Récompense';
 
   @override
-  String get creeunerecompenceattractive =>
-      'Créez une récompense attractive pour fidéliser';
+  String get creeunerecompenceattractive => 'Créez une récompense attractive pour fidéliser';
 
   @override
   String get modifierrecompenceexiste => 'Modifiez votre récompense existante';
@@ -129,12 +126,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get peaufinez => 'Peaufinez votre récompense';
 
   @override
-  String get creerecompencesquiincitent =>
-      'Créez des récompenses qui incitent au retour';
+  String get creerecompencesquiincitent => 'Créez des récompenses qui incitent au retour';
 
   @override
-  String get ajuusterlesdetails =>
-      'Ajustez les détails pour optimiser l\'engagement';
+  String get ajuusterlesdetails => 'Ajustez les détails pour optimiser l\'engagement';
 
   @override
   String get detailsrecompence => 'Détails de la Récompense';
@@ -143,8 +138,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get descriptionrecompence => 'Description de la récompense';
 
   @override
-  String get exemplerecompence =>
-      'Ex: 1 burger gratuit, Café offert, 10% de réduction';
+  String get exemplerecompence => 'Ex: 1 burger gratuit, Café offert, 10% de réduction';
 
   @override
   String get entrerladescription => 'Entrez la description de la récompense...';
@@ -183,8 +177,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get interfacecaissier => 'Interface Caissier';
 
   @override
-  String get gererfacilementcomptes =>
-      'Gérez facilement les comptes clients et leurs soldes';
+  String get gererfacilementcomptes => 'Gérez facilement les comptes clients et leurs soldes';
 
   @override
   String get solde => 'Soldes';
@@ -205,15 +198,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ajoutersolde => 'Ajouter du Solde';
 
   @override
-  String get rechargezcompte =>
-      'Rechargez le compte d\'un client en scannant son QR code';
+  String get rechargezcompte => 'Rechargez le compte d\'un client en scannant son QR code';
 
   @override
   String get montantajouter => 'Montant à ajouter';
 
   @override
-  String get scanerajoutermontant =>
-      'Entrez le montant puis scannez le QR code du client';
+  String get scanerajoutermontant => 'Entrez le montant puis scannez le QR code du client';
 
   @override
   String get scannercleint => 'Scanner Client';
@@ -222,12 +213,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get gererrecompence => 'Gérer les Récompenses';
 
   @override
-  String get aidezclientconsulterrecompence =>
-      'Aidez les clients à consulter et réclamer leurs récompenses';
+  String get aidezclientconsulterrecompence => 'Aidez les clients à consulter et réclamer leurs récompenses';
 
   @override
-  String get scannerrecompence =>
-      'Scannez le QR code du client pour accéder à ses récompenses';
+  String get scannerrecompence => 'Scannez le QR code du client pour accéder à ses récompenses';
 
   @override
   String get scannerrecompenceqr => 'Scanner pour Récompenses';
@@ -239,8 +228,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get validation => 'Validation';
 
   @override
-  String get confiremeztransaction =>
-      'Confirmez les transactions et informez le client des changements';
+  String get confiremeztransaction => 'Confirmez les transactions et informez le client des changements';
 
   @override
   String get veuillez => 'Veuillez entrer un montant valide (> 0)';

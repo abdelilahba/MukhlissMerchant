@@ -48,7 +48,7 @@ void main() async {
         ),
       BlocProvider(
     create: (context) => LanguageCubit(
-    getLocale: getIt<GetLocale>(),  // Notez le camelCase et le type explicite
+    getLocale: getIt<GetLocale>(),  
     saveLocale: getIt<SaveLocale>(),
       ),
       ),
