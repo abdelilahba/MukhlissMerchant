@@ -147,7 +147,21 @@
 "veuillezsaisirpassword":"يرجى إدخال كلمة المرور",
 "motpassecotenir":"يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
 "connexion":"جارٍ تسجيل الدخول...",
-"seconnecter":"تسجيل الدخول"
+"seconnecter":"تسجيل الدخول",
+"decouvrezmeilleures":"اكتشف أفضل عروضنا",
+"gererrecompenses":"قم بإدارة مكافآتك بسهولة",
+"trouvermeilleur":"اعثر على الهدية المثالية من بين أفضل عروضنا",
+"chargementoffres":"جاري تحميل العروض...",
+"aucunoffre":"لا توجد عروض متاحة",
+"commencezparcree":"ابدأ بإنشاء أول عرض لك لجذب العملاء",
+"offresupprimersucces":"تم حذف العرض بنجاح",
+"supprimeroffre":"حذف العرض",
+"etesvoussur":"هل أنت متأكد أنك تريد حذف هذا العرض؟ لا يمكن التراجع عن هذا الإجراء.",
+"supprimerrecompence":"حذف المكافأة",
+"etesvoussurdesupprimerrecompense":"هل أنت متأكد من رغبتك في حذف هذه المكافأة؟ هذا الإجراء غير قابل للاسترجاع."
+
+
+
 
 
 

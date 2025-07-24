@@ -957,6 +957,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log in'**
   String get seconnecter;
+
+  /// No description provided for @decouvrezmeilleures.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover our best promotions'**
+  String get decouvrezmeilleures;
+
+  /// No description provided for @gererrecompenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your rewards easily in Arabic'**
+  String get gererrecompenses;
+
+  /// No description provided for @trouvermeilleur.
+  ///
+  /// In en, this message translates to:
+  /// **'Find the perfect gift among our best offers'**
+  String get trouvermeilleur;
+
+  /// No description provided for @chargementoffres.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading offers...'**
+  String get chargementoffres;
+
+  /// No description provided for @aucunoffre.
+  ///
+  /// In en, this message translates to:
+  /// **'No offers available'**
+  String get aucunoffre;
+
+  /// No description provided for @commencezparcree.
+  ///
+  /// In en, this message translates to:
+  /// **'Start by creating your first offer to attract your customers'**
+  String get commencezparcree;
+
+  /// No description provided for @offresupprimersucces.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer successfully deleted'**
+  String get offresupprimersucces;
+
+  /// No description provided for @supprimeroffre.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete offer'**
+  String get supprimeroffre;
+
+  /// No description provided for @etesvoussur.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this offer? This action is irreversible.'**
+  String get etesvoussur;
+
+  /// No description provided for @supprimerrecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove reward'**
+  String get supprimerrecompence;
+
+  /// No description provided for @etesvoussurdesupprimerrecompense.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this reward? This action is irreversible.'**
+  String get etesvoussurdesupprimerrecompense;
 }
 
 class _AppLocalizationsDelegate

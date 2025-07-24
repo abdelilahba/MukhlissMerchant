@@ -443,4 +443,39 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get seconnecter => 'تسجيل الدخول';
+
+  @override
+  String get decouvrezmeilleures => 'اكتشف أفضل عروضنا';
+
+  @override
+  String get gererrecompenses => 'قم بإدارة مكافآتك بسهولة';
+
+  @override
+  String get trouvermeilleur => 'اعثر على الهدية المثالية من بين أفضل عروضنا';
+
+  @override
+  String get chargementoffres => 'جاري تحميل العروض...';
+
+  @override
+  String get aucunoffre => 'لا توجد عروض متاحة';
+
+  @override
+  String get commencezparcree => 'ابدأ بإنشاء أول عرض لك لجذب العملاء';
+
+  @override
+  String get offresupprimersucces => 'تم حذف العرض بنجاح';
+
+  @override
+  String get supprimeroffre => 'حذف العرض';
+
+  @override
+  String get etesvoussur =>
+      'هل أنت متأكد أنك تريد حذف هذا العرض؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get supprimerrecompence => 'حذف المكافأة';
+
+  @override
+  String get etesvoussurdesupprimerrecompense =>
+      'هل أنت متأكد من رغبتك في حذف هذه المكافأة؟ هذا الإجراء غير قابل للاسترجاع.';
 }

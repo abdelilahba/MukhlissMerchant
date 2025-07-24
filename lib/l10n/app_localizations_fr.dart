@@ -455,4 +455,41 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get seconnecter => 'Se connecter';
+
+  @override
+  String get decouvrezmeilleures => 'Découvrez nos meilleures promotions';
+
+  @override
+  String get gererrecompenses => 'Gérez vos récompenses facilement';
+
+  @override
+  String get trouvermeilleur =>
+      'Trouvez le cadeau parfait parmi nos meilleures offres';
+
+  @override
+  String get chargementoffres => 'Chargement des offres...';
+
+  @override
+  String get aucunoffre => 'Aucune offre disponible';
+
+  @override
+  String get commencezparcree =>
+      'Commencez par créer votre première offre pour attirer vos clients';
+
+  @override
+  String get offresupprimersucces => 'Offre supprimée avec succès';
+
+  @override
+  String get supprimeroffre => 'Supprimer l\'offre';
+
+  @override
+  String get etesvoussur =>
+      'Êtes-vous sûr de vouloir supprimer cette offre ? Cette action est irréversible.';
+
+  @override
+  String get supprimerrecompence => 'Supprimer la récompense';
+
+  @override
+  String get etesvoussurdesupprimerrecompense =>
+      'Êtes-vous sûr de vouloir supprimer cette récompense ? Cette action est irréversible.';
 }

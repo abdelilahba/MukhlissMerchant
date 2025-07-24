@@ -6,10 +6,17 @@ import 'package:mukhlissmagasin/features/auth/presentation/cubit/auth_cubit.dart
 import 'package:mukhlissmagasin/features/auth/presentation/cubit/auth_state.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
-class LoginScreen extends StatelessWidget {
+
+
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+ bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -173,9 +180,9 @@ class LoginScreen extends StatelessWidget {
                               // Champ Mot de passe amélioré
                               TextFormField(
                                 controller: _passwordController,
-                                obscureText: true,
+                                obscureText: _obscurePassword,
                                 style: TextStyle(
-                                  color:  Colors.black ,
+                     
                                 ),
                                 decoration: InputDecoration(
                                   labelText: L10n.motpasse,
@@ -188,11 +195,13 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
-                                      Icons.visibility_outlined,
+                                     _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
                                       color: Colors.grey.shade500,
                                     ),
                                     onPressed: () {
-                                      // Ajouter la logique pour afficher/masquer le mot de passe
+                                       setState(() {
+                                   _obscurePassword = !_obscurePassword;
+                                            });
                                     },
                                   ),
                                   border: OutlineInputBorder(

@@ -450,4 +450,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seconnecter => 'Log in';
+
+  @override
+  String get decouvrezmeilleures => 'Discover our best promotions';
+
+  @override
+  String get gererrecompenses => 'Manage your rewards easily in Arabic';
+
+  @override
+  String get trouvermeilleur => 'Find the perfect gift among our best offers';
+
+  @override
+  String get chargementoffres => 'Loading offers...';
+
+  @override
+  String get aucunoffre => 'No offers available';
+
+  @override
+  String get commencezparcree =>
+      'Start by creating your first offer to attract your customers';
+
+  @override
+  String get offresupprimersucces => 'Offer successfully deleted';
+
+  @override
+  String get supprimeroffre => 'Delete offer';
+
+  @override
+  String get etesvoussur =>
+      'Are you sure you want to delete this offer? This action is irreversible.';
+
+  @override
+  String get supprimerrecompence => 'Remove reward';
+
+  @override
+  String get etesvoussurdesupprimerrecompense =>
+      'Are you sure you want to delete this reward? This action is irreversible.';
 }
