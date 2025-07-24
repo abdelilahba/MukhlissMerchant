@@ -637,7 +637,7 @@ abstract class AppLocalizations {
   /// No description provided for @email.
   ///
   /// In en, this message translates to:
-  /// **'E-mail'**
+  /// **'E-mail address'**
   String get email;
 
   /// No description provided for @phone.
@@ -897,6 +897,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Navigation'**
   String get navigation;
+
+  /// No description provided for @confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmation'**
+  String get confirmation;
+
+  /// No description provided for @etevoussur.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get etevoussur;
+
+  /// No description provided for @connecterpourcontinuer.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in to continue'**
+  String get connecterpourcontinuer;
+
+  /// No description provided for @veuillezsaisiremail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get veuillezsaisiremail;
+
+  /// No description provided for @formatinvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email format'**
+  String get formatinvalid;
+
+  /// No description provided for @motpasse.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get motpasse;
+
+  /// No description provided for @veuillezsaisirpassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get veuillezsaisirpassword;
+
+  /// No description provided for @motpassecotenir.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least 6 characters'**
+  String get motpassecotenir;
+
+  /// No description provided for @connexion.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection...'**
+  String get connexion;
+
+  /// No description provided for @seconnecter.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in'**
+  String get seconnecter;
 }
 
 class _AppLocalizationsDelegate

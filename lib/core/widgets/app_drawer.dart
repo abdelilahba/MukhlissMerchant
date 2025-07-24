@@ -346,18 +346,18 @@ class AppDrawer extends StatelessWidget {
                 size: 28,
               ),
               const SizedBox(width: 12),
-              Text('Confirmation'),
+              Text(l10n.confirmation),
             ],
           ),
           content: Text(
-            'Êtes-vous sûr de vouloir vous déconnecter ?',
+          l10n.etevoussur ,
             style: TextStyle(fontSize: 16),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
-                'Annuler',
+               l10n.annuler ,
                 style: TextStyle(
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500,
@@ -368,6 +368,10 @@ class AppDrawer extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop();
                 context.read<AuthCubit>().logout();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                '/login', // Route de votre page de login
+                (Route<dynamic> route) => false, // Supprime toutes les routes
+              );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,

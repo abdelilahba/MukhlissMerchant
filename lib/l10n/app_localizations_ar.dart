@@ -282,7 +282,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get nomcomplet => 'الاسم الكامل';
 
   @override
-  String get email => 'البريد الإلكتروني';
+  String get email => 'عنوان البريد الإلكتروني';
 
   @override
   String get phone => 'رقم الهاتف';
@@ -413,4 +413,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get navigation => 'تصفح';
+
+  @override
+  String get confirmation => 'تأكيد ';
+
+  @override
+  String get etevoussur => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get connecterpourcontinuer => 'يرجى تسجيل الدخول للمتابعة';
+
+  @override
+  String get veuillezsaisiremail => 'يرجى إدخال بريدك الإلكتروني';
+
+  @override
+  String get formatinvalid => 'صيغة البريد الإلكتروني غير صحيحة';
+
+  @override
+  String get motpasse => 'كلمة المرور';
+
+  @override
+  String get veuillezsaisirpassword => 'يرجى إدخال كلمة المرور';
+
+  @override
+  String get motpassecotenir => 'يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل';
+
+  @override
+  String get connexion => 'جارٍ تسجيل الدخول...';
+
+  @override
+  String get seconnecter => 'تسجيل الدخول';
 }

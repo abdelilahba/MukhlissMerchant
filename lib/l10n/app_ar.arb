@@ -136,8 +136,18 @@
 "qrcodeinvalide":"رمز الاستجابة السريعة غير صالح: تنسيق غير صحيح",
 "erreurtraitement":"حدث خطأ أثناء المعالجة:",
 "qrreconu":"تم التعرف على رمز QR",
-"navigation":"تصفح"
-
+"navigation":"تصفح",
+"confirmation":"تأكيد ",
+"etevoussur":"هل أنت متأكد أنك تريد تسجيل الخروج؟",
+"connecterpourcontinuer":"يرجى تسجيل الدخول للمتابعة",
+"email":"عنوان البريد الإلكتروني",
+"veuillezsaisiremail":"يرجى إدخال بريدك الإلكتروني",
+"formatinvalid":"صيغة البريد الإلكتروني غير صحيحة",
+"motpasse":"كلمة المرور",
+"veuillezsaisirpassword":"يرجى إدخال كلمة المرور",
+"motpassecotenir":"يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
+"connexion":"جارٍ تسجيل الدخول...",
+"seconnecter":"تسجيل الدخول"
 
 
 

@@ -135,5 +135,16 @@
 "qrcodeinvalide":"QR code invalide: Format incorrect",
 "erreurtraitement":"Erreur lors du traitement: ",
 "qrreconu":"QR reconnu",
-"navigation":"Navigation"
+"navigation":"Navigation",
+"confirmation":"Confirmation",
+"etevoussur":"Êtes-vous sûr de vouloir vous déconnecter ?",
+"connecterpourcontinuer":"Connectez-vous pour continuer",
+"email":"Adresse email",
+"veuillezsaisiremail":"Veuillez saisir votre email",
+"formatinvalid":"Format d'email invalide",
+"motpasse":"Mot de passe",
+"veuillezsaisirpassword":"Veuillez saisir votre mot de passe",
+"motpassecotenir":"Le mot de passe doit contenir au moins 6 caractères",
+"connexion":"Connexion...",
+"seconnecter":"Se connecter"
 }
