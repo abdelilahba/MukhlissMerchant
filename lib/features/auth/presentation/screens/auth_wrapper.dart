@@ -26,7 +26,7 @@ import 'package:mukhlissmagasin/features/auth/presentation/screens/login_screen.
             Navigator.pushNamedAndRemoveUntil(
               // ignore: use_build_context_synchronously
               context,
-              '/offers',
+              '/caissiers',
               (route) => false,
             );
           });

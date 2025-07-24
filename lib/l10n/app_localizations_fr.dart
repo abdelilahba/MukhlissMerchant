@@ -78,7 +78,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ajusterlesdetails => 'Ajustez les détails pour maximiser l\'impact';
 
   @override
-  String get mantant => 'Montant (DH)';
+  String get mantant => 'Montant';
 
   @override
   String get requis => 'Requis';
@@ -297,7 +297,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get laisserviede => 'Laissez vide pour ne pas changer';
 
   @override
-  String get confirmer => 'Confirmer le mot de passe';
+  String get confirmer => 'Confirmer';
 
   @override
   String get champsrequis => 'Ce champ est requis';
@@ -310,4 +310,100 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get galerie => 'Galerie';
+
+  @override
+  String get cout => 'Coût';
+
+  @override
+  String get newsolde => 'Nouveau solde';
+
+  @override
+  String get annuler => 'Annuler';
+
+  @override
+  String get confirmerechange => 'Confirmer l\'échange';
+
+  @override
+  String get descriptionnondisponible => 'Description non disponible';
+
+  @override
+  String get ilvousmanque => 'Il vous manque';
+
+  @override
+  String get disponible => 'Disponible';
+
+  @override
+  String get chargementdesrecompences => 'Chargement des récompenses...';
+
+  @override
+  String get oups => 'Oups ! Une erreur est survenue';
+
+  @override
+  String get ressayer => 'Réessayer';
+
+  @override
+  String get choisissezrecompence => 'Choisissez une récompense qui vous fait plaisir';
+
+  @override
+  String get aucunerecompence => 'Aucune récompense disponible';
+
+  @override
+  String get revenez => 'Revenez plus tard pour découvrir nos nouvelles récompenses exclusives';
+
+  @override
+  String get felicitation => 'Félicitations';
+
+  @override
+  String get vousvenezgagner => 'Vous venez de gagner';
+
+  @override
+  String get points => 'points';
+
+  @override
+  String get solderestant => 'Solde restant';
+
+  @override
+  String get terminer => 'Terminé';
+
+  @override
+  String get scannerajoutersolde => 'Scanner Client - Ajouter Solde';
+
+  @override
+  String get scannervoiroffre => 'Scanner Client - Voir Offres';
+
+  @override
+  String get chnangercamera => 'Changer de caméra';
+
+  @override
+  String get scannerpourajoutersolde => 'Scannez le QR code du client pour ajouter du solde';
+
+  @override
+  String get scannerpourvoiroffre => 'Scannez le QR code du client pour voir les offres';
+
+  @override
+  String get vousserezrederigervers => 'Après ajout du solde, vous serez redirigé vers les offres disponibles';
+
+  @override
+  String get dh => 'DH';
+
+  @override
+  String get ajoutencour => 'Ajout du solde en cours...';
+
+  @override
+  String get traitementencouor => 'Traitement en cours...';
+
+  @override
+  String get redirectionversoffres => 'Redirection vers les offres après ajout...';
+
+  @override
+  String get qrcodeinvalide => 'QR code invalide: Format incorrect';
+
+  @override
+  String get erreurtraitement => 'Erreur lors du traitement: ';
+
+  @override
+  String get qrreconu => 'QR reconnu';
+
+  @override
+  String get navigation => 'Navigation';
 }

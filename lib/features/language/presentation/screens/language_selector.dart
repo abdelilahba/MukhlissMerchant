@@ -46,13 +46,15 @@ class LanguageSelector extends StatelessWidget {
       ),
       child: Column(
         children: [
-          //  IconButton(
-          //          icon: const Icon(),
-          //     onPressed: () {
-          //       Navigator.of(context).pop();
-          //     },
-          //      ),
-          // Header
+        Container(
+                  margin: const EdgeInsets.only(top: 12),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(

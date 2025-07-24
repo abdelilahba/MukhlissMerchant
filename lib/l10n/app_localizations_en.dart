@@ -78,7 +78,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ajusterlesdetails => 'Ajustez les détails pour maximiser l\'impact';
 
   @override
-  String get mantant => 'Amount (DH)';
+  String get mantant => 'Amount';
 
   @override
   String get requis => 'Required';
@@ -297,7 +297,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get laisserviede => 'Leave blank to not change';
 
   @override
-  String get confirmer => 'Confirm password';
+  String get confirmer => 'Confirm';
 
   @override
   String get champsrequis => 'This field is required';
@@ -310,4 +310,100 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get galerie => 'Gallery';
+
+  @override
+  String get cout => 'Cost';
+
+  @override
+  String get newsolde => 'New balance';
+
+  @override
+  String get annuler => 'Cancel';
+
+  @override
+  String get confirmerechange => 'Confirm the exchange';
+
+  @override
+  String get descriptionnondisponible => 'Description not available';
+
+  @override
+  String get ilvousmanque => 'you miss';
+
+  @override
+  String get disponible => 'Available';
+
+  @override
+  String get chargementdesrecompences => 'Loading rewards...';
+
+  @override
+  String get oups => 'Oops! An error has occurred';
+
+  @override
+  String get ressayer => 'Try again';
+
+  @override
+  String get choisissezrecompence => 'Choose a reward that makes you happy';
+
+  @override
+  String get aucunerecompence => 'No rewards available';
+
+  @override
+  String get revenez => 'Come back later to discover our new exclusive rewards';
+
+  @override
+  String get felicitation => 'Congratulations';
+
+  @override
+  String get vousvenezgagner => 'You just won';
+
+  @override
+  String get points => 'points';
+
+  @override
+  String get solderestant => 'Remaining balance';
+
+  @override
+  String get terminer => 'Finished';
+
+  @override
+  String get scannerajoutersolde => 'Customer Scanner - Add Balance';
+
+  @override
+  String get scannervoiroffre => 'Customer Scanner - See Offers';
+
+  @override
+  String get chnangercamera => 'Change camera';
+
+  @override
+  String get scannerpourajoutersolde => 'Scan the customer\'s QR code to add balance';
+
+  @override
+  String get scannerpourvoiroffre => 'Scan the customer\'s QR code to see offers';
+
+  @override
+  String get vousserezrederigervers => 'After adding the balance, you will be redirected to the available offers';
+
+  @override
+  String get dh => 'DH';
+
+  @override
+  String get ajoutencour => 'Adding current balance...';
+
+  @override
+  String get traitementencouor => 'Processing in progress...';
+
+  @override
+  String get redirectionversoffres => 'Redirection to offers after adding...';
+
+  @override
+  String get qrcodeinvalide => 'Invalid QR code: Incorrect format';
+
+  @override
+  String get erreurtraitement => 'Error while processing:';
+
+  @override
+  String get qrreconu => 'QR recognized';
+
+  @override
+  String get navigation => 'Navigation';
 }
