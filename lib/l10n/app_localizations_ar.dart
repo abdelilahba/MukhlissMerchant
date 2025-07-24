@@ -30,7 +30,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pointfidelite => 'نقاط الولاء';
 
   @override
-  String get pts => 'نقـط';
+  String get pts => 'نقاط';
 
   @override
   String get modifier => 'تعديل';
@@ -78,7 +78,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ajusterlesdetails => 'عدّل التفاصيل لتعظيم التأثير';
 
   @override
-  String get mantant => 'المبلغ (درهم)';
+  String get mantant => 'المبلغ';
 
   @override
   String get requis => 'حقل مطلوب ';
@@ -303,7 +303,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get laisserviede => 'اترك الحقل فارغًا لعدم التغيير';
 
   @override
-  String get confirmer => 'تأكيد كلمة المرور';
+  String get confirmer => 'تأكيد';
 
   @override
   String get champsrequis => 'هذا الحقل مطلوب';
@@ -316,4 +316,101 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get galerie => 'معرض الصور';
+
+  @override
+  String get cout => 'تكلفة';
+
+  @override
+  String get newsolde => 'الرصيد الجديد';
+
+  @override
+  String get annuler => 'إلغاء';
+
+  @override
+  String get confirmerechange => 'تأكيد التبادل';
+
+  @override
+  String get descriptionnondisponible => 'الوصف غير متوفر';
+
+  @override
+  String get ilvousmanque => 'ينقصك';
+
+  @override
+  String get disponible => 'متوفر';
+
+  @override
+  String get chargementdesrecompences => 'جارٍ تحميل المكافآت...';
+
+  @override
+  String get oups => 'عفوًا! حدث خطأ ما';
+
+  @override
+  String get ressayer => 'أعد المحاولة';
+
+  @override
+  String get choisissezrecompence => 'اختر مكافأة تُسعدك';
+
+  @override
+  String get aucunerecompence => 'لا مكافآت متاحة';
+
+  @override
+  String get revenez => 'عد لاحقًا لاكتشاف مكافآتنا الحصرية الجديدة';
+
+  @override
+  String get felicitation => 'مبروك';
+
+  @override
+  String get vousvenezgagner => 'لقد ربحت للتو';
+
+  @override
+  String get points => 'نقاط';
+
+  @override
+  String get solderestant => 'الرصيد المتبقي';
+
+  @override
+  String get terminer => 'تم';
+
+  @override
+  String get scannerajoutersolde => 'مسح العميل - إضافة رصيد';
+
+  @override
+  String get scannervoiroffre => 'مسح العميل - عرض العروض';
+
+  @override
+  String get chnangercamera => 'تغيير الكاميرا';
+
+  @override
+  String get scannerpourajoutersolde => 'امسح رمز QR الخاص بالعميل لإضافة رصيد';
+
+  @override
+  String get scannerpourvoiroffre => 'امسح رمز QR الخاص بالعميل لعرض العروض';
+
+  @override
+  String get vousserezrederigervers =>
+      'بعد إضافة الرصيد، سيتم توجيهك إلى العروض المتاحة';
+
+  @override
+  String get dh => 'درهم';
+
+  @override
+  String get ajoutencour => 'جارٍ إضافة الرصيد...';
+
+  @override
+  String get traitementencouor => 'جارٍ المعالجة...';
+
+  @override
+  String get redirectionversoffres => 'إعادة التوجيه إلى العروض بعد الإضافة...';
+
+  @override
+  String get qrcodeinvalide => 'رمز الاستجابة السريعة غير صالح: تنسيق غير صحيح';
+
+  @override
+  String get erreurtraitement => 'حدث خطأ أثناء المعالجة:';
+
+  @override
+  String get qrreconu => 'تم التعرف على رمز QR';
+
+  @override
+  String get navigation => 'تصفح';
 }

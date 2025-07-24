@@ -9,6 +9,8 @@ import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_re
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/success_screen.dart';
+import 'package:mukhlissmagasin/l10n/app_localizations.dart';
+import 'package:mukhlissmagasin/l10n/l10n.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 enum ScanMode { balance, rewards }
@@ -72,6 +74,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
 
   /// Builds the main scaffold with QR scanner
   Widget _buildScaffold(CaissierState state) {
+    
     return Scaffold(
       appBar: _buildAppBar(),
       body: Stack(
@@ -85,18 +88,19 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
 
   /// Builds the app bar with camera switch button
   PreferredSizeWidget _buildAppBar() {
+    final L10n=AppLocalizations.of(context)!;
     return AppBar(
       title: Text(
         _isBalanceMode
-            ? 'Scanner Client - Ajouter Solde'
-            : 'Scanner Client - Voir Offres',
+            ? L10n.scannerajoutersolde
+            : L10n.scannervoiroffre ,
       ),
       elevation: 0,
       actions: [
         IconButton(
           icon: const Icon(Icons.flip_camera_ios),
           onPressed: _flipCamera,
-          tooltip: 'Changer de caméra',
+          tooltip:L10n.chnangercamera ,
         ),
       ],
     );
@@ -104,6 +108,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> {
 
   /// Builds the main content with QR scanner and info
 Widget _buildMainContent() {
+  final L10n=AppLocalizations.of(context)!;
   return Column(
     children: [
       Expanded(
@@ -129,8 +134,8 @@ Widget _buildMainContent() {
             const SizedBox(height: 8),
             Text(
               _isBalanceMode
-                  ? 'Scannez le QR code du client pour ajouter du solde'
-                  : 'Scannez le QR code du client pour voir les offres',
+                  ?L10n.scannerpourajoutersolde 
+                  : L10n.scannerpourvoiroffre,
               style: const TextStyle(fontSize: 16, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
@@ -139,7 +144,7 @@ Widget _buildMainContent() {
             if (_isBalanceMode) ...[
               const SizedBox(height: 12),
               Text(
-                'Après ajout du solde, vous serez redirigé vers les offres disponibles',
+               L10n.vousserezrederigervers ,
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey.shade600,
@@ -173,6 +178,7 @@ Widget _buildMainContent() {
 
   /// Builds the amount display (only shown in balance mode)
   Widget _buildAmountDisplay() {
+    final L10n=AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -180,7 +186,7 @@ Widget _buildMainContent() {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        'Montant: ${widget.montant!.toStringAsFixed(2)} DH',
+        L10n.mantant+': ${widget.montant!.toStringAsFixed(2)}'+L10n.dh ,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -192,6 +198,7 @@ Widget _buildMainContent() {
 
   /// Builds the loading overlay
   Widget _buildLoadingOverlay() {
+    final L10n=AppLocalizations.of(context)!;
     return Container(
       color: Colors.black54,
       child: Center(
@@ -204,14 +211,14 @@ Widget _buildMainContent() {
             const SizedBox(height: 16),
             Text(
               _isBalanceMode
-                  ? 'Ajout du solde en cours...'
-                  : 'Traitement en cours...',
+                  ? L10n.ajoutencour 
+                  : L10n.traitementencouor,
               style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
             if (_isBalanceMode) ...[
               const SizedBox(height: 8),
-              const Text(
-                'Redirection vers les offres après ajout...',
+               Text(
+               L10n.redirectionversoffres ,
                 style: TextStyle(color: Colors.white70, fontSize: 14),
               ),
             ],
@@ -242,7 +249,7 @@ Widget _buildMainContent() {
   /// Handles successful balance addition - automatically redirects to offers
   /// Handles successful balance addition - automatically redirects to offers and rewards
   Future<void> _handleBalanceAdded(
-    double pointsGagnes,
+     pointsGagnes,
     double soldeRestant,
   ) async {
     await Navigator.push(
@@ -294,6 +301,7 @@ Widget _buildMainContent() {
 
   /// Handles QR code scanning
   Future<void> _handleQRScan(Barcode scanData) async {
+    final L10n =AppLocalizations.of(context)!;
     if (!_canProcessScan(scanData)) return;
 
     _setProcessing(true);
@@ -302,9 +310,9 @@ Widget _buildMainContent() {
     try {
       await _processQRCode(scanData.code!);
     } on FormatException catch (e) {
-      _handleScanError('QR code invalide: Format incorrect', e);
+      _handleScanError(L10n.qrcodeinvalide, e);
     } catch (e) {
-      _handleScanError('Erreur lors du traitement: ${e.toString()}', e);
+      _handleScanError(L10n.erreurtraitement+': ${e.toString()}', e);
     }
   }
 
@@ -315,6 +323,7 @@ Widget _buildMainContent() {
 
   /// Processes the QR code data
   Future<void> _processQRCode(String qrCode) async {
+    final L10n=AppLocalizations.of(context)!;
     final clientData = _parseQRCode(qrCode);
     final currentUser = _getCurrentUser();
     _validateData(clientData, currentUser);
@@ -345,7 +354,7 @@ Widget _buildMainContent() {
     );
 
     await _playSuccessSound();
-    _showSnackBar(message: 'QR reconnu ✔️', backgroundColor: Colors.green);
+    _showSnackBar(message:L10n.qrreconu +'✔️', backgroundColor: Colors.green);
 
     // petite pause esthétique
     await Future.delayed(const Duration(milliseconds: 600));
