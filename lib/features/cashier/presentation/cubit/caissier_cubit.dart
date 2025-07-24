@@ -71,7 +71,7 @@ class CaissierCubit extends Cubit<CaissierState> {
         rewardId: rewardId,
         pointsRequired: pointsRequired,
       );
-      emit(RecompenseReclamee(message: 'Récompense réclamée avec succès'));
+      emit(RecompenseReclamee(message: 'Récompense réclamée avec succès',pointsDeduits:pointsRequired));
     } catch (e) {
       emit(CaissierError(message: e.toString()));
     }

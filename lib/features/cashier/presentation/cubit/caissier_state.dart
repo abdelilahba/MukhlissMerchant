@@ -44,5 +44,6 @@ class RecompensesChargees extends CaissierState {
 
 class RecompenseReclamee extends CaissierState {
   final String message;
-  RecompenseReclamee({required this.message});
+  final int pointsDeduits;
+  RecompenseReclamee({required this.message,required this.pointsDeduits});
 }

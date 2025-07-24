@@ -241,7 +241,7 @@ abstract class AppLocalizations {
   /// No description provided for @mantant.
   ///
   /// In en, this message translates to:
-  /// **'Amount (DH)'**
+  /// **'Amount'**
   String get mantant;
 
   /// No description provided for @requis.
@@ -679,7 +679,7 @@ abstract class AppLocalizations {
   /// No description provided for @confirmer.
   ///
   /// In en, this message translates to:
-  /// **'Confirm password'**
+  /// **'Confirm'**
   String get confirmer;
 
   /// No description provided for @champsrequis.
@@ -705,6 +705,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gallery'**
   String get galerie;
+
+  /// No description provided for @cout.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost'**
+  String get cout;
+
+  /// No description provided for @newsolde.
+  ///
+  /// In en, this message translates to:
+  /// **'New balance'**
+  String get newsolde;
+
+  /// No description provided for @annuler.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get annuler;
+
+  /// No description provided for @confirmerechange.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm the exchange'**
+  String get confirmerechange;
+
+  /// No description provided for @descriptionnondisponible.
+  ///
+  /// In en, this message translates to:
+  /// **'Description not available'**
+  String get descriptionnondisponible;
+
+  /// No description provided for @ilvousmanque.
+  ///
+  /// In en, this message translates to:
+  /// **'you miss'**
+  String get ilvousmanque;
+
+  /// No description provided for @disponible.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get disponible;
+
+  /// No description provided for @chargementdesrecompences.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading rewards...'**
+  String get chargementdesrecompences;
+
+  /// No description provided for @oups.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops! An error has occurred'**
+  String get oups;
+
+  /// No description provided for @ressayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get ressayer;
+
+  /// No description provided for @choisissezrecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a reward that makes you happy'**
+  String get choisissezrecompence;
+
+  /// No description provided for @aucunerecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'No rewards available'**
+  String get aucunerecompence;
+
+  /// No description provided for @revenez.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back later to discover our new exclusive rewards'**
+  String get revenez;
+
+  /// No description provided for @felicitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations'**
+  String get felicitation;
+
+  /// No description provided for @vousvenezgagner.
+  ///
+  /// In en, this message translates to:
+  /// **'You just won'**
+  String get vousvenezgagner;
+
+  /// No description provided for @points.
+  ///
+  /// In en, this message translates to:
+  /// **'points'**
+  String get points;
+
+  /// No description provided for @solderestant.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining balance'**
+  String get solderestant;
+
+  /// No description provided for @terminer.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get terminer;
+
+  /// No description provided for @scannerajoutersolde.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Scanner - Add Balance'**
+  String get scannerajoutersolde;
+
+  /// No description provided for @scannervoiroffre.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Scanner - See Offers'**
+  String get scannervoiroffre;
+
+  /// No description provided for @chnangercamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Change camera'**
+  String get chnangercamera;
+
+  /// No description provided for @scannerpourajoutersolde.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the customer\'s QR code to add balance'**
+  String get scannerpourajoutersolde;
+
+  /// No description provided for @scannerpourvoiroffre.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the customer\'s QR code to see offers'**
+  String get scannerpourvoiroffre;
+
+  /// No description provided for @vousserezrederigervers.
+  ///
+  /// In en, this message translates to:
+  /// **'After adding the balance, you will be redirected to the available offers'**
+  String get vousserezrederigervers;
+
+  /// No description provided for @dh.
+  ///
+  /// In en, this message translates to:
+  /// **'DH'**
+  String get dh;
+
+  /// No description provided for @ajoutencour.
+  ///
+  /// In en, this message translates to:
+  /// **'Adding current balance...'**
+  String get ajoutencour;
+
+  /// No description provided for @traitementencouor.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing in progress...'**
+  String get traitementencouor;
+
+  /// No description provided for @redirectionversoffres.
+  ///
+  /// In en, this message translates to:
+  /// **'Redirection to offers after adding...'**
+  String get redirectionversoffres;
+
+  /// No description provided for @qrcodeinvalide.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid QR code: Incorrect format'**
+  String get qrcodeinvalide;
+
+  /// No description provided for @erreurtraitement.
+  ///
+  /// In en, this message translates to:
+  /// **'Error while processing:'**
+  String get erreurtraitement;
+
+  /// No description provided for @qrreconu.
+  ///
+  /// In en, this message translates to:
+  /// **'QR recognized'**
+  String get qrreconu;
+
+  /// No description provided for @navigation.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation'**
+  String get navigation;
 }
 
 class _AppLocalizationsDelegate

@@ -1,41 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:mukhlissmagasin/core/widgets/app_drawer.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/recompenses_disponibles_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
 class CaissierHomeScreen extends StatelessWidget {
   final _montantController = TextEditingController();
-
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   CaissierHomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+       key: _scaffoldKey, 
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title:  Text(
         l10n.espacecaisier  ,
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
+    
         backgroundColor: Colors.white,
         foregroundColor: Colors.grey[800],
         elevation: 0,
         centerTitle: true,
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            child: CircleAvatar(
-              backgroundColor: Colors.blue[100],
-              child: Icon(
-                Icons.person,
-                color: Colors.blue[700],
-                size: 20,
-              ),
-            ),
-          ),
-        ],
+       
       ),
+        drawer: const AppDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
