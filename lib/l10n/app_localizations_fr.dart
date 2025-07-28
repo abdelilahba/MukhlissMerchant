@@ -168,7 +168,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get modificationencour => 'Modification en cours...';
 
   @override
-  String get creerecompence => 'Créer la récompense';
+  String get creerecompence => 'Créer une récompense';
 
   @override
   String get enredisterlesmodifiaction => 'Enregistrer les modifications';
@@ -492,4 +492,65 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get etesvoussurdesupprimerrecompense =>
       'Êtes-vous sûr de vouloir supprimer cette récompense ? Cette action est irréversible.';
+
+  @override
+  String get optionaffichage => 'Options d\'affichage';
+
+  @override
+  String get grille => 'Grille';
+
+  @override
+  String get liste => 'Liste';
+
+  @override
+  String get statistique => 'Statistiques';
+
+  @override
+  String get totaloffre => 'Total offres:';
+
+  @override
+  String get activee => 'Actives:';
+
+  @override
+  String get tableaubord => 'Tableau de bord';
+
+  @override
+  String get tousoffres => 'Toutes les offres';
+
+  @override
+  String get actualiiser => 'Actualiser';
+
+  @override
+  String get rechercheoffre => 'Rechercher une offre...';
+
+  @override
+  String get gestionoffre => 'Gestion des Offres';
+
+  @override
+  String get gestionrecompences => 'Gestion des récompenses';
+
+  @override
+  String get recherchereward => 'Rechercher une récompence...';
+
+  @override
+  String get filtres => 'Filtres';
+
+  @override
+  String get tous => 'Toutes';
+
+  @override
+  String get actionrapide => 'Actions rapides';
+
+  @override
+  String get rechargerdonnes => 'Recharger les données';
+
+  @override
+  String get totalrecompence => 'Total récompenses';
+
+  @override
+  String get oops => 'Oops! Une erreur s\'est produite';
+
+  @override
+  String get commencezparcreerecompence =>
+      'Commencez par créer votre première récompense pour motiver vos clients';
 }

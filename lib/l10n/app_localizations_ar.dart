@@ -164,7 +164,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get modificationencour => 'جارٍ التعديل...';
 
   @override
-  String get creerecompence => 'أنشئ المكافأة';
+  String get creerecompence => 'إنشاء مكافأة';
 
   @override
   String get enredisterlesmodifiaction => ' حفظ التغييرات';
@@ -478,4 +478,65 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get etesvoussurdesupprimerrecompense =>
       'هل أنت متأكد من رغبتك في حذف هذه المكافأة؟ هذا الإجراء غير قابل للاسترجاع.';
+
+  @override
+  String get optionaffichage => 'خيارات العرض';
+
+  @override
+  String get grille => 'شبكة العرض';
+
+  @override
+  String get liste => 'قائمة';
+
+  @override
+  String get statistique => 'إحصاءات';
+
+  @override
+  String get totaloffre => 'إجمالي العروض:';
+
+  @override
+  String get activee => 'العروض النشطة :';
+
+  @override
+  String get tableaubord => 'لوحة التحكم';
+
+  @override
+  String get tousoffres => 'جميع العروض';
+
+  @override
+  String get actualiiser => 'تحديث';
+
+  @override
+  String get rechercheoffre => 'البحث عن عرض...';
+
+  @override
+  String get gestionoffre => 'إدارة العروض';
+
+  @override
+  String get gestionrecompences => 'إدارة المكافآت';
+
+  @override
+  String get recherchereward => 'البحث عن مكافأة...';
+
+  @override
+  String get filtres => 'مرشحات';
+
+  @override
+  String get tous => 'جميع';
+
+  @override
+  String get actionrapide => 'إجراءات سريعة';
+
+  @override
+  String get rechargerdonnes => 'إعادة تحميل البيانات';
+
+  @override
+  String get totalrecompence => 'إجمالي المكافآت';
+
+  @override
+  String get oops => 'عذرًا! حدث خطأ ما';
+
+  @override
+  String get commencezparcreerecompence =>
+      'ابدأ بإنشاء أول مكافأة لك لتحفيز عملائك';
 }

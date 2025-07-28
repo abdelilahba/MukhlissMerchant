@@ -158,7 +158,32 @@
 "supprimeroffre":"حذف العرض",
 "etesvoussur":"هل أنت متأكد أنك تريد حذف هذا العرض؟ لا يمكن التراجع عن هذا الإجراء.",
 "supprimerrecompence":"حذف المكافأة",
-"etesvoussurdesupprimerrecompense":"هل أنت متأكد من رغبتك في حذف هذه المكافأة؟ هذا الإجراء غير قابل للاسترجاع."
+"etesvoussurdesupprimerrecompense":"هل أنت متأكد من رغبتك في حذف هذه المكافأة؟ هذا الإجراء غير قابل للاسترجاع.",
+"optionaffichage":"خيارات العرض",
+"grille":"شبكة العرض",
+"liste":"قائمة",
+"statistique":"إحصاءات",
+"totaloffre":"إجمالي العروض:",
+"activee":"العروض النشطة :",
+"tableaubord":"لوحة التحكم",
+"tousoffres":"جميع العروض",
+"actualiiser":"تحديث",
+"rechercheoffre":"البحث عن عرض...",
+"gestionoffre":"إدارة العروض",
+"gestionrecompences":"إدارة المكافآت",
+"recherchereward":"البحث عن مكافأة...",
+"filtres":"مرشحات",
+"tous":"جميع",
+"actionrapide":"إجراءات سريعة",
+"creerecompence":"إنشاء مكافأة",
+"rechargerdonnes":"إعادة تحميل البيانات",
+"totalrecompence":"إجمالي المكافآت",
+"oops":"عذرًا! حدث خطأ ما",
+"commencezparcreerecompence":"ابدأ بإنشاء أول مكافأة لك لتحفيز عملائك"
+
+
+
+
 
 
 

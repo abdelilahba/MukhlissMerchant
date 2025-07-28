@@ -86,9 +86,9 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
             onTapUp: _onTapUp,
             onTapCancel: _onTapCancel,
             child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
                     color: isDark 
@@ -103,12 +103,12 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                         ? Colors.white.withOpacity(0.02)
                         : Colors.white.withOpacity(0.8),
                     blurRadius: 10,
-                    offset: const Offset(0, -2),
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(16),
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
