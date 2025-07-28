@@ -276,7 +276,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get nomcomplet => 'Nom complet';
 
   @override
-  String get email => 'Email';
+  String get email => 'Adresse email';
 
   @override
   String get phone => 'Téléphone';
@@ -406,4 +406,34 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get navigation => 'Navigation';
+
+  @override
+  String get confirmation => 'Confirmation';
+
+  @override
+  String get etevoussur => 'Êtes-vous sûr de vouloir vous déconnecter ?';
+
+  @override
+  String get connecterpourcontinuer => 'Connectez-vous pour continuer';
+
+  @override
+  String get veuillezsaisiremail => 'Veuillez saisir votre email';
+
+  @override
+  String get formatinvalid => 'Format d\'email invalide';
+
+  @override
+  String get motpasse => 'Mot de passe';
+
+  @override
+  String get veuillezsaisirpassword => 'Veuillez saisir votre mot de passe';
+
+  @override
+  String get motpassecotenir => 'Le mot de passe doit contenir au moins 6 caractères';
+
+  @override
+  String get connexion => 'Connexion...';
+
+  @override
+  String get seconnecter => 'Se connecter';
 }

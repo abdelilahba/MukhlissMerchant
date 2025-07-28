@@ -346,11 +346,11 @@ class AppDrawer extends StatelessWidget {
                 size: 28,
               ),
               const SizedBox(width: 12),
-              Text(l10n.acceuil),
+              Text(l10n.confirmation),
             ],
           ),
           content: Text(
-          l10n.acceuil ,
+          l10n.etevoussur ,
             style: TextStyle(fontSize: 16),
           ),
           actions: [
