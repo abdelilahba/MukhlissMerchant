@@ -157,5 +157,27 @@
 "supprimeroffre":"Supprimer l'offre",
 "etesvoussur":"Êtes-vous sûr de vouloir supprimer cette offre ? Cette action est irréversible.",
 "supprimerrecompence":"Supprimer la récompense",
-"etesvoussurdesupprimerrecompense":"Êtes-vous sûr de vouloir supprimer cette récompense ? Cette action est irréversible."
-}
+"etesvoussurdesupprimerrecompense":"Êtes-vous sûr de vouloir supprimer cette récompense ? Cette action est irréversible.",
+"optionaffichage":"Options d'affichage",
+"grille":"Grille",
+"liste":"Liste",
+"statistique":"Statistiques",
+"totaloffre":"Total offres:",
+"activee":"Actives:",
+"tableaubord":"Tableau de bord",
+"tousoffres":"Toutes les offres",
+"actualiiser":"Actualiser",
+"rechercheoffre":"Rechercher une offre...",
+"gestionoffre":"Gestion des Offres",
+"gestionrecompences":"Gestion des récompenses",
+"recherchereward":"Rechercher une récompence...",
+"filtres":"Filtres",
+"tous":"Toutes",
+"actionrapide":"Actions rapides",
+"creerecompence":"Créer une récompense",
+"rechargerdonnes":"Recharger les données",
+"totalrecompence":"Total récompenses",
+"oops":"Oops! Une erreur s'est produite",
+"commencezparcreerecompence":"Commencez par créer votre première récompense pour motiver vos clients"
+
+} 

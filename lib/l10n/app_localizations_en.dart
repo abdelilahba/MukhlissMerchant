@@ -167,7 +167,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get modificationencour => 'Modification in progress...';
 
   @override
-  String get creerecompence => 'Create the reward';
+  String get creerecompence => 'Create a reward';
 
   @override
   String get enredisterlesmodifiaction => 'Save changes';
@@ -486,4 +486,65 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get etesvoussurdesupprimerrecompense =>
       'Are you sure you want to delete this reward? This action is irreversible.';
+
+  @override
+  String get optionaffichage => 'Display options';
+
+  @override
+  String get grille => 'Grid';
+
+  @override
+  String get liste => 'List';
+
+  @override
+  String get statistique => 'Statistics';
+
+  @override
+  String get totaloffre => 'Total offers:';
+
+  @override
+  String get activee => 'Active:';
+
+  @override
+  String get tableaubord => 'Dashboard';
+
+  @override
+  String get tousoffres => 'All offers';
+
+  @override
+  String get actualiiser => 'Refresh';
+
+  @override
+  String get rechercheoffre => 'Search for an offer...';
+
+  @override
+  String get gestionoffre => 'Offer Management';
+
+  @override
+  String get gestionrecompences => 'Rewards management';
+
+  @override
+  String get recherchereward => 'Looking for a reward...';
+
+  @override
+  String get filtres => 'Filters';
+
+  @override
+  String get tous => 'الجميع';
+
+  @override
+  String get actionrapide => 'Quick Actions';
+
+  @override
+  String get rechargerdonnes => 'Reload data';
+
+  @override
+  String get totalrecompence => 'Total rewards';
+
+  @override
+  String get oops => 'Oops! An error has occurred';
+
+  @override
+  String get commencezparcreerecompence =>
+      'Start by creating your first reward to motivate your customers';
 }

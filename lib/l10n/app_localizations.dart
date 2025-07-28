@@ -409,7 +409,7 @@ abstract class AppLocalizations {
   /// No description provided for @creerecompence.
   ///
   /// In en, this message translates to:
-  /// **'Create the reward'**
+  /// **'Create a reward'**
   String get creerecompence;
 
   /// No description provided for @enredisterlesmodifiaction.
@@ -1023,6 +1023,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this reward? This action is irreversible.'**
   String get etesvoussurdesupprimerrecompense;
+
+  /// No description provided for @optionaffichage.
+  ///
+  /// In en, this message translates to:
+  /// **'Display options'**
+  String get optionaffichage;
+
+  /// No description provided for @grille.
+  ///
+  /// In en, this message translates to:
+  /// **'Grid'**
+  String get grille;
+
+  /// No description provided for @liste.
+  ///
+  /// In en, this message translates to:
+  /// **'List'**
+  String get liste;
+
+  /// No description provided for @statistique.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statistique;
+
+  /// No description provided for @totaloffre.
+  ///
+  /// In en, this message translates to:
+  /// **'Total offers:'**
+  String get totaloffre;
+
+  /// No description provided for @activee.
+  ///
+  /// In en, this message translates to:
+  /// **'Active:'**
+  String get activee;
+
+  /// No description provided for @tableaubord.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get tableaubord;
+
+  /// No description provided for @tousoffres.
+  ///
+  /// In en, this message translates to:
+  /// **'All offers'**
+  String get tousoffres;
+
+  /// No description provided for @actualiiser.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get actualiiser;
+
+  /// No description provided for @rechercheoffre.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for an offer...'**
+  String get rechercheoffre;
+
+  /// No description provided for @gestionoffre.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer Management'**
+  String get gestionoffre;
+
+  /// No description provided for @gestionrecompences.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards management'**
+  String get gestionrecompences;
+
+  /// No description provided for @recherchereward.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for a reward...'**
+  String get recherchereward;
+
+  /// No description provided for @filtres.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filtres;
+
+  /// No description provided for @tous.
+  ///
+  /// In en, this message translates to:
+  /// **'الجميع'**
+  String get tous;
+
+  /// No description provided for @actionrapide.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get actionrapide;
+
+  /// No description provided for @rechargerdonnes.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload data'**
+  String get rechargerdonnes;
+
+  /// No description provided for @totalrecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'Total rewards'**
+  String get totalrecompence;
+
+  /// No description provided for @oops.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops! An error has occurred'**
+  String get oops;
+
+  /// No description provided for @commencezparcreerecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'Start by creating your first reward to motivate your customers'**
+  String get commencezparcreerecompence;
 }
 
 class _AppLocalizationsDelegate
