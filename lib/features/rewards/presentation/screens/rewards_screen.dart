@@ -603,32 +603,42 @@ Widget _buildTopBar(BuildContext context, RewardManager manager) {
         
         // Barre de recherche
         Expanded(
-          child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 100),
-                  child:Container(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(12),
+  child: Align(
+    alignment: Alignment.centerLeft,
+    child: ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 300), // Largeur réduite à 80
+      child: Container(
+        height: 36, // Hauteur légèrement réduite
+        decoration: BoxDecoration(
+          color:  Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: l10n.recherchereward,
+            hintStyle: TextStyle(fontSize: 15), // Texte plus petit
+            prefixIcon: Icon(Icons.search, 
+                           color: Colors.grey.shade500,
+                           size: 18), // Icône plus petite
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14, // Padding horizontal réduit
+              vertical: 12,   // Padding vertical réduit
             ),
-           child: TextField(
-  decoration: InputDecoration(
-    hintText:l10n.recherchereward ,
-    prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
-    border: InputBorder.none,
-    contentPadding: const EdgeInsets.symmetric(
-      horizontal: 12,
-      vertical: 10,
+            isDense: true, // Réduit l'espace interne
+          ),
+          style: TextStyle(fontSize: 12), // Texte de saisie plus petit
+          keyboardType: TextInputType.number,
+          onChanged: (value) {
+            setState(() {
+              _searchQuery = value;
+            });
+          },
+        ),
+      ),
     ),
   ),
-  keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
-            ),)
-          ),
-        ),
+),
       ],
     ),
   );
