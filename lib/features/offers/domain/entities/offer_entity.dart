@@ -2,13 +2,15 @@ class Offer {
   final String id;
   final double minAmount;
   final int pointsGiven;
-  final String magasinId; // Nouveau champ
+  final String magasinId;
+ // Nouveau champ
 
   Offer({
     required this.id,
     required this.minAmount,
     required this.pointsGiven,
     required this.magasinId, // Ajouté
+   
   });
 
   Map<String, dynamic> toJson() {
@@ -17,6 +19,7 @@ class Offer {
       'min_amount': minAmount,
       'points_given': pointsGiven,
       'magasin_id': magasinId, // Ajouté
+    
     };
   }
 
@@ -26,6 +29,7 @@ class Offer {
       minAmount: (json['min_amount'] as num).toDouble(),
       pointsGiven: json['points_given'] as int,
       magasinId: json['magasin_id'] as String, // Ajouté
+     
     );
   }
 
@@ -40,6 +44,7 @@ class Offer {
       minAmount: minAmount ?? this.minAmount,
       pointsGiven: pointsGiven ?? this.pointsGiven,
       magasinId: magasinId ?? this.magasinId, // Ajouté
+      
     );
   }
 }

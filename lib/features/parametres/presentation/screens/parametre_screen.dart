@@ -71,7 +71,26 @@ class _ParametreScreenState extends State<ParametreScreen> with TickerProviderSt
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+      leading: Builder(
+    builder: (context) => Container(
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: IconButton(
+        icon: const Icon(Icons.menu_rounded, color: Colors.black87),
+        onPressed: () => Scaffold.of(context).openDrawer(),
+      ),
+    ),
+  ),
       ),
       drawer: const AppDrawer(),
       body: Stack(

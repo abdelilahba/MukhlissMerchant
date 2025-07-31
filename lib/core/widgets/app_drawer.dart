@@ -17,7 +17,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-  
+  final bool isPermanent;
     
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.85,

@@ -147,7 +147,44 @@
 "veuillezsaisirpassword":"Please enter your password",
 "motpassecotenir":"Password must contain at least 6 characters",
 "connexion":"Connection...",
-"seconnecter":"Log in"
+"seconnecter":"Log in",
+"decouvrezmeilleures":"Discover our best promotions",
+"gererrecompenses":"Manage your rewards easily in Arabic",
+"trouvermeilleur":"Find the perfect gift among our best offers",
+"chargementoffres":"Loading offers...",
+"aucunoffre":"No offers available",
+"commencezparcree":"Start by creating your first offer to attract your customers",
+"offresupprimersucces":"Offer successfully deleted",
+"supprimeroffre":"Delete offer",
+"etesvoussur":"Are you sure you want to delete this offer? This action is irreversible.",
+"supprimerrecompence":"Remove reward",
+"etesvoussurdesupprimerrecompense":"Are you sure you want to delete this reward? This action is irreversible.",
+"optionaffichage":"Display options",
+"grille":"Grid",
+"liste":"List",
+"statistique":"Statistics",
+"totaloffre":"Total offers:",
+"activee":"Active:",
+"tableaubord":"Dashboard",
+"tousoffres":"All offers",
+"actualiiser":"Refresh",
+"rechercheoffre":"Search for an offer...",
+"gestionoffre":"Offer Management",
+"gestionrecompences":"Rewards management",
+"recherchereward":"Looking for a reward...",
+"filtres":"Filters",
+"tous":"الجميع",
+"actionrapide":"Quick Actions",
+"creerecompence":"Create a reward",
+"rechargerdonnes":"Reload data",
+"totalrecompence":"Total rewards",
+"oops":"Oops! An error has occurred",
+"commencezparcreerecompence":"Start by creating your first reward to motivate your customers"
+
+
+
+
+
 
 
 }

@@ -162,7 +162,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get modificationencour => 'جارٍ التعديل...';
 
   @override
-  String get creerecompence => 'أنشئ المكافأة';
+  String get creerecompence => 'إنشاء مكافأة';
 
   @override
   String get enredisterlesmodifiaction => ' حفظ التغييرات';
@@ -436,4 +436,97 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get seconnecter => 'تسجيل الدخول';
+
+  @override
+  String get decouvrezmeilleures => 'اكتشف أفضل عروضنا';
+
+  @override
+  String get gererrecompenses => 'قم بإدارة مكافآتك بسهولة';
+
+  @override
+  String get trouvermeilleur => 'اعثر على الهدية المثالية من بين أفضل عروضنا';
+
+  @override
+  String get chargementoffres => 'جاري تحميل العروض...';
+
+  @override
+  String get aucunoffre => 'لا توجد عروض متاحة';
+
+  @override
+  String get commencezparcree => 'ابدأ بإنشاء أول عرض لك لجذب العملاء';
+
+  @override
+  String get offresupprimersucces => 'تم حذف العرض بنجاح';
+
+  @override
+  String get supprimeroffre => 'حذف العرض';
+
+  @override
+  String get etesvoussur => 'هل أنت متأكد أنك تريد حذف هذا العرض؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get supprimerrecompence => 'حذف المكافأة';
+
+  @override
+  String get etesvoussurdesupprimerrecompense => 'هل أنت متأكد من رغبتك في حذف هذه المكافأة؟ هذا الإجراء غير قابل للاسترجاع.';
+
+  @override
+  String get optionaffichage => 'خيارات العرض';
+
+  @override
+  String get grille => 'شبكة العرض';
+
+  @override
+  String get liste => 'قائمة';
+
+  @override
+  String get statistique => 'إحصاءات';
+
+  @override
+  String get totaloffre => 'إجمالي العروض:';
+
+  @override
+  String get activee => 'العروض النشطة :';
+
+  @override
+  String get tableaubord => 'لوحة التحكم';
+
+  @override
+  String get tousoffres => 'جميع العروض';
+
+  @override
+  String get actualiiser => 'تحديث';
+
+  @override
+  String get rechercheoffre => 'البحث عن عرض...';
+
+  @override
+  String get gestionoffre => 'إدارة العروض';
+
+  @override
+  String get gestionrecompences => 'إدارة المكافآت';
+
+  @override
+  String get recherchereward => 'البحث عن مكافأة...';
+
+  @override
+  String get filtres => 'مرشحات';
+
+  @override
+  String get tous => 'جميع';
+
+  @override
+  String get actionrapide => 'إجراءات سريعة';
+
+  @override
+  String get rechargerdonnes => 'إعادة تحميل البيانات';
+
+  @override
+  String get totalrecompence => 'إجمالي المكافآت';
+
+  @override
+  String get oops => 'عذرًا! حدث خطأ ما';
+
+  @override
+  String get commencezparcreerecompence => 'ابدأ بإنشاء أول مكافأة لك لتحفيز عملائك';
 }

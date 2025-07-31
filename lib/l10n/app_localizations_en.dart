@@ -162,7 +162,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get modificationencour => 'Modification in progress...';
 
   @override
-  String get creerecompence => 'Create the reward';
+  String get creerecompence => 'Create a reward';
 
   @override
   String get enredisterlesmodifiaction => 'Save changes';
@@ -436,4 +436,97 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seconnecter => 'Log in';
+
+  @override
+  String get decouvrezmeilleures => 'Discover our best promotions';
+
+  @override
+  String get gererrecompenses => 'Manage your rewards easily in Arabic';
+
+  @override
+  String get trouvermeilleur => 'Find the perfect gift among our best offers';
+
+  @override
+  String get chargementoffres => 'Loading offers...';
+
+  @override
+  String get aucunoffre => 'No offers available';
+
+  @override
+  String get commencezparcree => 'Start by creating your first offer to attract your customers';
+
+  @override
+  String get offresupprimersucces => 'Offer successfully deleted';
+
+  @override
+  String get supprimeroffre => 'Delete offer';
+
+  @override
+  String get etesvoussur => 'Are you sure you want to delete this offer? This action is irreversible.';
+
+  @override
+  String get supprimerrecompence => 'Remove reward';
+
+  @override
+  String get etesvoussurdesupprimerrecompense => 'Are you sure you want to delete this reward? This action is irreversible.';
+
+  @override
+  String get optionaffichage => 'Display options';
+
+  @override
+  String get grille => 'Grid';
+
+  @override
+  String get liste => 'List';
+
+  @override
+  String get statistique => 'Statistics';
+
+  @override
+  String get totaloffre => 'Total offers:';
+
+  @override
+  String get activee => 'Active:';
+
+  @override
+  String get tableaubord => 'Dashboard';
+
+  @override
+  String get tousoffres => 'All offers';
+
+  @override
+  String get actualiiser => 'Refresh';
+
+  @override
+  String get rechercheoffre => 'Search for an offer...';
+
+  @override
+  String get gestionoffre => 'Offer Management';
+
+  @override
+  String get gestionrecompences => 'Rewards management';
+
+  @override
+  String get recherchereward => 'Looking for a reward...';
+
+  @override
+  String get filtres => 'Filters';
+
+  @override
+  String get tous => 'الجميع';
+
+  @override
+  String get actionrapide => 'Quick Actions';
+
+  @override
+  String get rechargerdonnes => 'Reload data';
+
+  @override
+  String get totalrecompence => 'Total rewards';
+
+  @override
+  String get oops => 'Oops! An error has occurred';
+
+  @override
+  String get commencezparcreerecompence => 'Start by creating your first reward to motivate your customers';
 }
