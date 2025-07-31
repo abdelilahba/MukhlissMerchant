@@ -179,7 +179,27 @@
 "rechargerdonnes":"Reload data",
 "totalrecompence":"Total rewards",
 "oops":"Oops! An error has occurred",
-"commencezparcreerecompence":"Start by creating your first reward to motivate your customers"
+"commencezparcreerecompence":"Start by creating your first reward to motivate your customers",
+"active":"Active",
+"inactif":"inactive",
+"stausoffre":"Offer status",
+"cetteoffreestactuve":"This offer is active and visible to customers",
+"cetteoffreesttemporairement":"This offer is temporarily disabled",
+"ajustez":"Adjust your reward details",
+"creerecompenceattractive":"Create an attractive reward for your customers",
+"peaufinezrecompence":"Refine your reward",
+"nombrepointnecessaire":"Number of points needed to obtain this reward",
+"statusrecompence":"Reward Status",
+"cetterecompencedisponible":"This reward is available to customers",
+"cetterecompenceesttemporairemenrdesactive":"This reward is temporarily disabled",
+"modificationreussi":"Edit successful!",
+"recompencecree":"Reward created!",
+"modiificationonteteenregistre":"The changes have been saved",
+"votrerecompenceestdisponible":"Your reward is now available",
+"errerusurvenu":"Error occurred",
+"exemple":"Ex: \"Free coffee\", \"10% discount\", \"Free product\""
+
+
 
 
 

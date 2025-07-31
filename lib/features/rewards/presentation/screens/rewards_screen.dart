@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/widgets/app_drawer.dart';
 import 'package:mukhlissmagasin/core/widgets/reward_card.dart';
+import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_cubit.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_state.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/managers/reward_manager.dart';
@@ -21,7 +22,7 @@ class _RewardsScreenState extends State<RewardsScreen> with SingleTickerProvider
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
  String _searchQuery = '';
-  
+   bool _isGridView = true;
    String _selectedFilter = 'all'; 
    // all, active, expired
 final TextEditingController _pointsController = TextEditingController();
@@ -164,25 +165,91 @@ final TextEditingController _pointsController = TextEditingController();
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Filtres
+                  //option d afichage
                   Text(
-                   l10n.filtres ,
+                   l10n.optionaffichage ,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.grey.shade800,
                     ),
                   ),
+                  SizedBox(height: 10,),
+                     Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => _isGridView = true),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: _isGridView ? Colors.blue.shade600 : Colors.transparent,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.grid_view_rounded,
+                                    color: _isGridView ? Colors.white : Colors.grey.shade600,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                  l10n.grille  ,
+                                    style: TextStyle(
+                                      color: _isGridView ? Colors.white : Colors.grey.shade600,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => _isGridView = false),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: !_isGridView ? Colors.blue.shade600 : Colors.transparent,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.view_list_rounded,
+                                    color: !_isGridView ? Colors.white : Colors.grey.shade600,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    l10n.liste,
+                                    style: TextStyle(
+                                      color: !_isGridView ? Colors.white : Colors.grey.shade600,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height:16 ,),
+                  // Filtres
+                
                   const SizedBox(height: 16),
-                  
-                  _buildFilterChip(l10n.tous, 'all'),
-                  const SizedBox(height: 8),
-                  _buildFilterChip(l10n.activee, 'active'),
-                  
-                  const SizedBox(height: 32),
-                  
-                  // Statistiques
-                  BlocBuilder<RewardCubit, RewardState>(
+                           BlocBuilder<RewardCubit, RewardState>(
                     builder: (context, state) {
                       if (state is RewardsLoaded) {
                         return _buildStats(context, state.rewards);
@@ -190,10 +257,31 @@ final TextEditingController _pointsController = TextEditingController();
                       return const SizedBox();
                     },
                   ),
-                  
+                   const SizedBox(height: 32),
+                    Text(
+                  l10n.navigation  ,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
+                     const SizedBox(height: 10),
+                 _buildMenuItem(
+                    icon: Icons.dashboard_outlined,
+                    title: l10n.tableaubord ,
+                    onTap: () {
+                      // Navigation vers le dashboard
+                    },
+                  ),
+                  _buildFilterChip(l10n.tous, 'all'),
+                  const SizedBox(height: 8),
+                  _buildFilterChip(l10n.activee, 'active'),
+                
                   const SizedBox(height: 32),
                   
                   // Actions rapides
+                  
                   Text(
                   l10n.actionrapide  ,
                     style: TextStyle(
@@ -203,25 +291,150 @@ final TextEditingController _pointsController = TextEditingController();
                     ),
                   ),
                   const SizedBox(height: 16),
+                   Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => manager.navigateToAddReward(context),
+                    icon: const Icon(Icons.add_rounded),
+                    label: Text(l10n.creerecompence),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade600,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () =>manager.loadRewards(),
+                    icon: const Icon(Icons.refresh_rounded),
+                    label:  Text(l10n.actualiiser),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
                   
-                  _buildQuickAction(
-                    icon: Icons.add_circle_outline,
-                    title: l10n.ajouterrecompence,
-                    subtitle:l10n.creerecompence ,
-                    onTap: () => manager.navigateToAddReward(context),
-                  ),
-                  const SizedBox(height: 12),
-                  _buildQuickAction(
-                    icon: Icons.refresh_rounded,
-                    title:l10n.actualiiser ,
-                    subtitle:l10n.rechargerdonnes ,
-                    onTap: () => manager.loadRewards(),
-                  ),
                 ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+ Widget _buildMenuItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    bool isActive = false,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: isActive ? Colors.blue.shade50 : Colors.transparent,
+              borderRadius: BorderRadius.circular(12),
+              border: isActive ? Border.all(color: Colors.blue.shade200) : null,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 20,
+                  color: isActive ? Colors.blue.shade600 : Colors.grey.shade600,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: isActive ? Colors.blue.shade700 : Colors.grey.shade700,
+                      fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecompencesList(BuildContext context, List<Reward> offers, RewardManager manager) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: TweenAnimationBuilder<double>(
+                duration: Duration(milliseconds: 300 + (index * 50)),
+                tween: Tween(begin: 0.0, end: 1.0),
+                builder: (context, value, child) {
+                  return Transform.translate(
+                    offset: Offset(0, 20 * (1 - value)),
+                    child: Opacity(
+                      opacity: value,
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: SizedBox(
+                            height: 120,
+                            child: RewardCard(
+                              reward: offers[index],
+                              onTap: () => manager.showRewardDetail(offers[index]),
+                             onDelete: () => _showDeleteDialog(context, manager, offers[index].id),
+                             onEdit: () => manager.navigateToEditReward(context, offers[index]),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
+        childCount: offers.length,
       ),
     );
   }
@@ -271,6 +484,7 @@ final TextEditingController _pointsController = TextEditingController();
 
   Widget _buildStats(BuildContext context, List<dynamic> rewards) {
     final L10n=AppLocalizations.of(context)!;
+    final activereward=rewards.where((reward)=>reward.isActive).length;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -303,7 +517,7 @@ final TextEditingController _pointsController = TextEditingController();
           const SizedBox(height: 16),
           _buildStatRow(L10n.totalrecompence, '${rewards.length}'),
           const SizedBox(height: 8),
-          _buildStatRow(L10n.activee, '${rewards.length}'), // À ajuster selon votre logique
+          _buildStatRow(L10n.activee, '${activereward}'), // À ajuster selon votre logique
           
         ],
       ),
@@ -333,66 +547,7 @@ final TextEditingController _pointsController = TextEditingController();
     );
   }
 
-  Widget _buildQuickAction({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, color: Colors.blue.shade600, size: 20),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey.shade400),
-          ],
-        ),
-      ),
-    );
-  }
+ 
 
 Widget _buildTopBar(BuildContext context, RewardManager manager) {
   final l10n = AppLocalizations.of(context)!;
@@ -494,7 +649,14 @@ Widget _buildTopBar(BuildContext context, RewardManager manager) {
           if (state.rewards.isEmpty) {
             return _buildEmptyState(context, manager);
           }
-          return _buildRewardsGrid(state, manager, context);
+          return CustomScrollView(  // Add this
+          slivers: [
+            _isGridView 
+              ? _buildRewardsGrid(state, manager, context)
+              : _buildRewardsList(state, context, manager),
+          ],
+        );
+         
         }
 
         return const SizedBox();
@@ -549,6 +711,7 @@ Widget _buildTopBar(BuildContext context, RewardManager manager) {
   }
 
   Widget _buildErrorState(String message) {
+    final L10n=AppLocalizations.of(context);
     return Center(
       child: Container(
         margin: const EdgeInsets.all(40),
@@ -580,8 +743,8 @@ Widget _buildTopBar(BuildContext context, RewardManager manager) {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Oops! Une erreur s\'est produite',
+             Text(
+             L10n.oups ,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -691,118 +854,71 @@ Widget _buildTopBar(BuildContext context, RewardManager manager) {
     );
   }
 
- Widget _buildRewardsGrid(RewardsLoaded state, RewardManager manager, BuildContext context) {
+Widget _buildRewardsGrid(RewardsLoaded state, RewardManager manager, BuildContext context) {
   final l10n = AppLocalizations.of(context)!;
   
-  // Filtrage des récompenses
   List<dynamic> filteredRewards = state.rewards.where((reward) {
-    if (_searchQuery.isEmpty) return true;
-    final nameMatch = reward.name.toLowerCase().contains(_searchQuery.toLowerCase());
-    bool pointsMatch = false;
-    final points = int.tryParse(_searchQuery);
-    if (points != null) {
-      pointsMatch = reward.requiredPoints == points;
+    // Filtre par statut (nouveau)
+    bool statusMatch = true;
+    if (_selectedFilter == 'active') {
+      statusMatch = reward.isActive == true;
+    } else if (_selectedFilter == 'inactive') {
+      statusMatch = reward.isActive == false;
     }
-    return nameMatch || pointsMatch;
+    // Si _selectedFilter == 'all', on affiche tout (statusMatch reste true)
+    
+    // Filtre par recherche (existant)
+    bool searchMatch = true;
+    if (_searchQuery.isNotEmpty) {
+      final nameMatch = reward.name.toLowerCase().contains(_searchQuery.toLowerCase());
+      bool pointsMatch = false;
+      final points = int.tryParse(_searchQuery);
+      if (points != null) {
+        pointsMatch = reward.requiredPoints == points;
+      }
+      searchMatch = nameMatch || pointsMatch;
+    }
+    
+    return statusMatch && searchMatch;
   }).toList();
 
-  return CustomScrollView(
-    slivers: [
-      // Header avec statistiques et bouton Ajouter
-      SliverToBoxAdapter(
-        child: Container(
-          margin: const EdgeInsets.all(16) ,
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 24),
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.blue.shade50,
-                      Colors.purple.shade50,
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.blue.shade200),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(26),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade100,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Icon(
-                        Icons.stars_rounded,
-                        color: Colors.blue.shade600,
-                        size: 32,
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        
-                        children: [
-                          Text(
-                            '${filteredRewards.length} ${l10n.recompences}',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1F2937),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l10n.gererrecompenses,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // Bouton Ajouter en dessous du header
-            
-             
-            ],
-          ),
-        ),
+  // Si aucune récompense ne correspond aux filtres
+  if (filteredRewards.isEmpty) {
+    return SliverFillRemaining(
+      child: _buildNoResultsState(context, manager),
+    );
+  }
+
+  return SliverPadding(
+    padding: const EdgeInsets.all(16),
+    sliver: SliverGrid(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: MediaQuery.of(context).size.width > 1400 ? 3 : 
+                       MediaQuery.of(context).size.width > 900 ? 2 : 1,
+        childAspectRatio: MediaQuery.of(context).size.width > 900 ? 3.5 : 3.0,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 16,
       ),
-      
-      // Grille de récompenses
-      SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: MediaQuery.of(context).size.width > 1200 ? 3 : 2,
-          childAspectRatio: 1.2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-        ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final reward = filteredRewards[index];
-            return FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: TweenAnimationBuilder<double>(
-                  duration: Duration(milliseconds: 300 + (index * 100)),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  builder: (context, value, child) {
-                    return Transform.translate(
-                      offset: Offset(0, 30 * (1 - value)),
-                      child: Opacity(
-                        opacity: value,
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final reward = filteredRewards[index];
+          return FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: TweenAnimationBuilder<double>(
+                duration: Duration(milliseconds: 300 + (index * 100)),
+                tween: Tween(begin: 0.0, end: 1.0),
+                builder: (context, value, child) {
+                  return Transform.translate(
+                    offset: Offset(0, 30 * (1 - value)),
+                    child: Opacity(
+                      opacity: value,
+                      child: Container(
+                        constraints: BoxConstraints(
+                          minHeight: 30,
+                          maxHeight: 60,
+                        ),
                         child: RewardCard(
                           reward: reward,
                           onTap: () => manager.showRewardDetail(reward),
@@ -810,19 +926,209 @@ Widget _buildTopBar(BuildContext context, RewardManager manager) {
                           onEdit: () => manager.navigateToEditReward(context, reward),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-          childCount: filteredRewards.length,
-        ),
+            ),
+          );
+        },
+        childCount: filteredRewards.length,
       ),
-    ],
+    ),
   );
 }
 
+Widget _buildNoResultsState(BuildContext context, RewardManager manager) {
+  final l10n = AppLocalizations.of(context)!;
+  
+  return Center(
+    child: Container(
+      margin: const EdgeInsets.all(40),
+      padding: const EdgeInsets.all(48),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(32),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.orange.shade100,
+                  Colors.red.shade100,
+                ],
+              ),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.search_off_rounded,
+              size: 50,
+              color: Colors.orange.shade600,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            "Aucun résultat trouvé",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF1F2937),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            _selectedFilter == 'active' 
+              ? "Aucune récompense active ne correspond à votre recherche"
+              : _selectedFilter == 'inactive'
+                ? "Aucune récompense inactive ne correspond à votre recherche"
+                : "Aucune récompense ne correspond à votre recherche",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 16,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 32),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _searchQuery = '';
+                    _selectedFilter = 'all';
+                  });
+                },
+                icon: const Icon(Icons.clear_all_rounded),
+                label: const Text("Effacer filtres"),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton.icon(
+                onPressed: () => manager.navigateToAddReward(context),
+                icon: const Icon(Icons.add_rounded),
+                label: const Text("Créer récompense"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue.shade600,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+ Widget _buildRewardsList(RewardsLoaded state, BuildContext context, RewardManager manager) {
+  List<dynamic> filteredRewards = state.rewards.where((reward) {
+    // Filtre par statut (nouveau)
+    bool statusMatch = true;
+    if (_selectedFilter == 'active') {
+      statusMatch = reward.isActive == true;
+    } else if (_selectedFilter == 'inactive') {
+      statusMatch = reward.isActive == false;
+    }
+    
+    // Filtre par recherche (existant)
+    bool searchMatch = true;
+    if (_searchQuery.isNotEmpty) {
+      final nameMatch = reward.name.toLowerCase().contains(_searchQuery.toLowerCase());
+      bool pointsMatch = false;
+      final points = int.tryParse(_searchQuery);
+      if (points != null) {
+        pointsMatch = reward.requiredPoints == points;
+      }
+      searchMatch = nameMatch || pointsMatch;
+    }
+    
+    return statusMatch && searchMatch;
+  }).toList();
+
+  // Si aucune récompense ne correspond aux filtres
+  if (filteredRewards.isEmpty) {
+    return SliverFillRemaining(
+      child: _buildNoResultsState(context, manager),
+    );
+  }
+
+  return SliverPadding(
+    padding: const EdgeInsets.all(16),
+    sliver: SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: TweenAnimationBuilder<double>(
+                duration: Duration(milliseconds: 300 + (index * 50)),
+                tween: Tween(begin: 0.0, end: 1.0),
+                builder: (context, value, child) {
+                  return Transform.translate(
+                    offset: Offset(0, 20 * (1 - value)),
+                    child: Opacity(
+                      opacity: value,
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: SizedBox(
+                            height: 120,
+                            child: RewardCard(
+                              reward: filteredRewards[index],
+                              onTap: () => manager.showRewardDetail(filteredRewards[index]),
+                              onDelete: () => _showDeleteDialog(context, manager, filteredRewards[index].id),
+                              onEdit: () => manager.navigateToEditReward(context, filteredRewards[index]),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
+        childCount: filteredRewards.length,
+      ),
+    ),
+  );
+}
   void _showDeleteDialog(BuildContext context, RewardManager manager, String id) {
     final l10n = AppLocalizations.of(context)!;
     showDialog(

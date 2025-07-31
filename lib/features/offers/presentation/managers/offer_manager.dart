@@ -7,7 +7,7 @@ class OfferManager {
   final OfferCubit offerCubit;
   final TextEditingController amountController = TextEditingController();
   final TextEditingController pointsController = TextEditingController();
-
+   bool isactive=true;
   OfferManager(this.offerCubit);
 
   /// Charge toutes les offres
@@ -19,11 +19,13 @@ class OfferManager {
   Future<void> createOffer({
     required String amount,
     required String points,
+    required bool isActive
   }) async {
     try {
       await offerCubit.addOffer(
         amount: double.parse(amount),
         points: int.parse(points),
+        isActive: isActive
       );
     } catch (e) {
       rethrow;
@@ -35,12 +37,14 @@ Future<void> updateOffer({
     required String id,
     required String amount,
     required String points,
+    required bool isActive
   }) async {
     try {
       await offerCubit.updateOffer(
         id: id,
         amount: double.parse(amount),
         points: int.parse(points),
+        isactive: isActive
       );
     } catch (e) {
       rethrow;
@@ -87,6 +91,10 @@ Future<void> updateOffer({
       ),
     );
   }
+
+  void loadActiveOffers() {
+  offerCubit.loadActivateOffer();
+}
 
   /// Navigation vers l'écran d'édition
  void navigateToEditOffer(BuildContext context, Offer offer) {

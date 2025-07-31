@@ -45,6 +45,7 @@ void main() async {
                 getOffersUseCase: getIt(),
                 deleteOfferUseCase: getIt(),
                 updateOfferUseCase: getIt(),
+                getactivateofferUseCase: getIt()
               ),
         ),
       BlocProvider(

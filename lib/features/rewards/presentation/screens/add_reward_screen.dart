@@ -7,8 +7,10 @@ import 'package:mukhlissmagasin/features/rewards/presentation/managers/reward_ma
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 import 'package:mukhlissmagasin/l10n/l10n.dart';
 
+
+
 class AddRewardScreen extends StatefulWidget {
-  final Reward? reward; // Add optional reward parameter for editing
+  final Reward? reward;
 
   const AddRewardScreen({super.key, this.reward});
 
@@ -22,9 +24,11 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   late final RewardManager _manager;
   late AnimationController _animationController;
   late AnimationController _submitAnimationController;
+  late AnimationController _floatingActionController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _floatingScaleAnimation;
   bool _isSubmitting = false;
 
   @override
@@ -36,55 +40,64 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   void _initializeAnimations() {
-    // Main animation controller for entrance animations
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
 
-    // Submit button animation controller
     _submitAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 400),
       vsync: this,
     );
 
-    // Fade animation for content
+    _floatingActionController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: _animationController,
-      curve: Curves.easeInOut,
+      curve: const Interval(0.2, 1.0, curve: Curves.easeInOut),
     ));
 
-    // Slide animation for form
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.5),
+      begin: const Offset(0, 0.3),
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _animationController,
-      curve: Curves.easeOutBack,
+      curve: const Interval(0.1, 0.8, curve: Curves.easeOutCubic),
     ));
 
-    // Scale animation for submit button
     _scaleAnimation = Tween<double>(
       begin: 1.0,
-      end: 0.95,
+      end: 0.96,
     ).animate(CurvedAnimation(
       parent: _submitAnimationController,
       curve: Curves.easeInOut,
     ));
 
-    // Start entrance animation
+    _floatingScaleAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _floatingActionController,
+      curve: Curves.elasticOut,
+    ));
+
     _animationController.forward();
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (mounted) _floatingActionController.forward();
+    });
   }
 
   void _populateFieldsForEditing() {
     if (widget.reward != null) {
       _manager.titleController.text = widget.reward!.name;
-      // _manager.descriptionController.text = widget.reward!.description ?? '';
       _manager.pointsController.text = widget.reward!.requiredPoints.toString();
-      // _manager.setImagePath(widget.reward!.imageUrl);
+      _manager.isActive = widget.reward!.isActive ?? true;
     }
   }
 
@@ -92,6 +105,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   void dispose() {
     _animationController.dispose();
     _submitAnimationController.dispose();
+    _floatingActionController.dispose();
     _manager.dispose();
     super.dispose();
   }
@@ -104,17 +118,14 @@ class _AddRewardScreenState extends State<AddRewardScreen>
 
     try {
       if (widget.reward == null) {
-        // Adding a new reward
         await _manager.addReward();
       } else {
-        // Editing an existing reward
         await _manager.updateReward(widget.reward!.id);
       }
 
       if (mounted) {
         _showSuccessMessage();
-        await Future.delayed(const Duration(milliseconds: 1500));
-        // ignore: use_build_context_synchronously
+        await Future.delayed(const Duration(milliseconds: 2000));
         Navigator.pop(context);
       }
     } catch (e) {
@@ -128,41 +139,108 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   void _showSuccessMessage() {
+    final L10n=AppLocalizations.of(context);
     final isEditing = widget.reward != null;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.check_circle, color: Colors.white),
-            SizedBox(width: 12),
-            Text(isEditing 
-                ? 'Récompense modifiée avec succès!' 
-                : 'Récompense créée avec succès!'),
-          ],
+        content: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Icon(Icons.check_circle, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      isEditing ? L10n.modificationreussi  : L10n.recompencecree,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      isEditing 
+                          ? L10n.modiificationonteteenregistre 
+                          : L10n.votrerecompenceestdisponible ,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         backgroundColor: Colors.green.shade600,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
 
   void _showErrorSnackbar(String message) {
+    final L10n=AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.error_outline, color: Colors.white),
-            SizedBox(width: 12),
-            Expanded(child: Text('Erreur: $message')),
-          ],
+        content: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Icon(Icons.error_outline, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                     Text(
+                    L10n.errerusurvenu  ,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      message,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 13,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         backgroundColor: Colors.red.shade600,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: EdgeInsets.all(16),
-        duration: Duration(seconds: 4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 4),
       ),
     );
   }
@@ -170,94 +248,127 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
         child: Column(
           children: [
-            _buildModernAppBar(),
+            _buildEnhancedAppBar(),
             Expanded(
               child: _buildFormContent(),
             ),
           ],
         ),
       ),
+      floatingActionButton: _buildFloatingSubmitButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
-  Widget _buildModernAppBar() {
+  Widget _buildEnhancedAppBar() {
     final isEditing = widget.reward != null;
-  final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
+    
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: Offset(0, 2),
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back_ios_new, size: 20),
-                color: Colors.grey.shade700,
-              ),
-            ),
-            Expanded(
-              child: Column(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Row(
                 children: [
-                  Text(
-                    isEditing ? l10n.modifierrecompence  :l10n.creerecompence ,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade800,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+                      color: Colors.grey.shade700,
                     ),
                   ),
-                  SizedBox(height: 2),
-                  Text(
-                    isEditing 
-                        ?l10n.modifierrecompence 
-                        : l10n.creeunerecompenceattractive ,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.purple.shade100, Colors.purple.shade50],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.card_giftcard_rounded,
+                          color: Colors.purple.shade600,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                        l10n.recompences  ,
+                          style: TextStyle(
+                            color: Colors.purple.shade700,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.purple.shade50,
-                borderRadius: BorderRadius.circular(12),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          isEditing ? l10n.modifierrecompence : l10n.creerecompence,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          isEditing 
+                              ? l10n.ajustez 
+                              : l10n.creeunerecompenceattractive,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              child: Icon(
-                Icons.card_giftcard,
-                color: Colors.purple.shade600,
-                size: 20,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildFormContent() {
-    
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -266,18 +377,15 @@ class _AddRewardScreenState extends State<AddRewardScreen>
           child: FadeTransition(
             opacity: _fadeAnimation,
             child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildWelcomeSection(),
-                    SizedBox(height: 32),
-                    _buildFormCard(),
-                    SizedBox(height: 24),
-                    _buildSubmitSection(),
-                    SizedBox(height: 32),
+                    _buildMotivationalCard(),
+                    const SizedBox(height: 24),
+                    _buildEnhancedFormCard(),
+                    const SizedBox(height: 32),
                   ],
                 ),
               ),
@@ -288,62 +396,104 @@ class _AddRewardScreenState extends State<AddRewardScreen>
     );
   }
 
-  Widget _buildWelcomeSection() {
-     final l10n = AppLocalizations.of(context)!;
+  Widget _buildMotivationalCard() {
+    final l10n = AppLocalizations.of(context)!;
     final isEditing = widget.reward != null;
+    
     return Container(
-      padding: EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.purple.shade600, Colors.purple.shade400],
+          colors: [
+            Colors.purple.shade600,
+            Colors.purple.shade400,
+            Colors.pink.shade400,
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: Colors.purple.withOpacity(0.3),
             blurRadius: 20,
-            offset: Offset(0, 8),
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: Row(
+      child: Stack(
         children: [
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              // ignore: deprecated_member_use
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Icon(
-              isEditing ? Icons.edit : Icons.star_rounded,
-              color: Colors.white,
-              size: 28,
+          // Decorative elements
+          Positioned(
+            top: -20,
+            right: -20,
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Positioned(
+            bottom: -30,
+            left: -30,
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.08),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Row(
               children: [
-                Text(
-                  isEditing ? l10n.peaufinez : l10n.fidelisezclient,
-                  style: TextStyle(
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Icon(
+                    isEditing ? Icons.tune_rounded : Icons.auto_awesome_rounded,
                     color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    size: 32,
                   ),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  isEditing
-                      ? l10n.ajusterlesdetails
-                      :l10n.creerecompencesquiincitent ,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 14,
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        isEditing ? l10n.peaufinezrecompence  : l10n.fidelisezclient ,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          height: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        isEditing
+                            ? l10n.ajuusterlesdetails 
+                            : l10n.creerecompencesquiincitent,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 15,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -354,58 +504,40 @@ class _AddRewardScreenState extends State<AddRewardScreen>
     );
   }
 
-  Widget _buildFormCard() {
-  final l10n = AppLocalizations.of(context)!;
+  Widget _buildEnhancedFormCard() {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            offset: Offset(0, 8),
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 25,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(28),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade50,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      Icons.edit_note,
-                      color: Colors.orange.shade600,
-                      size: 20,
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                  Text(
-                   l10n.detailsrecompence,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade800,
-                    ),
-                  ),
-                ],
+              _buildSectionHeader(
+                icon: Icons.edit_note_rounded,
+                title:l10n.detailsrecompence ,
+                color: Colors.blue.shade600,
               ),
-              SizedBox(height: 24),
-              _buildRewardNameField(),
-              SizedBox(height: 20),
-              // _buildDescriptionField(),
-              SizedBox(height: 20),
-              _buildPointsField(),
+              const SizedBox(height: 28),
+              _buildEnhancedRewardNameField(),
+              const SizedBox(height: 24),
+              _buildEnhancedPointsField(),
+              const SizedBox(height: 24),
+              _buildEnhancedActiveToggle(),
             ],
           ),
         ),
@@ -413,106 +545,148 @@ class _AddRewardScreenState extends State<AddRewardScreen>
     );
   }
 
-  Widget _buildRewardNameField() {
+  Widget _buildSectionHeader({
+    required IconData icon,
+    required String title,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: color.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEnhancedRewardNameField() {
     final l10n = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Icon(
-              Icons.title_rounded,
-              size: 18,
-              color: Colors.purple.shade600,
-            ),
-            SizedBox(width: 8),
-            Text(
-            l10n.descriptionrecompence  ,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade800,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
         Text(
-          l10n.exemplerecompence,
+        l10n.descriptionrecompence  ,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade800,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+         l10n.exemple ,
+          style: TextStyle(
+            fontSize: 13,
             color: Colors.grey.shade600,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
             color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Colors.grey.shade200),
           ),
           child: TextFormField(
             controller: _manager.titleController,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
-              color: Colors.grey.shade800,
+              fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
-              hintText:l10n.entrerladescription ,
+              hintText: l10n.entrerladescription ,
               hintStyle: TextStyle(
                 color: Colors.grey.shade500,
-                fontSize: 15,
+                fontWeight: FontWeight.normal,
               ),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.all(16),
-              prefixIcon: Icon(
-                Icons.card_giftcard,
-                color: Colors.purple.shade400,
-                size: 20,
+              contentPadding: const EdgeInsets.all(20),
+              prefixIcon: Container(
+                margin: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.card_giftcard_rounded,
+                  color: Colors.purple.shade600,
+                  size: 20,
+                ),
               ),
             ),
-            validator: (value) => value?.isEmpty ?? true ?l10n.descriptionrequise : null,
+            validator: (value) => value?.isEmpty ?? true ? l10n.descriptionrequise : null,
           ),
         ),
       ],
     );
   }
 
- 
-  Widget _buildPointsField() {
+  Widget _buildEnhancedPointsField() {
     final l10n = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Icon(
-              Icons.stars_rounded,
-              size: 18,
-              color: Colors.amber.shade600,
-            ),
-            SizedBox(width: 8),
-            Text(
-            l10n.pointrequise  ,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade800,
-              ),
-            ),
-          ],
+        Text(
+         l10n.pointrequise ,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade800,
+          ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 8),
+        Text(
+        l10n.nombrepointnecessaire  ,
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey.shade600,
+          ),
+        ),
+        const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.amber.shade50,
-            borderRadius: BorderRadius.circular(12),
+            gradient: LinearGradient(
+              colors: [Colors.amber.shade50, Colors.orange.shade50],
+            ),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Colors.amber.shade200),
           ),
           child: TextFormField(
             controller: _manager.pointsController,
             style: TextStyle(
-        
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.amber.shade700,
             ),
@@ -522,24 +696,31 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               hintStyle: TextStyle(
                 color: Colors.amber.shade400,
                 fontWeight: FontWeight.w600,
-
               ),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.all(16),
-              prefixIcon: Icon(
-                Icons.star,
-                color: Colors.amber.shade600,
-
+              contentPadding: const EdgeInsets.all(20),
+              prefixIcon: Container(
+                margin: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.amber.shade200,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.stars_rounded,
+                  color: Colors.amber.shade700,
+                  size: 20,
+                ),
               ),
               suffixText: l10n.pts,
               suffixStyle: TextStyle(
                 color: Colors.amber.shade600,
-                fontWeight: FontWeight.w600,
-  
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
             validator: (value) {
-              if (value?.isEmpty ?? true) return l10n.pointrequismessage;
+              if (value?.isEmpty ?? true) return l10n.pointrequise ;
               if (int.tryParse(value!) == null) return l10n.nombreinvaliide ;
               if (int.parse(value) <= 0) return l10n.doitetresuperieur ;
               return null;
@@ -550,17 +731,99 @@ class _AddRewardScreenState extends State<AddRewardScreen>
     );
   }
 
-  Widget _buildSubmitSection() {
+  Widget _buildEnhancedActiveToggle() {
+    final l10n = AppLocalizations.of(context)!;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+        l10n.statusrecompence ,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade800,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          _manager.isActive 
+              ?l10n.cetterecompencedisponible 
+              : l10n.cetterecompenceesttemporairemenrdesactive ,
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey.shade600,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          decoration: BoxDecoration(
+            color: _manager.isActive ? Colors.green.shade50 : Colors.red.shade50,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: _manager.isActive ? Colors.green.shade200 : Colors.red.shade200,
+            ),
+          ),
+          child: SwitchListTile(
+            title: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: _manager.isActive 
+                        ? Colors.green.shade100 
+                        : Colors.red.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    _manager.isActive ? Icons.check_circle : Icons.cancel,
+                    size: 16,
+                    color: _manager.isActive 
+                        ? Colors.green.shade600 
+                        : Colors.red.shade600,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  _manager.isActive ?l10n.active  : l10n.inactif ,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: _manager.isActive 
+                        ? Colors.green.shade700 
+                        : Colors.red.shade700,
+                  ),
+                ),
+              ],
+            ),
+            value: _manager.isActive,
+            onChanged: (value) {
+              setState(() {
+                _manager.isActive = value;
+              });
+            },
+            activeColor: Colors.green.shade600,
+            inactiveTrackColor: Colors.red.shade300,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFloatingSubmitButton() {
     final isEditing = widget.reward != null;
-      final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
+    
     return AnimatedBuilder(
-      animation: _scaleAnimation,
+      animation: Listenable.merge([
+        _floatingScaleAnimation,
+        _scaleAnimation,
+      ]),
       builder: (context, child) {
         return Transform.scale(
-          scale: _scaleAnimation.value,
+          scale: _floatingScaleAnimation.value * _scaleAnimation.value,
           child: Container(
-            width: double.infinity,
-            height: 56,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: _isSubmitting
@@ -569,13 +832,13 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
                   color: (_isSubmitting ? Colors.grey : Colors.green)
-                      .withOpacity(0.3),
+                      .withOpacity(0.4),
                   blurRadius: 20,
-                  offset: Offset(0, 8),
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
@@ -583,44 +846,52 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               color: Colors.transparent,
               child: InkWell(
                 onTap: _isSubmitting ? null : _submitForm,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(20),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  height: 64,
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (_isSubmitting) ...[
                         SizedBox(
-                          width: 20,
-                          height: 20,
+                          width: 24,
+                          height: 24,
                           child: CircularProgressIndicator(
-                            strokeWidth: 2,
+                            strokeWidth: 2.5,
                             valueColor: AlwaysStoppedAnimation<Color>(
                               Colors.white,
                             ),
                           ),
                         ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 16),
                         Text(
-                          isEditing ?l10n.modificationencour  : l10n.creationencours,
-                          style: TextStyle(
+                          isEditing ? l10n.modificationencour  : l10n.creationencours ,
+                          style: const TextStyle(
                             color: Colors.white,
-
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ] else ...[
-                        Icon(
-                          isEditing ? Icons.save : Icons.card_giftcard,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        SizedBox(width: 12),
-                        Text(
-                          isEditing ? l10n.enredisterlesmodifiaction  : l10n.creerecompence ,
-                          style: TextStyle(
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            isEditing ? Icons.save_rounded : Icons.card_giftcard_rounded,
                             color: Colors.white,
-            
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Text(
+                          isEditing ? l10n.enredisterlesmodifiaction  : l10n.creerecompence,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

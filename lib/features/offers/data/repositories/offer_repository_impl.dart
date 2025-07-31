@@ -34,4 +34,15 @@ class OfferRepositoryImpl implements OfferRepository {
   Future<void> deleteOffer(String id) async {
     await remoteDataSource.deleteOffer(id);
   }
+  
+@override
+Future<List<Offer>> getActivateOffers() async {
+  final currentUser = authRepository.getCurrentUser();
+  if (currentUser == null) throw Exception('Utilisateur non connecté');
+  
+  final allOffers = await remoteDataSource.getOffersByStore(currentUser.id);
+  return allOffers.where((offer) => offer.isActive).toList();
+}
+
+  
 }

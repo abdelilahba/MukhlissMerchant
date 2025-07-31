@@ -15,6 +15,7 @@ class AddOfferUseCase {
   Future<void> execute({
     required double minAmount,
     required int pointsGiven,
+    required bool isActive
   }) async {
     final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('User not authenticated');
@@ -25,7 +26,8 @@ class AddOfferUseCase {
         id: const Uuid().v4(),
         minAmount: minAmount,
         pointsGiven: pointsGiven,
-        magasinId: currentUser.id, // Associe au magasin connecté
+        magasinId: currentUser.id,
+        isActive: isActive // Associe au magasin connecté
       ),
     );
   }
