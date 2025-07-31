@@ -539,4 +539,60 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get commencezparcreerecompence =>
       'ابدأ بإنشاء أول مكافأة لك لتحفيز عملائك';
+
+  @override
+  String get active => 'نشط ';
+
+  @override
+  String get inactif => 'غير نشط ';
+
+  @override
+  String get stausoffre => 'حالة العرض';
+
+  @override
+  String get cetteoffreestactuve => 'العرض مفعل ومتاح لرؤية العملاء';
+
+  @override
+  String get cetteoffreesttemporairement => 'هذا العرض مُعَطَّل مؤقتًا';
+
+  @override
+  String get ajustez => 'قم بتعديل تفاصيل مكافأتك';
+
+  @override
+  String get creerecompenceattractive => 'قم بإنشاء مكافأة مميزة تجذب عملاءك';
+
+  @override
+  String get peaufinezrecompence => 'قم بصقل مكافأتك';
+
+  @override
+  String get nombrepointnecessaire =>
+      'عدد النقاط المطلوبة للحصول على هذه المكافأة';
+
+  @override
+  String get statusrecompence => 'حالة المكافأة';
+
+  @override
+  String get cetterecompencedisponible => 'هذه المكافأة متاحة للعملاء';
+
+  @override
+  String get cetterecompenceesttemporairemenrdesactive =>
+      'تم تعطيل هذه المكافأة مؤقتًا';
+
+  @override
+  String get modificationreussi => 'تم التعديل بنجاح!';
+
+  @override
+  String get recompencecree => 'تم إنشاء المكافأة!';
+
+  @override
+  String get modiificationonteteenregistre => 'تم حفظ التعديلات';
+
+  @override
+  String get votrerecompenceestdisponible => 'مكافأتك متاحة الآن';
+
+  @override
+  String get errerusurvenu => 'حدث خطأ';
+
+  @override
+  String get exemple => 'مثال: \"قهوة مجانية\"، \"خصم 10٪\"، \"منتج مجاني\"';
 }

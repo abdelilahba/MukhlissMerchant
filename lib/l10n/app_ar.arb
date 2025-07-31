@@ -179,7 +179,26 @@
 "rechargerdonnes":"إعادة تحميل البيانات",
 "totalrecompence":"إجمالي المكافآت",
 "oops":"عذرًا! حدث خطأ ما",
-"commencezparcreerecompence":"ابدأ بإنشاء أول مكافأة لك لتحفيز عملائك"
+"commencezparcreerecompence":"ابدأ بإنشاء أول مكافأة لك لتحفيز عملائك",
+"active":"نشط ",
+"inactif":"غير نشط ",
+"stausoffre":"حالة العرض",
+"cetteoffreestactuve":"العرض مفعل ومتاح لرؤية العملاء",
+"cetteoffreesttemporairement":"هذا العرض مُعَطَّل مؤقتًا",
+"ajustez":"قم بتعديل تفاصيل مكافأتك",
+"creerecompenceattractive":"قم بإنشاء مكافأة مميزة تجذب عملاءك",
+"peaufinezrecompence":"قم بصقل مكافأتك",
+"nombrepointnecessaire":"عدد النقاط المطلوبة للحصول على هذه المكافأة",
+"statusrecompence":"حالة المكافأة",
+"cetterecompencedisponible":"هذه المكافأة متاحة للعملاء",
+"cetterecompenceesttemporairemenrdesactive":"تم تعطيل هذه المكافأة مؤقتًا",
+"modificationreussi":"تم التعديل بنجاح!",
+"recompencecree":"تم إنشاء المكافأة!",
+"modiificationonteteenregistre":"تم حفظ التعديلات",
+"votrerecompenceestdisponible":"مكافأتك متاحة الآن",
+"errerusurvenu":"حدث خطأ",
+"exemple":"مثال: \"قهوة مجانية\"، \"خصم 10٪\"، \"منتج مجاني\""
+
 
 
 

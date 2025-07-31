@@ -5,6 +5,7 @@ import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dar
 import 'package:mukhlissmagasin/features/offers/domain/usecases/add_offer_usecase.dart';
 import 'package:mukhlissmagasin/features/offers/domain/usecases/delete_offer_usecase.dart';
 import 'package:mukhlissmagasin/features/offers/domain/usecases/edit_offer_usecase.dart';
+import 'package:mukhlissmagasin/features/offers/domain/usecases/get_activate_offers_usecase.dart';
 import 'package:mukhlissmagasin/features/offers/domain/usecases/get_offers_usecase.dart';
 
 // États
@@ -26,7 +27,14 @@ class OffersLoaded extends OfferState {
   @override
   List<Object> get props => [offers];
 }
+//les offres active
+class OffersActiveLoaded extends OfferState {
+  final List<Offer> offers;
+  const OffersActiveLoaded(this.offers);
 
+  @override
+  List<Object> get props => [offers];
+}
 // For single operation success (add/edit/delete)
 class OperationSuccess extends OfferState {
   final String message;
@@ -49,23 +57,27 @@ class OfferCubit extends Cubit<OfferState> {
   final GetOffersUseCase getOffersUseCase;
   final DeleteOfferUseCase deleteOfferUseCase;
   final UpdateOfferUseCase updateOfferUseCase; 
+  final GetActivateOffersUsecase getactivateofferUseCase;
 
   OfferCubit({
     required this.addOfferUseCase,
     required this.getOffersUseCase,
     required this.deleteOfferUseCase,
     required this.updateOfferUseCase,
+    required this.getactivateofferUseCase
   }) : super(OfferInitial());
 
   Future<void> addOffer({
     required double amount,
     required int points,
+    required bool isActive
   }) async {
     emit(OfferLoading());
     try {
       await addOfferUseCase.execute(
         minAmount: amount,
         pointsGiven: points,
+        isActive: isActive
       );
       emit(OperationSuccess('Offre ajoutée avec succès'));
       await loadOffers(); // Rafraîchit la liste
@@ -83,6 +95,16 @@ class OfferCubit extends Cubit<OfferState> {
       emit(OfferError('Erreur de chargement: ${e.toString()}'));
     }
   }
+
+  Future<void> loadActivateOffer()async{
+    emit(OfferLoading());
+    try{
+      final activateoffer=await getactivateofferUseCase.execute();
+      emit(OffersLoaded(activateoffer));
+    }catch(e){
+      emit(OfferError('erreur de chargement des offres active: ${e.toString()}'));
+    }
+  }
  Future<void> deleteOffer(String id) async {
     emit(OfferLoading());
     try {
@@ -97,6 +119,7 @@ class OfferCubit extends Cubit<OfferState> {
     required String id,
     required double amount,
     required int points,
+    required bool isactive
   }) async {
     emit(OfferLoading());
     try {
@@ -106,6 +129,7 @@ class OfferCubit extends Cubit<OfferState> {
         id: id,
         minAmount: amount,
         pointsGiven: points,
+        isActive: isactive
       );
       emit(OperationSuccess('Offre modifiée avec succès'));
       await loadOffers();

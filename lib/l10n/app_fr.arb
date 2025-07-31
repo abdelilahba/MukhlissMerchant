@@ -178,6 +178,23 @@
 "rechargerdonnes":"Recharger les données",
 "totalrecompence":"Total récompenses",
 "oops":"Oops! Une erreur s'est produite",
-"commencezparcreerecompence":"Commencez par créer votre première récompense pour motiver vos clients"
-
+"commencezparcreerecompence":"Commencez par créer votre première récompense pour motiver vos clients",
+"active":"Active",
+"inactif":"inactive",
+"stausoffre":"Statut de l'offre",
+"cetteoffreestactuve":"Cette offre est active et visible par les clients",
+"cetteoffreesttemporairement":"Cette offre est temporairement désactivée",
+"ajustez":"Ajustez les détails de votre récompense",
+"creerecompenceattractive":"Créez une récompense attractive pour vos clients",
+"peaufinezrecompence":"Peaufinez votre récompense",
+"nombrepointnecessaire":"Nombre de points nécessaires pour obtenir cette récompense",
+"statusrecompence":"Statut de la récompense",
+"cetterecompencedisponible":"Cette récompense est disponible pour les clients",
+"cetterecompenceesttemporairemenrdesactive":"Cette récompense est temporairement désactivée",
+"modificationreussi":"Modification réussie!",
+"recompencecree":"Récompense créée!",
+"modiificationonteteenregistre":"Les modifications ont été enregistrées",
+"votrerecompenceestdisponible":"Votre récompense est maintenant disponible",
+"errerusurvenu":"Erreur survenue",
+"exemple":"Ex: \"Café gratuit\", \"Réduction 10%\", \"Produit offert\""
 } 

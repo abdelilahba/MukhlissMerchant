@@ -3,6 +3,7 @@ class Offer {
   final double minAmount;
   final int pointsGiven;
   final String magasinId;
+  final bool isActive;
  // Nouveau champ
 
   Offer({
@@ -10,7 +11,7 @@ class Offer {
     required this.minAmount,
     required this.pointsGiven,
     required this.magasinId, // Ajouté
-   
+    required this.isActive
   });
 
   Map<String, dynamic> toJson() {
@@ -19,7 +20,7 @@ class Offer {
       'min_amount': minAmount,
       'points_given': pointsGiven,
       'magasin_id': magasinId, // Ajouté
-    
+      'is_active' :isActive
     };
   }
 
@@ -29,7 +30,7 @@ class Offer {
       minAmount: (json['min_amount'] as num).toDouble(),
       pointsGiven: json['points_given'] as int,
       magasinId: json['magasin_id'] as String, // Ajouté
-     
+     isActive: json['is_active'] as bool
     );
   }
 
@@ -38,13 +39,14 @@ class Offer {
     double? minAmount,
     int? pointsGiven,
     String? magasinId, // Ajouté
+    bool? isActive
   }) {
     return Offer(
       id: id ?? this.id,
       minAmount: minAmount ?? this.minAmount,
       pointsGiven: pointsGiven ?? this.pointsGiven,
       magasinId: magasinId ?? this.magasinId, // Ajouté
-      
+      isActive: isActive ?? this.isActive
     );
   }
 }

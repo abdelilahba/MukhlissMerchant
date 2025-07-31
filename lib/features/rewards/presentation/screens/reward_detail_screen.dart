@@ -24,33 +24,7 @@ class RewardDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (reward.imagePath != null)
-                    Center(
-                      child: Image.network(
-                        reward.imagePath!,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  const SizedBox(height: 20),
-                  Text(
-                    reward.name,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${reward.requiredPoints} points requis',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Text(
-                  //   reward.description,
-                  //   style: Theme.of(context).textTheme.bodyLarge,
-                  // ),
-                ],
+                
               ),
             );
           }

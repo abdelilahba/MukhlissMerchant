@@ -24,6 +24,7 @@ import 'package:mukhlissmagasin/features/offers/domain/repositories/offer_reposi
 import 'package:mukhlissmagasin/features/offers/domain/usecases/add_offer_usecase.dart';
 import 'package:mukhlissmagasin/features/offers/domain/usecases/delete_offer_usecase.dart';
 import 'package:mukhlissmagasin/features/offers/domain/usecases/edit_offer_usecase.dart';
+import 'package:mukhlissmagasin/features/offers/domain/usecases/get_activate_offers_usecase.dart';
 import 'package:mukhlissmagasin/features/offers/domain/usecases/get_offers_usecase.dart';
 import 'package:mukhlissmagasin/features/profile/data/datasource/profile_remote_data_source.dart';
 import 'package:mukhlissmagasin/features/profile/data/repositories/user_repository_impl.dart';
@@ -74,6 +75,8 @@ Future<void> initDependencies() async {
     repository: getIt(),
     authRepository: getIt(),
   ));
+
+  getIt.registerLazySingleton(()=>GetActivateOffersUsecase(repository: getIt()));
 
     getIt.registerLazySingleton(() => UpdateOfferUseCase(
     repository: getIt(),

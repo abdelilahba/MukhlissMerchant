@@ -547,4 +547,65 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get commencezparcreerecompence =>
       'Start by creating your first reward to motivate your customers';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactif => 'inactive';
+
+  @override
+  String get stausoffre => 'Offer status';
+
+  @override
+  String get cetteoffreestactuve =>
+      'This offer is active and visible to customers';
+
+  @override
+  String get cetteoffreesttemporairement =>
+      'This offer is temporarily disabled';
+
+  @override
+  String get ajustez => 'Adjust your reward details';
+
+  @override
+  String get creerecompenceattractive =>
+      'Create an attractive reward for your customers';
+
+  @override
+  String get peaufinezrecompence => 'Refine your reward';
+
+  @override
+  String get nombrepointnecessaire =>
+      'Number of points needed to obtain this reward';
+
+  @override
+  String get statusrecompence => 'Reward Status';
+
+  @override
+  String get cetterecompencedisponible =>
+      'This reward is available to customers';
+
+  @override
+  String get cetterecompenceesttemporairemenrdesactive =>
+      'This reward is temporarily disabled';
+
+  @override
+  String get modificationreussi => 'Edit successful!';
+
+  @override
+  String get recompencecree => 'Reward created!';
+
+  @override
+  String get modiificationonteteenregistre => 'The changes have been saved';
+
+  @override
+  String get votrerecompenceestdisponible => 'Your reward is now available';
+
+  @override
+  String get errerusurvenu => 'Error occurred';
+
+  @override
+  String get exemple =>
+      'Ex: \"Free coffee\", \"10% discount\", \"Free product\"';
 }

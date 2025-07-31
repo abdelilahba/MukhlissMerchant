@@ -32,7 +32,8 @@ class RewardCubit extends Cubit<RewardState> {
     required String title,
     required String description,
     required int requiredPoints,
-    String? imagePath, // Changé de imageUrl à imagePath
+    required bool isactive,
+     // Changé de imageUrl à imagePath
   }) async {
     emit(RewardLoading());
     try {
@@ -40,6 +41,7 @@ class RewardCubit extends Cubit<RewardState> {
         title: title,
         description: description,
         requiredPoints: requiredPoints,
+        isactive: isactive
       );
       await loadShopRewards(); // Recharge la liste mise à jour
     } catch (e) {
@@ -51,7 +53,8 @@ Future<void> updateReward({
     required String title,
     required String description,
     required int requiredPoints,
-    String? imagePath,
+    required bool isActive ,
+  
   }) async {
     try {
       emit(RewardLoading());
@@ -61,7 +64,8 @@ Future<void> updateReward({
         title: title,
         description: description,
         requiredPoints: requiredPoints,
-        imagePath: imagePath,
+       
+        isActive: isActive
       );
       await loadShopRewards();
     } catch (e) {

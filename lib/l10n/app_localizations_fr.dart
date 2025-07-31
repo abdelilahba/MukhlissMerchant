@@ -553,4 +553,67 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get commencezparcreerecompence =>
       'Commencez par créer votre première récompense pour motiver vos clients';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactif => 'inactive';
+
+  @override
+  String get stausoffre => 'Statut de l\'offre';
+
+  @override
+  String get cetteoffreestactuve =>
+      'Cette offre est active et visible par les clients';
+
+  @override
+  String get cetteoffreesttemporairement =>
+      'Cette offre est temporairement désactivée';
+
+  @override
+  String get ajustez => 'Ajustez les détails de votre récompense';
+
+  @override
+  String get creerecompenceattractive =>
+      'Créez une récompense attractive pour vos clients';
+
+  @override
+  String get peaufinezrecompence => 'Peaufinez votre récompense';
+
+  @override
+  String get nombrepointnecessaire =>
+      'Nombre de points nécessaires pour obtenir cette récompense';
+
+  @override
+  String get statusrecompence => 'Statut de la récompense';
+
+  @override
+  String get cetterecompencedisponible =>
+      'Cette récompense est disponible pour les clients';
+
+  @override
+  String get cetterecompenceesttemporairemenrdesactive =>
+      'Cette récompense est temporairement désactivée';
+
+  @override
+  String get modificationreussi => 'Modification réussie!';
+
+  @override
+  String get recompencecree => 'Récompense créée!';
+
+  @override
+  String get modiificationonteteenregistre =>
+      'Les modifications ont été enregistrées';
+
+  @override
+  String get votrerecompenceestdisponible =>
+      'Votre récompense est maintenant disponible';
+
+  @override
+  String get errerusurvenu => 'Erreur survenue';
+
+  @override
+  String get exemple =>
+      'Ex: \"Café gratuit\", \"Réduction 10%\", \"Produit offert\"';
 }

@@ -1143,6 +1143,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start by creating your first reward to motivate your customers'**
   String get commencezparcreerecompence;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @inactif.
+  ///
+  /// In en, this message translates to:
+  /// **'inactive'**
+  String get inactif;
+
+  /// No description provided for @stausoffre.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer status'**
+  String get stausoffre;
+
+  /// No description provided for @cetteoffreestactuve.
+  ///
+  /// In en, this message translates to:
+  /// **'This offer is active and visible to customers'**
+  String get cetteoffreestactuve;
+
+  /// No description provided for @cetteoffreesttemporairement.
+  ///
+  /// In en, this message translates to:
+  /// **'This offer is temporarily disabled'**
+  String get cetteoffreesttemporairement;
+
+  /// No description provided for @ajustez.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust your reward details'**
+  String get ajustez;
+
+  /// No description provided for @creerecompenceattractive.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an attractive reward for your customers'**
+  String get creerecompenceattractive;
+
+  /// No description provided for @peaufinezrecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'Refine your reward'**
+  String get peaufinezrecompence;
+
+  /// No description provided for @nombrepointnecessaire.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of points needed to obtain this reward'**
+  String get nombrepointnecessaire;
+
+  /// No description provided for @statusrecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward Status'**
+  String get statusrecompence;
+
+  /// No description provided for @cetterecompencedisponible.
+  ///
+  /// In en, this message translates to:
+  /// **'This reward is available to customers'**
+  String get cetterecompencedisponible;
+
+  /// No description provided for @cetterecompenceesttemporairemenrdesactive.
+  ///
+  /// In en, this message translates to:
+  /// **'This reward is temporarily disabled'**
+  String get cetterecompenceesttemporairemenrdesactive;
+
+  /// No description provided for @modificationreussi.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit successful!'**
+  String get modificationreussi;
+
+  /// No description provided for @recompencecree.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward created!'**
+  String get recompencecree;
+
+  /// No description provided for @modiificationonteteenregistre.
+  ///
+  /// In en, this message translates to:
+  /// **'The changes have been saved'**
+  String get modiificationonteteenregistre;
+
+  /// No description provided for @votrerecompenceestdisponible.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reward is now available'**
+  String get votrerecompenceestdisponible;
+
+  /// No description provided for @errerusurvenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Error occurred'**
+  String get errerusurvenu;
+
+  /// No description provided for @exemple.
+  ///
+  /// In en, this message translates to:
+  /// **'Ex: \"Free coffee\", \"10% discount\", \"Free product\"'**
+  String get exemple;
 }
 
 class _AppLocalizationsDelegate

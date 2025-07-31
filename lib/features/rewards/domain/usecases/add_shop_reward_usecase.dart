@@ -16,6 +16,7 @@ Future<void> execute({
     required String title,
     required String description,
     required int requiredPoints,
+    required bool isactive
   }) async {
     final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('Utilisateur non authentifié');
@@ -26,6 +27,7 @@ Future<void> execute({
       name: title,
       requiredPoints: requiredPoints,
       shopId: currentUser.id,
+       isActive: isactive
       // imageUrl sera défini par le repository après l'upload
     );
 
