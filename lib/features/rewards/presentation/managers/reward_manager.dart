@@ -9,7 +9,7 @@ class RewardManager {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController pointsController = TextEditingController();
   String? imagePath; // Changé de imageUrl à imagePath pour plus de clarté
-
+  bool isActive = true ;
   RewardManager(this._cubit);
 
   Future<void> loadRewards() async => await _cubit.loadShopRewards();
@@ -19,7 +19,8 @@ class RewardManager {
       title: titleController.text,
       description: descriptionController.text,
       requiredPoints: int.parse(pointsController.text),
-      imagePath: imagePath, 
+      
+      isactive: isActive
     );
   }
  Future<void> updateReward(String rewardId) async {
@@ -28,7 +29,8 @@ class RewardManager {
       title: titleController.text,
       description: descriptionController.text,
       requiredPoints: int.parse(pointsController.text),
-      imagePath: imagePath,
+    
+      isActive: isActive
     );
   }
   void showRewardDetail(Reward reward) => _cubit.showRewardDetail(reward);
@@ -36,7 +38,7 @@ void navigateToEditReward(BuildContext context, Reward reward) {
     // Populate the form fields with existing reward data
     titleController.text = reward.name;
     pointsController.text = reward.requiredPoints.toString();
-
+    isActive =reward.isActive;
     Navigator.push(
       context,
       MaterialPageRoute(

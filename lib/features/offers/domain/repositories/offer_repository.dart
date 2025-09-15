@@ -5,4 +5,5 @@ abstract class OfferRepository {
   Future<List<Offer>> getOffers();
   Future<void> updateOffer(Offer offer);
 Future<void> deleteOffer(String id); 
+Future<List<Offer>> getActivateOffers();
 }

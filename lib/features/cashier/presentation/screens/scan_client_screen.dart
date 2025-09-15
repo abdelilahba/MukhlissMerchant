@@ -249,7 +249,7 @@ Widget _buildMainContent() {
   /// Handles successful balance addition - automatically redirects to offers
   /// Handles successful balance addition - automatically redirects to offers and rewards
   Future<void> _handleBalanceAdded(
-     pointsGagnes,
+   double   pointsGagnes,
     double soldeRestant,
   ) async {
     await Navigator.push(
@@ -257,7 +257,7 @@ Widget _buildMainContent() {
       MaterialPageRoute(
         builder:
             (_) => FelicitationScreen(
-              pointsGagnes: pointsGagnes,
+              pointsGagnes: pointsGagnes.toInt(),
               soldeRestant: soldeRestant,
             ),
       ),

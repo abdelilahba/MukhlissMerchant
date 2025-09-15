@@ -30,9 +30,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pointfidelite => 'loyalty points';
 
   @override
-  String get pts => 'pts';
-
-  @override
   String get modifier => 'Modify';
 
   @override
@@ -78,9 +75,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ajusterlesdetails => 'Ajustez les détails pour maximiser l\'impact';
 
   @override
-  String get mantant => 'Amount';
-
-  @override
   String get requis => 'Required';
 
   @override
@@ -105,13 +99,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deconnexion => 'Disconnect';
 
   @override
-  String get ajouterrecompence => 'New Reward';
-
-  @override
   String get echange => 'Exchangeable with';
 
   @override
   String get modifierrecompence => 'Edit Reward';
+
+  @override
+  String get ajouterrecompence => 'New Reward';
 
   @override
   String get creeunerecompenceattractive => 'Create an attractive reward to build loyalty';
@@ -160,9 +154,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get modificationencour => 'Modification in progress...';
-
-  @override
-  String get creerecompence => 'Create a reward';
 
   @override
   String get enredisterlesmodifiaction => 'Save changes';
@@ -276,9 +267,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nomcomplet => 'Full name';
 
   @override
-  String get email => 'E-mail address';
-
-  @override
   String get phone => 'Phone Number';
 
   @override
@@ -295,9 +283,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get laisserviede => 'Leave blank to not change';
-
-  @override
-  String get confirmer => 'Confirm';
 
   @override
   String get champsrequis => 'This field is required';
@@ -319,6 +304,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get annuler => 'Cancel';
+
+  @override
+  String get confirmer => 'Confirm';
 
   @override
   String get confirmerechange => 'Confirm the exchange';
@@ -349,6 +337,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get revenez => 'Come back later to discover our new exclusive rewards';
+
+  @override
+  String get pts => 'pts';
 
   @override
   String get felicitation => 'Congratulations';
@@ -384,6 +375,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vousserezrederigervers => 'After adding the balance, you will be redirected to the available offers';
 
   @override
+  String get mantant => 'Amount';
+
+  @override
   String get dh => 'DH';
 
   @override
@@ -415,6 +409,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get connecterpourcontinuer => 'Log in to continue';
+
+  @override
+  String get email => 'E-mail address';
 
   @override
   String get veuillezsaisiremail => 'Please enter your email';
@@ -519,6 +516,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionrapide => 'Quick Actions';
 
   @override
+  String get creerecompence => 'Create a reward';
+
+  @override
   String get rechargerdonnes => 'Reload data';
 
   @override
@@ -529,4 +529,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commencezparcreerecompence => 'Start by creating your first reward to motivate your customers';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactif => 'inactive';
+
+  @override
+  String get stausoffre => 'Offer status';
+
+  @override
+  String get cetteoffreestactuve => 'This offer is active and visible to customers';
+
+  @override
+  String get cetteoffreesttemporairement => 'This offer is temporarily disabled';
+
+  @override
+  String get ajustez => 'Adjust your reward details';
+
+  @override
+  String get creerecompenceattractive => 'Create an attractive reward for your customers';
+
+  @override
+  String get peaufinezrecompence => 'Refine your reward';
+
+  @override
+  String get nombrepointnecessaire => 'Number of points needed to obtain this reward';
+
+  @override
+  String get statusrecompence => 'Reward Status';
+
+  @override
+  String get cetterecompencedisponible => 'This reward is available to customers';
+
+  @override
+  String get cetterecompenceesttemporairemenrdesactive => 'This reward is temporarily disabled';
+
+  @override
+  String get modificationreussi => 'Edit successful!';
+
+  @override
+  String get recompencecree => 'Reward created!';
+
+  @override
+  String get modiificationonteteenregistre => 'The changes have been saved';
+
+  @override
+  String get votrerecompenceestdisponible => 'Your reward is now available';
+
+  @override
+  String get errerusurvenu => 'Error occurred';
+
+  @override
+  String get exemple => 'Ex: \"Free coffee\", \"10% discount\", \"Free product\"';
 }

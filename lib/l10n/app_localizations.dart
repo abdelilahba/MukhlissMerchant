@@ -139,12 +139,6 @@ abstract class AppLocalizations {
   /// **'loyalty points'**
   String get pointfidelite;
 
-  /// No description provided for @pts.
-  ///
-  /// In en, this message translates to:
-  /// **'pts'**
-  String get pts;
-
   /// No description provided for @modifier.
   ///
   /// In en, this message translates to:
@@ -235,12 +229,6 @@ abstract class AppLocalizations {
   /// **'Ajustez les détails pour maximiser l\'impact'**
   String get ajusterlesdetails;
 
-  /// No description provided for @mantant.
-  ///
-  /// In en, this message translates to:
-  /// **'Amount'**
-  String get mantant;
-
   /// No description provided for @requis.
   ///
   /// In en, this message translates to:
@@ -289,12 +277,6 @@ abstract class AppLocalizations {
   /// **'Disconnect'**
   String get deconnexion;
 
-  /// No description provided for @ajouterrecompence.
-  ///
-  /// In en, this message translates to:
-  /// **'New Reward'**
-  String get ajouterrecompence;
-
   /// No description provided for @echange.
   ///
   /// In en, this message translates to:
@@ -306,6 +288,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit Reward'**
   String get modifierrecompence;
+
+  /// No description provided for @ajouterrecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'New Reward'**
+  String get ajouterrecompence;
 
   /// No description provided for @creeunerecompenceattractive.
   ///
@@ -402,12 +390,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Modification in progress...'**
   String get modificationencour;
-
-  /// No description provided for @creerecompence.
-  ///
-  /// In en, this message translates to:
-  /// **'Create a reward'**
-  String get creerecompence;
 
   /// No description provided for @enredisterlesmodifiaction.
   ///
@@ -631,12 +613,6 @@ abstract class AppLocalizations {
   /// **'Full name'**
   String get nomcomplet;
 
-  /// No description provided for @email.
-  ///
-  /// In en, this message translates to:
-  /// **'E-mail address'**
-  String get email;
-
   /// No description provided for @phone.
   ///
   /// In en, this message translates to:
@@ -672,12 +648,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Leave blank to not change'**
   String get laisserviede;
-
-  /// No description provided for @confirmer.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm'**
-  String get confirmer;
 
   /// No description provided for @champsrequis.
   ///
@@ -720,6 +690,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get annuler;
+
+  /// No description provided for @confirmer.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirmer;
 
   /// No description provided for @confirmerechange.
   ///
@@ -780,6 +756,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Come back later to discover our new exclusive rewards'**
   String get revenez;
+
+  /// No description provided for @pts.
+  ///
+  /// In en, this message translates to:
+  /// **'pts'**
+  String get pts;
 
   /// No description provided for @felicitation.
   ///
@@ -847,6 +829,12 @@ abstract class AppLocalizations {
   /// **'After adding the balance, you will be redirected to the available offers'**
   String get vousserezrederigervers;
 
+  /// No description provided for @mantant.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get mantant;
+
   /// No description provided for @dh.
   ///
   /// In en, this message translates to:
@@ -912,6 +900,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log in to continue'**
   String get connecterpourcontinuer;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'E-mail address'**
+  String get email;
 
   /// No description provided for @veuillezsaisiremail.
   ///
@@ -1117,6 +1111,12 @@ abstract class AppLocalizations {
   /// **'Quick Actions'**
   String get actionrapide;
 
+  /// No description provided for @creerecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a reward'**
+  String get creerecompence;
+
   /// No description provided for @rechargerdonnes.
   ///
   /// In en, this message translates to:
@@ -1140,6 +1140,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start by creating your first reward to motivate your customers'**
   String get commencezparcreerecompence;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @inactif.
+  ///
+  /// In en, this message translates to:
+  /// **'inactive'**
+  String get inactif;
+
+  /// No description provided for @stausoffre.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer status'**
+  String get stausoffre;
+
+  /// No description provided for @cetteoffreestactuve.
+  ///
+  /// In en, this message translates to:
+  /// **'This offer is active and visible to customers'**
+  String get cetteoffreestactuve;
+
+  /// No description provided for @cetteoffreesttemporairement.
+  ///
+  /// In en, this message translates to:
+  /// **'This offer is temporarily disabled'**
+  String get cetteoffreesttemporairement;
+
+  /// No description provided for @ajustez.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust your reward details'**
+  String get ajustez;
+
+  /// No description provided for @creerecompenceattractive.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an attractive reward for your customers'**
+  String get creerecompenceattractive;
+
+  /// No description provided for @peaufinezrecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'Refine your reward'**
+  String get peaufinezrecompence;
+
+  /// No description provided for @nombrepointnecessaire.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of points needed to obtain this reward'**
+  String get nombrepointnecessaire;
+
+  /// No description provided for @statusrecompence.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward Status'**
+  String get statusrecompence;
+
+  /// No description provided for @cetterecompencedisponible.
+  ///
+  /// In en, this message translates to:
+  /// **'This reward is available to customers'**
+  String get cetterecompencedisponible;
+
+  /// No description provided for @cetterecompenceesttemporairemenrdesactive.
+  ///
+  /// In en, this message translates to:
+  /// **'This reward is temporarily disabled'**
+  String get cetterecompenceesttemporairemenrdesactive;
+
+  /// No description provided for @modificationreussi.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit successful!'**
+  String get modificationreussi;
+
+  /// No description provided for @recompencecree.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward created!'**
+  String get recompencecree;
+
+  /// No description provided for @modiificationonteteenregistre.
+  ///
+  /// In en, this message translates to:
+  /// **'The changes have been saved'**
+  String get modiificationonteteenregistre;
+
+  /// No description provided for @votrerecompenceestdisponible.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reward is now available'**
+  String get votrerecompenceestdisponible;
+
+  /// No description provided for @errerusurvenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Error occurred'**
+  String get errerusurvenu;
+
+  /// No description provided for @exemple.
+  ///
+  /// In en, this message translates to:
+  /// **'Ex: \"Free coffee\", \"10% discount\", \"Free product\"'**
+  String get exemple;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

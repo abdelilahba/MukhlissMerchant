@@ -30,9 +30,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pointfidelite => 'نقاط الولاء';
 
   @override
-  String get pts => 'نقاط';
-
-  @override
   String get modifier => 'تعديل';
 
   @override
@@ -78,9 +75,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ajusterlesdetails => 'عدّل التفاصيل لتعظيم التأثير';
 
   @override
-  String get mantant => 'المبلغ';
-
-  @override
   String get requis => 'حقل مطلوب ';
 
   @override
@@ -105,13 +99,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deconnexion => 'تسجيل الخروج';
 
   @override
-  String get ajouterrecompence => 'مكافأة جديدة';
-
-  @override
   String get echange => 'قابل للتحويل ابتداءً من ';
 
   @override
   String get modifierrecompence => 'عدِّل مكافأتك الحالية';
+
+  @override
+  String get ajouterrecompence => 'مكافأة جديدة';
 
   @override
   String get creeunerecompenceattractive => ' قم بكسب ولاء عملائك من خلال عرض حصري';
@@ -160,9 +154,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get modificationencour => 'جارٍ التعديل...';
-
-  @override
-  String get creerecompence => 'إنشاء مكافأة';
 
   @override
   String get enredisterlesmodifiaction => ' حفظ التغييرات';
@@ -276,9 +267,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get nomcomplet => 'الاسم الكامل';
 
   @override
-  String get email => 'عنوان البريد الإلكتروني';
-
-  @override
   String get phone => 'رقم الهاتف';
 
   @override
@@ -295,9 +283,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get laisserviede => 'اترك الحقل فارغًا لعدم التغيير';
-
-  @override
-  String get confirmer => 'تأكيد';
 
   @override
   String get champsrequis => 'هذا الحقل مطلوب';
@@ -319,6 +304,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get annuler => 'إلغاء';
+
+  @override
+  String get confirmer => 'تأكيد';
 
   @override
   String get confirmerechange => 'تأكيد التبادل';
@@ -349,6 +337,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get revenez => 'عد لاحقًا لاكتشاف مكافآتنا الحصرية الجديدة';
+
+  @override
+  String get pts => 'نقاط';
 
   @override
   String get felicitation => 'مبروك';
@@ -384,6 +375,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get vousserezrederigervers => 'بعد إضافة الرصيد، سيتم توجيهك إلى العروض المتاحة';
 
   @override
+  String get mantant => 'المبلغ';
+
+  @override
   String get dh => 'درهم';
 
   @override
@@ -415,6 +409,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get connecterpourcontinuer => 'يرجى تسجيل الدخول للمتابعة';
+
+  @override
+  String get email => 'عنوان البريد الإلكتروني';
 
   @override
   String get veuillezsaisiremail => 'يرجى إدخال بريدك الإلكتروني';
@@ -519,6 +516,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get actionrapide => 'إجراءات سريعة';
 
   @override
+  String get creerecompence => 'إنشاء مكافأة';
+
+  @override
   String get rechargerdonnes => 'إعادة تحميل البيانات';
 
   @override
@@ -529,4 +529,58 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get commencezparcreerecompence => 'ابدأ بإنشاء أول مكافأة لك لتحفيز عملائك';
+
+  @override
+  String get active => 'نشط ';
+
+  @override
+  String get inactif => 'غير نشط ';
+
+  @override
+  String get stausoffre => 'حالة العرض';
+
+  @override
+  String get cetteoffreestactuve => 'العرض مفعل ومتاح لرؤية العملاء';
+
+  @override
+  String get cetteoffreesttemporairement => 'هذا العرض مُعَطَّل مؤقتًا';
+
+  @override
+  String get ajustez => 'قم بتعديل تفاصيل مكافأتك';
+
+  @override
+  String get creerecompenceattractive => 'قم بإنشاء مكافأة مميزة تجذب عملاءك';
+
+  @override
+  String get peaufinezrecompence => 'قم بصقل مكافأتك';
+
+  @override
+  String get nombrepointnecessaire => 'عدد النقاط المطلوبة للحصول على هذه المكافأة';
+
+  @override
+  String get statusrecompence => 'حالة المكافأة';
+
+  @override
+  String get cetterecompencedisponible => 'هذه المكافأة متاحة للعملاء';
+
+  @override
+  String get cetterecompenceesttemporairemenrdesactive => 'تم تعطيل هذه المكافأة مؤقتًا';
+
+  @override
+  String get modificationreussi => 'تم التعديل بنجاح!';
+
+  @override
+  String get recompencecree => 'تم إنشاء المكافأة!';
+
+  @override
+  String get modiificationonteteenregistre => 'تم حفظ التعديلات';
+
+  @override
+  String get votrerecompenceestdisponible => 'مكافأتك متاحة الآن';
+
+  @override
+  String get errerusurvenu => 'حدث خطأ';
+
+  @override
+  String get exemple => 'مثال: \"قهوة مجانية\"، \"خصم 10٪\"، \"منتج مجاني\"';
 }

@@ -17,6 +17,7 @@ class UpdateShopRewardUsecase {
     required String description,
     required int requiredPoints,
     String? imagePath,
+   required bool isActive
   }) async {
     final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('Utilisateur non authentifié');
@@ -27,6 +28,7 @@ class UpdateShopRewardUsecase {
       name: title,
       requiredPoints: requiredPoints,
       shopId: currentUser.id,
+     isActive: isActive
     );
 
     await repository.updateReward(reward);

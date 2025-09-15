@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/widgets/app_drawer.dart';
@@ -26,7 +28,7 @@ class _OffersScreenState extends State<OffersScreen>
   String _searchQuery = '';
   // Largeur de la sidebar
   static const double sidebarWidth = 280.0;
-  
+   String _selectedFilter = 'all'; 
   final TextEditingController _minPriceController = TextEditingController();
   final TextEditingController _maxPriceController = TextEditingController();
   final TextEditingController _minPointsController = TextEditingController();
@@ -284,20 +286,20 @@ Widget build(BuildContext context) {
                       // Navigation vers le dashboard
                     },
                   ),
-                  _buildMenuItem(
-                    icon: Icons.local_offer_outlined,
-                    title:l10n.tousoffres ,
-                    onTap: () {
-                      // Déjà sur cette page
-                    },
-                    isActive: true,
+                    _buildFilterChip(l10n.tous, 'all',manager),
+                  const SizedBox(height: 8),
+                  _buildFilterChip(l10n.activee, 'active',manager),
+                     SizedBox(height: 20,),
+                     Text(
+                    l10n.actionrapide,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade800,
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          
-          // Actions rapides en bas
+
+                      // Actions rapides en bas
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -336,6 +338,14 @@ Widget build(BuildContext context) {
               ],
             ),
           ),
+                ],
+              ),
+            ),
+          ),
+        
+                 // Actions rapides
+               
+      
         ],
       ),
     );
@@ -387,12 +397,18 @@ Widget build(BuildContext context) {
     );
   }
 
-  Widget _buildQuickStats(BuildContext context, List<Offer> offers) {
+  Widget _buildQuickStats(BuildContext context, List<Offer> offers ) {
     final L10n=AppLocalizations.of(context);
+     final activeOffersCount = offers.where((offer) => offer.isActive).length;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
+        gradient: LinearGradient(
+          colors: [
+            Colors.blue.shade50,
+            Colors.purple.shade50,
+          ],
+        ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.blue.shade200),
       ),
@@ -400,13 +416,13 @@ Widget build(BuildContext context) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-           L10n.statistique ,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.blue.shade800,
-            ),
-          ),
+               L10n.statistique ,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade800,
+                ),
+              ),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -436,6 +452,14 @@ Widget build(BuildContext context) {
                L10n.activee ,
                 style: TextStyle(
                   color: Colors.grey.shade700,
+                  fontSize: 13,
+                ),
+              ),
+              Text(
+                '${activeOffersCount}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade700,
                   fontSize: 13,
                 ),
               ),
@@ -540,6 +564,9 @@ Widget build(BuildContext context) {
   final l10n = AppLocalizations.of(context)!;
   if (state is OffersLoaded) {
     List<Offer> filteredOffers = state.offers.where((offer) {
+      if (_selectedFilter == 'active' && !offer.isActive) {
+        return false;
+      }
       // Filtre par recherche texte (prix ou points)
       if (_searchQuery.isNotEmpty) {
         final priceStr = offer.minAmount.toString(); // Enlever toStringAsFixed(2)
@@ -924,5 +951,53 @@ Widget build(BuildContext context) {
   void _handleEdit(BuildContext context, Offer offer, OfferManager manager) {
     manager.initializeControllersForEdit(offer);
     manager.navigateToEditOffer(context, offer);
+  }
+
+  Widget _buildFilterChip(String title, String value, OfferManager manager) {
+    final isSelected = _selectedFilter == value;
+    
+    return GestureDetector(
+    onTap: () {
+  setState(() {
+    _selectedFilter = value;
+    if (value == 'active') {
+      manager.loadActiveOffers();
+    } else {
+      manager.loadOffers();
+    }
+  });
+},
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue.shade50 : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? Colors.blue.shade200 : Colors.grey.shade200,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isSelected ? Colors.blue.shade600 : Colors.grey.shade400,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              title,
+              style: TextStyle(
+                color: isSelected ? Colors.blue.shade700 : Colors.grey.shade700,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

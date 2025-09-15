@@ -11,6 +11,7 @@ class UpdateOfferUseCase {
     required String id,
     required double minAmount,
     required int pointsGiven,
+    required bool isActive,
   }) async {
         final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('User not authenticated');
@@ -24,6 +25,7 @@ class UpdateOfferUseCase {
         pointsGiven: pointsGiven,
         // Make sure to preserve the magasinId from the existing offer
         magasinId: currentUser.id, // You'll need to get this from the existing offer
+        isActive: isActive
       ),
     );
   }
