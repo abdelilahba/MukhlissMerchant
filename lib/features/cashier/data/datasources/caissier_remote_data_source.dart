@@ -1,6 +1,9 @@
 import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
+
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
+
+import '../../../profile/domain/entities/magasin_entity.dart';
 
 class CacheEntry<T> {
   final T data;
@@ -298,4 +301,21 @@ class CaissierRemoteDataSource {
       print('Erreur lors du pré-chargement: $e');
     }
   }
+
+Future<MagasinModel> currentMagazin() async {
+  // Récupère l'utilisateur connecté
+  final user = supabase.auth.currentUser;
+  if (user == null) {
+    throw Exception('Aucun utilisateur connecté');
+  }
+  
+  // Utilise l'ID de l'utilisateur pour récupérer le magasin
+  final response = await supabase
+      .from('magasins')
+      .select()
+      .eq('id', user.id)  // Supposons que vous avez une colonne user_id
+      .single();
+  
+  return MagasinModel.fromJson(response);
+}
 }

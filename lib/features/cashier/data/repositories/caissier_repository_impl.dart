@@ -1,8 +1,12 @@
+import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/data/datasources/caissier_remote_data_source.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
+import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
+
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CaissierRepositoryImpl implements CaissierRepository {
   final CaissierRemoteDataSource remoteDataSource;
@@ -76,5 +80,15 @@ class CaissierRepositoryImpl implements CaissierRepository {
       magasinId: magasinId,
       montant: montant,
     );
+  }
+
+@override
+  User? getCurrentUser() {
+    return SupabaseService.client.auth.currentUser;
+  }
+ 
+ @override
+  Future<MagasinModel> currentMagazin() async {
+    return await remoteDataSource.currentMagazin();
   }
 }

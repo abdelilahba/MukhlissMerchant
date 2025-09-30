@@ -48,7 +48,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get modifieroffreexiste => 'Modify your existing offer';
 
   @override
-  String get ajouternoouveauoffre => 'Create an attractive offer for your customers';
+  String get ajouternoouveauoffre =>
+      'Create an attractive offer for your customers';
 
   @override
   String get bostezlesventes => 'Boost your sales';
@@ -72,7 +73,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get creeoffre => 'Create the offer';
 
   @override
-  String get ajusterlesdetails => 'Ajustez les détails pour maximiser l\'impact';
+  String get ajusterlesdetails =>
+      'Ajustez les détails pour maximiser l\'impact';
 
   @override
   String get requis => 'Required';
@@ -108,7 +110,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ajouterrecompence => 'New Reward';
 
   @override
-  String get creeunerecompenceattractive => 'Create an attractive reward to build loyalty';
+  String get creeunerecompenceattractive =>
+      'Create an attractive reward to build loyalty';
 
   @override
   String get modifierrecompenceexiste => 'Edit your existing reward';
@@ -120,7 +123,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get peaufinez => 'Refine your reward';
 
   @override
-  String get creerecompencesquiincitent => 'Create rewards that encourage return visits';
+  String get creerecompencesquiincitent =>
+      'Create rewards that encourage return visits';
 
   @override
   String get ajuusterlesdetails => 'Adjust the details to optimize engagement';
@@ -132,7 +136,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get descriptionrecompence => 'Description of the reward';
 
   @override
-  String get exemplerecompence => 'Ex: 1 burger gratuit, Café offert, 10% de réduction';
+  String get exemplerecompence =>
+      'Ex: 1 burger gratuit, Café offert, 10% de réduction';
 
   @override
   String get entrerladescription => 'Enter the reward description...';
@@ -168,7 +173,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get interfacecaissier => 'Cashier Interface';
 
   @override
-  String get gererfacilementcomptes => 'Easily manage customer accounts and their balances';
+  String get gererfacilementcomptes =>
+      'Easily manage customer accounts and their balances';
 
   @override
   String get solde => 'Sales';
@@ -189,13 +195,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ajoutersolde => 'Add Balance';
 
   @override
-  String get rechargezcompte => 'Top up a customer\'s account by scanning their QR code';
+  String get rechargezcompte =>
+      'Top up a customer\'s account by scanning their QR code';
 
   @override
   String get montantajouter => 'Amount to add';
 
   @override
-  String get scanerajoutermontant => 'Enter the amount then scan the customer\'s QR code';
+  String get scanerajoutermontant =>
+      'Enter the amount then scan the customer\'s QR code';
 
   @override
   String get scannercleint => 'Client Scanner';
@@ -204,10 +212,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gererrecompence => 'Manage Rewards';
 
   @override
-  String get aidezclientconsulterrecompence => 'Help customers view and claim their rewards';
+  String get aidezclientconsulterrecompence =>
+      'Help customers view and claim their rewards';
 
   @override
-  String get scannerrecompence => 'Scan the customer\'s QR code to access their rewards';
+  String get scannerrecompence =>
+      'Scan the customer\'s QR code to access their rewards';
 
   @override
   String get scannerrecompenceqr => 'Scanner for Rewards';
@@ -219,7 +229,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validation => 'Validation';
 
   @override
-  String get confiremeztransaction => 'Confirm transactions and notify the customer of changes';
+  String get confiremeztransaction =>
+      'Confirm transactions and notify the customer of changes';
 
   @override
   String get veuillez => 'Please enter a valid amount (> 0)';
@@ -366,13 +377,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chnangercamera => 'Change camera';
 
   @override
-  String get scannerpourajoutersolde => 'Scan the customer\'s QR code to add balance';
+  String get scannerpourajoutersolde =>
+      'Scan the customer\'s QR code to add balance';
 
   @override
-  String get scannerpourvoiroffre => 'Scan the customer\'s QR code to see offers';
+  String get scannerpourvoiroffre =>
+      'Scan the customer\'s QR code to see offers';
 
   @override
-  String get vousserezrederigervers => 'After adding the balance, you will be redirected to the available offers';
+  String get vousserezrederigervers =>
+      'After adding the balance, you will be redirected to the available offers';
 
   @override
   String get mantant => 'Amount';
@@ -450,7 +464,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aucunoffre => 'No offers available';
 
   @override
-  String get commencezparcree => 'Start by creating your first offer to attract your customers';
+  String get commencezparcree =>
+      'Start by creating your first offer to attract your customers';
 
   @override
   String get offresupprimersucces => 'Offer successfully deleted';
@@ -459,13 +474,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get supprimeroffre => 'Delete offer';
 
   @override
-  String get etesvoussur => 'Are you sure you want to delete this offer? This action is irreversible.';
+  String get etesvoussur =>
+      'Are you sure you want to delete this offer? This action is irreversible.';
 
   @override
   String get supprimerrecompence => 'Remove reward';
 
   @override
-  String get etesvoussurdesupprimerrecompense => 'Are you sure you want to delete this reward? This action is irreversible.';
+  String get etesvoussurdesupprimerrecompense =>
+      'Are you sure you want to delete this reward? This action is irreversible.';
 
   @override
   String get optionaffichage => 'Display options';
@@ -528,7 +545,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get oops => 'Oops! An error has occurred';
 
   @override
-  String get commencezparcreerecompence => 'Start by creating your first reward to motivate your customers';
+  String get commencezparcreerecompence =>
+      'Start by creating your first reward to motivate your customers';
 
   @override
   String get active => 'Active';
@@ -540,31 +558,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stausoffre => 'Offer status';
 
   @override
-  String get cetteoffreestactuve => 'This offer is active and visible to customers';
+  String get cetteoffreestactuve =>
+      'This offer is active and visible to customers';
 
   @override
-  String get cetteoffreesttemporairement => 'This offer is temporarily disabled';
+  String get cetteoffreesttemporairement =>
+      'This offer is temporarily disabled';
 
   @override
   String get ajustez => 'Adjust your reward details';
 
   @override
-  String get creerecompenceattractive => 'Create an attractive reward for your customers';
+  String get creerecompenceattractive =>
+      'Create an attractive reward for your customers';
 
   @override
   String get peaufinezrecompence => 'Refine your reward';
 
   @override
-  String get nombrepointnecessaire => 'Number of points needed to obtain this reward';
+  String get nombrepointnecessaire =>
+      'Number of points needed to obtain this reward';
 
   @override
   String get statusrecompence => 'Reward Status';
 
   @override
-  String get cetterecompencedisponible => 'This reward is available to customers';
+  String get cetterecompencedisponible =>
+      'This reward is available to customers';
 
   @override
-  String get cetterecompenceesttemporairemenrdesactive => 'This reward is temporarily disabled';
+  String get cetterecompenceesttemporairemenrdesactive =>
+      'This reward is temporarily disabled';
 
   @override
   String get modificationreussi => 'Edit successful!';
@@ -582,5 +606,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errerusurvenu => 'Error occurred';
 
   @override
-  String get exemple => 'Ex: \"Free coffee\", \"10% discount\", \"Free product\"';
+  String get exemple =>
+      'Ex: \"Free coffee\", \"10% discount\", \"Free product\"';
 }

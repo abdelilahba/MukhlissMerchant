@@ -108,7 +108,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ajouterrecompence => 'مكافأة جديدة';
 
   @override
-  String get creeunerecompenceattractive => ' قم بكسب ولاء عملائك من خلال عرض حصري';
+  String get creeunerecompenceattractive =>
+      ' قم بكسب ولاء عملائك من خلال عرض حصري';
 
   @override
   String get modifierrecompenceexiste => 'Edit your existing reward';
@@ -132,7 +133,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get descriptionrecompence => 'وصف المكافأة';
 
   @override
-  String get exemplerecompence => 'على سبيل المثال: برغر مجاني، قهوة مجانية، وخصم 10٪';
+  String get exemplerecompence =>
+      'على سبيل المثال: برغر مجاني، قهوة مجانية، وخصم 10٪';
 
   @override
   String get entrerladescription => 'أدخل وصف المكافأة...';
@@ -189,13 +191,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ajoutersolde => 'إضافة رصيد';
 
   @override
-  String get rechargezcompte => 'اشحن حساب العميل بمسح رمز الاستجابة السريعة الخاص به';
+  String get rechargezcompte =>
+      'اشحن حساب العميل بمسح رمز الاستجابة السريعة الخاص به';
 
   @override
   String get montantajouter => 'المبلغ المراد إضافته';
 
   @override
-  String get scanerajoutermontant => 'أدخل المبلغ ثم امسح رمز الاستجابة السريعة للعميل';
+  String get scanerajoutermontant =>
+      'أدخل المبلغ ثم امسح رمز الاستجابة السريعة للعميل';
 
   @override
   String get scannercleint => 'مسح العميل';
@@ -204,10 +208,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get gererrecompence => 'إدارة المكافآت';
 
   @override
-  String get aidezclientconsulterrecompence => 'ساعد العملاء على الاطلاع والمطالبة بمكافآتهم';
+  String get aidezclientconsulterrecompence =>
+      'ساعد العملاء على الاطلاع والمطالبة بمكافآتهم';
 
   @override
-  String get scannerrecompence => 'امسح رمز الاستجابة السريعة للعميل للوصول إلى مكافآته';
+  String get scannerrecompence =>
+      'امسح رمز الاستجابة السريعة للعميل للوصول إلى مكافآته';
 
   @override
   String get scannerrecompenceqr => 'امسح للمكافآت';
@@ -372,7 +378,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get scannerpourvoiroffre => 'امسح رمز QR الخاص بالعميل لعرض العروض';
 
   @override
-  String get vousserezrederigervers => 'بعد إضافة الرصيد، سيتم توجيهك إلى العروض المتاحة';
+  String get vousserezrederigervers =>
+      'بعد إضافة الرصيد، سيتم توجيهك إلى العروض المتاحة';
 
   @override
   String get mantant => 'المبلغ';
@@ -459,13 +466,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get supprimeroffre => 'حذف العرض';
 
   @override
-  String get etesvoussur => 'هل أنت متأكد أنك تريد حذف هذا العرض؟ لا يمكن التراجع عن هذا الإجراء.';
+  String get etesvoussur =>
+      'هل أنت متأكد أنك تريد حذف هذا العرض؟ لا يمكن التراجع عن هذا الإجراء.';
 
   @override
   String get supprimerrecompence => 'حذف المكافأة';
 
   @override
-  String get etesvoussurdesupprimerrecompense => 'هل أنت متأكد من رغبتك في حذف هذه المكافأة؟ هذا الإجراء غير قابل للاسترجاع.';
+  String get etesvoussurdesupprimerrecompense =>
+      'هل أنت متأكد من رغبتك في حذف هذه المكافأة؟ هذا الإجراء غير قابل للاسترجاع.';
 
   @override
   String get optionaffichage => 'خيارات العرض';
@@ -528,7 +537,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get oops => 'عذرًا! حدث خطأ ما';
 
   @override
-  String get commencezparcreerecompence => 'ابدأ بإنشاء أول مكافأة لك لتحفيز عملائك';
+  String get commencezparcreerecompence =>
+      'ابدأ بإنشاء أول مكافأة لك لتحفيز عملائك';
 
   @override
   String get active => 'نشط ';
@@ -555,7 +565,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get peaufinezrecompence => 'قم بصقل مكافأتك';
 
   @override
-  String get nombrepointnecessaire => 'عدد النقاط المطلوبة للحصول على هذه المكافأة';
+  String get nombrepointnecessaire =>
+      'عدد النقاط المطلوبة للحصول على هذه المكافأة';
 
   @override
   String get statusrecompence => 'حالة المكافأة';
@@ -564,7 +575,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cetterecompencedisponible => 'هذه المكافأة متاحة للعملاء';
 
   @override
-  String get cetterecompenceesttemporairemenrdesactive => 'تم تعطيل هذه المكافأة مؤقتًا';
+  String get cetterecompenceesttemporairemenrdesactive =>
+      'تم تعطيل هذه المكافأة مؤقتًا';
 
   @override
   String get modificationreussi => 'تم التعديل بنجاح!';

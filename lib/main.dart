@@ -64,6 +64,7 @@ void main() async {
             ajouterSolde: getIt(),
             chargerRecompensesClient: getIt(),
             reclamerRecompense: getIt(),
+            getCurrentMagazin: getIt(),
           ),
         ),
      BlocProvider(
