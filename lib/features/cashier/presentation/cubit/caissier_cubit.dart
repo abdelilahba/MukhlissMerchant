@@ -2,18 +2,23 @@
 import 'package:bloc/bloc.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/ajouter_solde.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/charger_recompenses_usecase.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/usecases/getcurrent_magazin.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/reclamer_recompense_usecase.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
+import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
+
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CaissierCubit extends Cubit<CaissierState> {
   final AjouterSoldeUseCase ajouterSolde;
   final ChargerRecompensesClientUseCase chargerRecompensesClient;
   final ReclamerRecompenseUseCase reclamerRecompense;
-
+   final GetCurrentMagazin getCurrentMagazin;
   CaissierCubit({
     required this.ajouterSolde,
     required this.chargerRecompensesClient,
     required this.reclamerRecompense,
+    required this.getCurrentMagazin,
   }) : super(CaissierInitial());
 
   Future<void> ajouterSoldeClient({
@@ -76,4 +81,18 @@ class CaissierCubit extends Cubit<CaissierState> {
       emit(CaissierError(message: e.toString()));
     }
   }
+
+// Dans CaissierCubit
+Future<MagasinModel> getCurrentMagasin() async {
+  emit(CaissierLoading());
+  try {
+    MagasinModel magasin = await getCurrentMagazin.execute();
+    emit(CurrentMagasinLoaded(magasin: magasin));
+    return magasin;
+  } catch (e) {
+    emit(CaissierError(message: e.toString()));
+    throw Exception('Failed to load current magasin: $e');
+  }
+}
+
 }

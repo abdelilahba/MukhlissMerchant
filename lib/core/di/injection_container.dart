@@ -11,6 +11,7 @@ import 'package:mukhlissmagasin/features/cashier/data/repositories/caissier_repo
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/ajouter_solde.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/charger_recompenses_usecase.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/usecases/getcurrent_magazin.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/reclamer_recompense_usecase.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/language/data/datasources/locale_datasource.dart';
@@ -139,12 +140,13 @@ getIt.registerLazySingleton<CaissierRepository>(
 getIt.registerLazySingleton(() => AjouterSoldeUseCase(repository: getIt()));
 getIt.registerLazySingleton(() => ChargerRecompensesClientUseCase(repository: getIt() ));
 getIt.registerLazySingleton(() => ReclamerRecompenseUseCase(repository: getIt()));
-
+getIt.registerLazySingleton(() => GetCurrentMagazin(repository: getIt()) );
 // Caissier Cubit
 getIt.registerFactory(() => CaissierCubit(
   ajouterSolde: getIt(),
   chargerRecompensesClient: getIt(),
   reclamerRecompense: getIt(),
+  getCurrentMagazin: getIt(),
 ));
 // Language dependencies
 getIt.registerLazySingleton<LocaleDatasource>(() => SharedPrefsLocaleDatasource());

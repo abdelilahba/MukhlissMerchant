@@ -1,5 +1,8 @@
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
+import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart' show MagasinModel;
+
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class CaissierRepository {
 
@@ -34,4 +37,8 @@ abstract class CaissierRepository {
     required String magasinId,
     required double montant,
   });
+
+   User? getCurrentUser();
+
+  Future<MagasinModel> currentMagazin();
 }

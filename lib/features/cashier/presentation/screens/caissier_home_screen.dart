@@ -1,14 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/widgets/app_drawer.dart';
+import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
+import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/recompenses_disponibles_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
+import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
+
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
-class CaissierHomeScreen extends StatelessWidget {
+
+class CaissierHomeScreen extends StatefulWidget {
+  const CaissierHomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CaissierHomeScreen> createState() => _CaissierHomeScreenState();
+}
+
+
+class _CaissierHomeScreenState extends State<CaissierHomeScreen>  {
   final _montantController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   
-  CaissierHomeScreen({Key? key}) : super(key: key);
+   @override
+  void initState() {
+    super.initState();
+    // Charge le magasin au démarrage
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CaissierCubit>().getCurrentMagasin();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,28 +114,24 @@ class CaissierHomeScreen extends StatelessWidget {
         // Colonne gauche - Stats et info
         Expanded(
           flex: 2,
-          child: SingleChildScrollView(  // Add this
-            child: Column(  // This is line 140
-              children: [
-                _buildWelcomeSection(context),
-                const SizedBox(height: 24),
-              
-               
-                _buildHelpSection(context),
-              ],
-            ),
+          child: Column(
+            children: [
+              // Logo - taille naturelle
+              _buildWelcomeSection(context),
+              const SizedBox(height: 24),
+              // Section aide - prend TOUT l'espace restant
+              Expanded(
+                child: _buildHelpSection(context),
+              ),
+            ],
           ),
         ),
         const SizedBox(width: 32),
         // Colonne droite - Actions principales
         Expanded(
           flex: 3,
-          child: SingleChildScrollView(  // Add this
-            child: Column(  // This is line 154
-              children: [
-                _buildMainActionsGrid(context),
-              ],
-            ),
+          child: SingleChildScrollView(
+            child: _buildMainActionsGrid(context),
           ),
         ),
       ],
@@ -122,177 +139,119 @@ class CaissierHomeScreen extends StatelessWidget {
   );
 }
 
-  Widget _buildMobileLayout(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          _buildWelcomeSection(context),
-          const SizedBox(height: 24),
-       
-         
-          _buildMainActionsGrid(context),
-          const SizedBox(height: 24),
-          _buildHelpSection(context),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildWelcomeSection(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Container(
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF3B82F6),
-            const Color(0xFF1D4ED8),
-            const Color(0xFF1E40AF),
+Widget _buildMobileLayout(BuildContext context) {
+  return SingleChildScrollView(  // Garde le défilement pour mobile
+    padding: const EdgeInsets.all(20.0),
+    child: Column(
+      children: [
+        _buildWelcomeSection(context),
+        const SizedBox(height: 24),
+        _buildMainActionsGrid(context),
+        const SizedBox(height: 24),
+        _buildHelpSection(context),
+      ],
+    ),
+  );
+}
+
+Widget _buildWelcomeSection(BuildContext context) {
+  final l10n = AppLocalizations.of(context)!;
+  
+  return BlocBuilder<CaissierCubit, CaissierState>(
+    builder: (context, state) {
+      MagasinModel? currentMagasin;
+      bool isLoading = false;
+      
+      if (state is CurrentMagasinLoaded) {
+        currentMagasin = state.magasin;
+      } else if (state is CaissierLoading) {
+        isLoading = true;
+      }
+      
+      return Container(
+        width: double.infinity,
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Important!
+          children: [
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 600,
+              ),
+              child: _buildModernLogoSection(currentMagasin, isLoading),
+            ),
           ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.white.withOpacity(0.2),
-                width: 2,
-              ),
-            ),
-            child: const Icon(
-              Icons.storefront_rounded,
-              size: 48,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            l10n.bienvenucaissier,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.white70,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            l10n.interfacecaissier,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              height: 1.2,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 12),
-          Text(
-            l10n.gererfacilementcomptes,
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.white,
-              height: 1.4,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+      );
+    },
+  );
+}
 
-
-
-  Widget _buildStatCard({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required String value,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey[100]!),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+Widget _buildModernLogoSection(MagasinModel? magasin, bool isLoading) {
+  return Container(
+    width: double.infinity,
+    child: Column(
+      mainAxisSize: MainAxisSize.min, // Important!
+      children: [
+        if (isLoading) 
+          const CircularProgressIndicator()
+        else if (magasin != null)
+          _buildModernLogo(magasin)
+        else
+          const Icon(
+            Icons.storefront_rounded,
+            size: 100,
+            color: Colors.grey,
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(16),
+      ],
+    ),
+  );
+}
+
+Widget _buildModernLogo(MagasinModel magasin) {
+  final logoUrl = magasin.imageUrl;
+  
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      // Calcule une hauteur adaptative basée sur l'espace disponible
+      final maxHeight = constraints.maxHeight > 0 
+          ? constraints.maxHeight.clamp(150.0, 250.0) 
+          : 200.0;
+      
+      return Container(
+        width: 250,
+        height: 250,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100), // Rendre circulaire
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: ClipOval( // Utiliser ClipOval au lieu de ClipRRect pour un cercle parfait
+          child: Image.network(
+            logoUrl,
+            width: 200,
+            height: maxHeight,
+            fit: BoxFit.cover, // Conserver BoxFit.cover pour bien remplir le cercle
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(
+                color: Colors.grey[100],
+                child: const Center(
+                  child: CircularProgressIndicator(),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 24,
-                ),
-              ),
-              Icon(
-                Icons.more_horiz,
-                color: Colors.grey[400],
-                size: 20,
-              ),
-            ],
+              );
+            },
           ),
-          const SizedBox(height: 20),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF1E293B),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF475569),
-            ),
-          ),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[500],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
+        ),
+      );
+    },
+  );
+}
   Widget _buildMainActionsGrid(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
@@ -626,59 +585,69 @@ class CaissierHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHelpSection(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey[100]!),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+Widget _buildHelpSection(BuildContext context) {
+  final l10n = AppLocalizations.of(context)!;
+  
+  return Container(
+    height: double.infinity, // Prend toute la hauteur disponible
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: Colors.grey[100]!),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.04),
+          blurRadius: 20,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    ),
+    child: SingleChildScrollView(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(Icons.help_outline_rounded, color: Colors.blue[600], size: 24),
+                child: Icon(
+                  Icons.help_outline_rounded, 
+                  color: Colors.blue[600], 
+                  size: 18
+                ),
               ),
-              const SizedBox(width: 16),
-              Text(
-                l10n.commentmarche,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E293B),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  l10n.commentmarche,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E293B),
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           _buildHelpStep(
             number: '1',
             title: l10n.ajoutersolde,
             description: l10n.scanerajoutermontant,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 10),
           _buildHelpStep(
             number: '2',
             title: l10n.gererrecompence,
             description: l10n.scannerrecompence,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 10),
           _buildHelpStep(
             number: '3',
             title: l10n.validation,
@@ -686,65 +655,66 @@ class CaissierHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildHelpStep({
-    required String number,
-    required String title,
-    required String description,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue[600]!, Colors.blue[500]!],
-            ),
-            borderRadius: BorderRadius.circular(16),
+ Widget _buildHelpStep({
+  required String number,
+  required String title,
+  required String description,
+}) {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        width: 28,
+        height: 28,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue[600]!, Colors.blue[500]!],
           ),
-          child: Center(
-            child: Text(
-              number,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Center(
+          child: Text(
+            number,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(width: 12),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
               style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
+                color: Color(0xFF1E293B),
               ),
             ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E293B),
-                ),
+            const SizedBox(height: 12),
+            Text(
+              description,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+                height: 1.3,
               ),
-              const SizedBox(height: 4),
-              Text(
-                description,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                  height: 1.4,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 
   Future<void> _handleAddBalance(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
