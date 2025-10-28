@@ -359,7 +359,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get felicitation => 'Félicitations';
 
   @override
-  String get vousvenezgagner => 'Vous venez de gagner';
+  String get vousvenezgagner => 'Le solde actualisé de vos points';
 
   @override
   String get points => 'points';

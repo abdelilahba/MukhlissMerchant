@@ -775,7 +775,7 @@ abstract class AppLocalizations {
   /// No description provided for @vousvenezgagner.
   ///
   /// In en, this message translates to:
-  /// **'You just won'**
+  /// **'Your updated points balance'**
   String get vousvenezgagner;
 
   /// No description provided for @points.
