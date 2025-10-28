@@ -351,7 +351,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get felicitation => 'مبروك';
 
   @override
-  String get vousvenezgagner => 'لقد ربحت للتو';
+  String get vousvenezgagner => 'الرصيد الحالي لنقاطك';
 
   @override
   String get points => 'نقاط';

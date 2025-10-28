@@ -356,7 +356,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get felicitation => 'Congratulations';
 
   @override
-  String get vousvenezgagner => 'You just won';
+  String get vousvenezgagner => 'Your updated points balance';
 
   @override
   String get points => 'points';

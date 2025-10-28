@@ -29,7 +29,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
   final CaissierCubit _cubit = getIt<CaissierCubit>();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-
+List<Reward> _selectedRewards = [];
   @override
   void initState() {
     super.initState();
@@ -79,7 +79,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
   }
 
   Widget _buildLoadingScreen() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: Center(
@@ -217,27 +217,263 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     );
   }
 
-  Widget _buildScaffold(List<Reward> rewards, int clientPoints) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
+Widget _buildScaffold(List<Reward> rewards, int clientPoints) {
+  return Scaffold(
+    backgroundColor: const Color(0xFFF8FAFC),
+    body: SafeArea(
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Column(
+          children: [
+            _buildModernAppBar(clientPoints: clientPoints),
+            _buildHeaderSection(),
+            Expanded(
+              child: rewards.isEmpty
+                  ? _buildEmptyState()
+                  : _buildRewardsList(rewards, clientPoints),
+            ),
+            // Nouveau bouton d'échange
+            if (_selectedRewards.isNotEmpty) _buildExchangeButton(clientPoints),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+void _confirmMultipleClaims() async {
+  final L10n = AppLocalizations.of(context)!;
+  final totalCost = _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
+  
+  final confirm = await showDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => AlertDialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      contentPadding: EdgeInsets.zero,
+      content: Container(
+        width: double.maxFinite,
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                ),
+                borderRadius: BorderRadius.circular(40),
+              ),
+              child: const Icon(
+                Icons.card_giftcard_rounded,
+                color: Colors.white,
+                size: 40,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'confirmer l\'échange',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[800],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  // Liste des récompenses sélectionnées
+                  ..._selectedRewards.map((reward) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            reward.name,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        Text(
+                          '${reward.requiredPoints} pts',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF6366F1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+                  const SizedBox(height: 12),
+                  Container(height: 1, color: Colors.grey[300]),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Text('total', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      const Spacer(),
+                      Text(
+                        '$totalCost pts',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF6366F1),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Text(L10n.newsolde, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      const Spacer(),
+                      Text(
+                        '${widget.clientPoints - totalCost} pts',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF10B981),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      side: BorderSide(color: Colors.grey[300]!),
+                    ),
+                    child: Text(
+                      L10n.annuler,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6366F1),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    ),
+                    child: Text(
+                      L10n.confirmer,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+
+  if (confirm == true) {
+    // Appeler votre cubit pour échanger toutes les récompenses sélectionnées
+    for (final reward in _selectedRewards) {
+      _cubit.claimReward(
+        clientId: widget.clientId,
+        magasinId: widget.magasinId,
+        rewardId: reward.id,
+        pointsRequired: reward.requiredPoints,
+      );
+    }
+  }
+}
+Widget _buildExchangeButton(int clientPoints) {
+  final L10n = AppLocalizations.of(context)!;
+  final totalCost = _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
+  final canAfford = clientPoints >= totalCost;
+  
+  return Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 20,
+          offset: const Offset(0, -5),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Expanded(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildModernAppBar(clientPoints: clientPoints),
-              _buildHeaderSection(),
-              Expanded(
-                child: rewards.isEmpty
-                    ? _buildEmptyState()
-                    : _buildRewardsList(rewards, clientPoints),
+              Text(
+                '${_selectedRewards.length} confirmer l\'échange',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                ),
+              ),
+              Text(
+                'Total: $totalCost ${L10n.pts}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF6366F1),
+                ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
+        const SizedBox(width: 16),
+        ElevatedButton(
+          onPressed: canAfford ? () => _confirmMultipleClaims() : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: canAfford ? const Color(0xFF6366F1) : Colors.grey.shade400,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          child: Text(
+            "échanger",
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildModernAppBar({int? clientPoints}) {
     final L10n=AppLocalizations.of(context)!;
@@ -415,168 +651,137 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     );
   }
 
-  Widget _buildRewardsList(List<Reward> rewards, int clientPoints) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      itemCount: rewards.length,
-      itemBuilder: (context, index) {
-        final reward = rewards[index];
-        final disponible = clientPoints >= reward.requiredPoints;
-        return AnimatedContainer(
-          duration: Duration(milliseconds: 200 + (index * 100)),
-          margin: const EdgeInsets.only(bottom: 16),
-          child: _buildModernRewardCard(reward, disponible, index),
-        );
-      },
-    );
-  }
+Widget _buildRewardsList(List<Reward> rewards, int clientPoints) {
+  return ListView.builder(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    itemCount: rewards.length,
+    itemBuilder: (context, index) {
+      final reward = rewards[index];
+      final disponible = clientPoints >= reward.requiredPoints;
+      return AnimatedContainer(
+        duration: Duration(milliseconds: 200 + (index * 100)),
+        margin: const EdgeInsets.only(bottom: 16),
+        child: _buildModernRewardCard(reward, disponible, index, clientPoints),
+      );
+    },
+  );
+}
 
-  Widget _buildModernRewardCard(Reward reward, bool disponible, int index) {
-    final L10n=AppLocalizations.of(context)!;
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
+  Widget _buildModernRewardCard(Reward reward, bool disponible, int index, int clientPoints) {
+  final L10n = AppLocalizations.of(context)!;
+  final isSelected = _isRewardSelected(reward);
+  final canAfford = clientPoints >= reward.requiredPoints;
+  
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      border: isSelected 
+          ? Border.all(color: const Color(0xFF6366F1), width: 2)
+          : null,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.08),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Material(
+      color: Colors.transparent,
+      child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: disponible ? () => _confirmClaim(reward) : null,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                Hero(
-                  tag: 'reward_${reward.id}',
-                  child: Container(
-                    width: 70,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      gradient: disponible
-                          ? const LinearGradient(
-                              colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                            )
-                          : LinearGradient(
-                              colors: [Colors.grey.shade300, Colors.grey.shade400],
-                            ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: disponible
-                          ? [
-                              BoxShadow(
-                                color: const Color(0xFF6366F1).withOpacity(0.3),
-                                blurRadius: 12,
-                                offset: const Offset(0, 6),
-                              ),
-                            ]
-                          : null,
-                    ),
-                    child: Icon(
-                      Icons.card_giftcard_rounded,
-                      size: 32,
-                      color: Colors.white,
-                    ),
+        onTap: canAfford ? () => _toggleRewardSelection(reward) : null,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              // Checkbox de sélection
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: isSelected ? const Color(0xFF6366F1) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: canAfford ? const Color(0xFF6366F1) : Colors.grey.shade400,
+                    width: 2,
                   ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        reward.name,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: disponible ? Colors.grey[800] : Colors.grey[500],
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                   L10n.descriptionnondisponible  ,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                          height: 1.4,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (!disponible) ...[
-                        const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 4,
+                child: isSelected
+                    ? const Icon(
+                        Icons.check_rounded,
+                        size: 16,
+                        color: Colors.white,
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 16),
+              // Icône de la récompense
+              Hero(
+                tag: 'reward_${reward.id}',
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    gradient: canAfford
+                        ? const LinearGradient(
+                            colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                          )
+                        : LinearGradient(
+                            colors: [Colors.grey.shade300, Colors.grey.shade400],
                           ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFEF2F2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            L10n.ilvousmanque+'${reward.requiredPoints - widget.clientPoints} pts',
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Color(0xFFF87171),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(
+                    Icons.card_giftcard_rounded,
+                    size: 28,
+                    color: Colors.white,
                   ),
                 ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+              ),
+              const SizedBox(width: 16),
+              
+              // Informations de la récompense
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: disponible
-                            ? const LinearGradient(
-                                colors: [Color(0xFF10B981), Color(0xFF059669)],
-                              )
-                            : LinearGradient(
-                                colors: [Colors.grey.shade400, Colors.grey.shade500],
-                              ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Text(
-                        '${reward.requiredPoints}'+L10n.pts,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
+                    Text(
+                      reward.name,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: canAfford ? Colors.grey[800] : Colors.grey[500],
                       ),
                     ),
-                    if (disponible) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      L10n.descriptionnondisponible,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                        height: 1.4,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (!canAfford) ...[
                       const SizedBox(height: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
+                          horizontal: 12,
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFECFDF5),
-                          borderRadius: BorderRadius.circular(8),
+                          color: const Color(0xFFFEF2F2),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                         L10n.disponible ,
+                          '${L10n.ilvousmanque} ${reward.requiredPoints - clientPoints} pts',
                           style: const TextStyle(
-                            fontSize: 10,
-                            color: Color(0xFF059669),
+                            fontSize: 11,
+                            color: Color(0xFFF87171),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -584,13 +789,87 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
                     ],
                   ],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 16),
+              
+              // Points et statut
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: canAfford
+                          ? const LinearGradient(
+                              colors: [Color(0xFF10B981), Color(0xFF059669)],
+                            )
+                          : LinearGradient(
+                              colors: [Colors.grey.shade400, Colors.grey.shade500],
+                            ),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      '${reward.requiredPoints}${L10n.pts}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  if (canAfford) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFECFDF5),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        L10n.disponible,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Color(0xFF059669),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+  void _toggleRewardSelection(Reward reward) {
+  setState(() {
+    if (_selectedRewards.contains(reward)) {
+      _selectedRewards.remove(reward);
+    } else {
+      _selectedRewards.add(reward);
+    }
+  });
+}
+
+bool _isRewardSelected(Reward reward) {
+  return _selectedRewards.contains(reward);
+}
+
+bool _canAffordAllSelectedRewards(int clientPoints) {
+  final totalCost = _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
+  return clientPoints >= totalCost;
+}
+
 
   void _confirmClaim(Reward reward) async {
     final L10n =AppLocalizations.of(context)!;
