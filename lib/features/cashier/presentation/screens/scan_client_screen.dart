@@ -31,10 +31,10 @@ class ScanClientScreen extends StatefulWidget {
 class _ScanClientScreenState extends State<ScanClientScreen> {
   // Constants
   static const _qrDebugLabel = 'QR';
-  static const _cutOutSize = 250.0;
-  static const _borderWidth = 10.0;
-  static const _borderLength = 30.0;
-  static const _borderRadius = 10.0;
+ static const _cutOutSize = 1000.0;
+static const _borderWidth = 16.0;
+static const _borderLength = 80.0;
+static const _borderRadius = 40.0;
 
   // Controllers and state
   final GlobalKey _qrKey = GlobalKey(debugLabel: _qrDebugLabel);

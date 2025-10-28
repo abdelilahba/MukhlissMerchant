@@ -21,7 +21,7 @@ version: 1.0.0+1
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/mukhlislogo.png"
+  image_path: "assets/images/mukhlis1.png"
 
 environment:
   sdk: ^3.7.2
@@ -83,6 +83,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/audio/success.mp3
+    - assets/images/mukhlislogo.png
+    - assets/images/mukhlis1.png
+    - assets/images/mukhlislogo1.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
