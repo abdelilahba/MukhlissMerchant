@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:mukhlissmagasin/features/auth/presentation/cubit/auth_state.dart';
+
 import 'package:mukhlissmagasin/features/auth/presentation/screens/login_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/caissier_home_screen.dart';
 import 'package:mukhlissmagasin/features/offers/presentation/screens/offers_screen.dart';
 import 'package:mukhlissmagasin/features/parametres/presentation/screens/parametre_screen.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/screens/rewards_screen.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
-
-
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -49,6 +48,7 @@ class AppDrawer extends StatelessWidget {
                   _buildMenuSection(
                     title: l10n.navigation,
                     items: [
+                    
                       _MenuItemData(
                         icon: Icons.local_offer_rounded,
                         title: l10n.offre,

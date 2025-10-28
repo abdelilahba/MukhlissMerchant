@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
+
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/success_screen.dart';
@@ -770,6 +771,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
         rewardId: reward.id,
         pointsRequired: reward.requiredPoints,
       );
+     
     }
   }
 
