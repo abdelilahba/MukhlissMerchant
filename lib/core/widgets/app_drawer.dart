@@ -84,13 +84,13 @@ class AppDrawer extends StatelessWidget {
                     ],
                   ),
                   
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 40),
+                    _buildLogoutSection(context, l10n),
                 ],
               ),
             ),
             
-            // Bouton de déconnexion en bas
-            _buildLogoutSection(context, l10n),
+          
           ],
         ),
       ),

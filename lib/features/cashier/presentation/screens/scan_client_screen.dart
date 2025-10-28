@@ -17,24 +17,23 @@ enum ScanMode { balance, rewards }
 
 /// Screen for scanning client QR codes to add balance or view offers
 class ScanClientScreen extends StatefulWidget {
-  final double? montant; // Nullable for offers mode
+  final double? montant;
   final ScanMode mode;
 
   const ScanClientScreen.balance(this.montant, {super.key}) : mode = ScanMode.balance;
-
   const ScanClientScreen.rewards({super.key}) : mode = ScanMode.rewards, montant = null;
 
   @override
   State<ScanClientScreen> createState() => _ScanClientScreenState();
 }
 
-class _ScanClientScreenState extends State<ScanClientScreen> {
+class _ScanClientScreenState extends State<ScanClientScreen> with TickerProviderStateMixin {
   // Constants
   static const _qrDebugLabel = 'QR';
- static const _cutOutSize = 1000.0;
-static const _borderWidth = 16.0;
-static const _borderLength = 80.0;
-static const _borderRadius = 40.0;
+  static const _cutOutSize = 1000.0;
+  static const _borderWidth = 16.0;
+  static const _borderLength = 80.0;
+  static const _borderRadius = 40.0;
 
   // Controllers and state
   final GlobalKey _qrKey = GlobalKey(debugLabel: _qrDebugLabel);
@@ -42,21 +41,64 @@ static const _borderRadius = 40.0;
   final CaissierCubit _cubit = getIt<CaissierCubit>();
   bool _isProcessing = false;
 
+  // Animation controllers
+  late AnimationController _scanLineController;
+  late AnimationController _cornerController;
+  late AnimationController _pulseController;
+  late Animation<double> _scanLineAnimation;
+  late Animation<double> _cornerAnimation;
+  late Animation<double> _pulseAnimation;
+
   // Store client data for navigation
   String? _lastClientId;
   String? _lastMagasinId;
 
-  // Check if we're in balance mode (montant is provided) or offers mode
   bool get _isBalanceMode => widget.montant != null;
-  final AudioPlayer _audioPlayer =
-      AudioPlayer()..setReleaseMode(ReleaseMode.stop);
+  final AudioPlayer _audioPlayer = AudioPlayer()..setReleaseMode(ReleaseMode.stop);
+
+  @override
+  void initState() {
+    super.initState();
+    _initAnimations();
+  }
+
+  void _initAnimations() {
+    // Scan line animation (vertical movement)
+    _scanLineController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    )..repeat(reverse: true);
+    
+    _scanLineAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _scanLineController, curve: Curves.easeInOut),
+    );
+
+    // Corner pulse animation
+    _cornerController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat(reverse: true);
+    
+    _cornerAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _cornerController, curve: Curves.easeInOut),
+    );
+
+    // Outer pulse animation
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    )..repeat();
+    
+    _pulseAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeOut),
+    );
+  }
+
   Future<void> _playSuccessSound() async {
     try {
-      await _audioPlayer.stop(); // au cas où un son joue déjà
+      await _audioPlayer.stop();
       await _audioPlayer.play(AssetSource('audio/success.mp3'));
-    } catch (_) {
-      // en production vous pourriez logger l’erreur
-    }
+    } catch (_) {}
   }
 
   @override
@@ -72,9 +114,7 @@ static const _borderRadius = 40.0;
     );
   }
 
-  /// Builds the main scaffold with QR scanner
   Widget _buildScaffold(CaissierState state) {
-    
     return Scaffold(
       appBar: _buildAppBar(),
       body: Stack(
@@ -86,99 +126,243 @@ static const _borderRadius = 40.0;
     );
   }
 
-  /// Builds the app bar with camera switch button
   PreferredSizeWidget _buildAppBar() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context)!;
     return AppBar(
       title: Text(
-        _isBalanceMode
-            ? L10n.scannerajoutersolde
-            : L10n.scannervoiroffre ,
+        _isBalanceMode ? L10n.scannerajoutersolde : L10n.scannervoiroffre,
       ),
       elevation: 0,
       actions: [
         IconButton(
           icon: const Icon(Icons.flip_camera_ios),
           onPressed: _flipCamera,
-          tooltip:L10n.chnangercamera ,
+          tooltip: L10n.chnangercamera,
         ),
       ],
     );
   }
 
-  /// Builds the main content with QR scanner and info
-Widget _buildMainContent() {
-  final L10n=AppLocalizations.of(context)!;
-  return Column(
-    children: [
-      Expanded(
-        flex: 3,
-        child: QRView(
-          key: _qrKey,
-          onQRViewCreated: _onQRViewCreated,
-          overlay: _buildScannerOverlay(),
-          cameraFacing: CameraFacing.front,
-          formatsAllowed: const [BarcodeFormat.qrcode],
-        ),
-      ),
-      Container( // Remplacez le Expanded par un Container simple
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              _isBalanceMode ? Icons.add_circle : Icons.local_offer,
-              size: 32,
-              color: Colors.grey,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _isBalanceMode
-                  ?L10n.scannerpourajoutersolde 
-                  : L10n.scannerpourvoiroffre,
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            if (_isBalanceMode) _buildAmountDisplay(),
-            if (_isBalanceMode) ...[
-              const SizedBox(height: 12),
-              Text(
-               L10n.vousserezrederigervers ,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
-                  fontStyle: FontStyle.italic,
+  Widget _buildMainContent() {
+    final L10n = AppLocalizations.of(context)!;
+    return Column(
+      children: [
+        Expanded(
+          flex: 3,
+          child: Stack(
+            children: [
+              QRView(
+                key: _qrKey,
+                onQRViewCreated: _onQRViewCreated,
+                overlay: QrScannerOverlayShape(
+                  borderColor: Colors.transparent,
+                  borderRadius: _borderRadius,
+                  borderLength: 0,
+                  borderWidth: 0,
+                  cutOutSize: _cutOutSize,
                 ),
+                cameraFacing: CameraFacing.front,
+                formatsAllowed: const [BarcodeFormat.qrcode],
+              ),
+              // Custom animated overlay
+              _buildAnimatedOverlay(),
+            ],
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                _isBalanceMode ? Icons.add_circle : Icons.local_offer,
+                size: 32,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _isBalanceMode
+                    ? L10n.scannerpourajoutersolde
+                    : L10n.scannerpourvoiroffre,
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 8),
+              if (_isBalanceMode) _buildAmountDisplay(),
+              if (_isBalanceMode) ...[
+                const SizedBox(height: 12),
+                Text(
+                  L10n.vousserezrederigervers,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ],
-          ],
+          ),
         ),
-      ),
-    ],
-  );
-}
-
-// Supprimez complètement la méthode _buildInfoSection() existante
-
-
-  /// Builds the scanner overlay
-  QrScannerOverlayShape _buildScannerOverlay() {
-    return QrScannerOverlayShape(
-      borderColor: Theme.of(context).primaryColor,
-      borderRadius: _borderRadius,
-      borderLength: _borderLength,
-      borderWidth: _borderWidth,
-      cutOutSize: _cutOutSize,
+      ],
     );
   }
 
- 
+  Widget _buildAnimatedOverlay() {
+    return Center(
+      child: SizedBox(
+        width: _cutOutSize,
+        height: _cutOutSize,
+        child: Stack(
+          children: [
+            // Outer pulse effect
+            AnimatedBuilder(
+              animation: _pulseAnimation,
+              builder: (context, child) {
+                return Opacity(
+                  opacity: 1 - _pulseAnimation.value,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(_borderRadius),
+                      border: Border.all(
+                        color: Theme.of(context).primaryColor,
+                        width: _borderWidth * (1 + _pulseAnimation.value * 0.5),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            // Main border with gradient
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(_borderRadius),
+                border: Border.all(
+                  color: Theme.of(context).primaryColor,
+                  width: _borderWidth,
+                ),
+              ),
+            ),
+            // Animated corners
+            _buildAnimatedCorners(),
+            // Scan line animation
+            AnimatedBuilder(
+              animation: _scanLineAnimation,
+              builder: (context, child) {
+                return Positioned(
+                  top: _cutOutSize * _scanLineAnimation.value - 2,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: 4,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.transparent,
+                          Theme.of(context).primaryColor.withOpacity(0.8),
+                          Colors.transparent,
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).primaryColor.withOpacity(0.5),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+            // Grid pattern
+            _buildGridPattern(),
+          ],
+        ),
+      ),
+    );
+  }
 
-  /// Builds the amount display (only shown in balance mode)
+  Widget _buildAnimatedCorners() {
+    return AnimatedBuilder(
+      animation: _cornerAnimation,
+      builder: (context, child) {
+        final color = Theme.of(context).primaryColor;
+        return Stack(
+          children: [
+            // Top-left corner
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Transform.scale(
+                scale: _cornerAnimation.value,
+                alignment: Alignment.topLeft,
+                child: _buildCorner(color, true, true),
+              ),
+            ),
+            // Top-right corner
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Transform.scale(
+                scale: _cornerAnimation.value,
+                alignment: Alignment.topRight,
+                child: _buildCorner(color, true, false),
+              ),
+            ),
+            // Bottom-left corner
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: Transform.scale(
+                scale: _cornerAnimation.value,
+                alignment: Alignment.bottomLeft,
+                child: _buildCorner(color, false, true),
+              ),
+            ),
+            // Bottom-right corner
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Transform.scale(
+                scale: _cornerAnimation.value,
+                alignment: Alignment.bottomRight,
+                child: _buildCorner(color, false, false),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildCorner(Color color, bool isTop, bool isLeft) {
+    return SizedBox(
+      width: _borderLength,
+      height: _borderLength,
+      child: CustomPaint(
+        painter: CornerPainter(
+          color: color,
+          isTop: isTop,
+          isLeft: isLeft,
+          borderWidth: _borderWidth * 1.5,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGridPattern() {
+    return Opacity(
+      opacity: 0.1,
+      child: CustomPaint(
+        size: const Size(_cutOutSize, _cutOutSize),
+        painter: GridPainter(color: Theme.of(context).primaryColor),
+      ),
+    );
+  }
+
   Widget _buildAmountDisplay() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -186,7 +370,7 @@ Widget _buildMainContent() {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        L10n.mantant+': ${widget.montant!.toStringAsFixed(2)}'+L10n.dh ,
+        L10n.mantant + ': ${widget.montant!.toStringAsFixed(2)}' + L10n.dh,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -196,9 +380,8 @@ Widget _buildMainContent() {
     );
   }
 
-  /// Builds the loading overlay
   Widget _buildLoadingOverlay() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context)!;
     return Container(
       color: Colors.black54,
       child: Center(
@@ -210,16 +393,14 @@ Widget _buildMainContent() {
             ),
             const SizedBox(height: 16),
             Text(
-              _isBalanceMode
-                  ? L10n.ajoutencour 
-                  : L10n.traitementencouor,
+              _isBalanceMode ? L10n.ajoutencour : L10n.traitementencouor,
               style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
             if (_isBalanceMode) ...[
               const SizedBox(height: 8),
-               Text(
-               L10n.redirectionversoffres ,
-                style: TextStyle(color: Colors.white70, fontSize: 14),
+              Text(
+                L10n.redirectionversoffres,
+                style: const TextStyle(color: Colors.white70, fontSize: 14),
               ),
             ],
           ],
@@ -228,14 +409,11 @@ Widget _buildMainContent() {
     );
   }
 
-  /// Handles cubit state changes
   void _handleStateChanges(BuildContext context, CaissierState state) {
     switch (state) {
       case SoldeAjoute():
-        final pointsGagnes =
-            state.clientMagasin.cumulePoint; // Adjust property name as needed
-        final soldeRestant =
-            state.clientMagasin.solde; // Adjust property name as needed
+        final pointsGagnes = state.clientMagasin.cumulePoint;
+        final soldeRestant = state.clientMagasin.solde;
         _handleBalanceAdded(pointsGagnes, soldeRestant);
         break;
       case CaissierError():
@@ -246,39 +424,27 @@ Widget _buildMainContent() {
     }
   }
 
-  /// Handles successful balance addition - automatically redirects to offers
-  /// Handles successful balance addition - automatically redirects to offers and rewards
-  Future<void> _handleBalanceAdded(
-   double   pointsGagnes,
-    double soldeRestant,
-  ) async {
+  Future<void> _handleBalanceAdded(double pointsGagnes, double soldeRestant) async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder:
-            (_) => FelicitationScreen(
-              pointsGagnes: pointsGagnes.toInt(),
-              soldeRestant: soldeRestant,
-            ),
+        builder: (_) => FelicitationScreen(
+          pointsGagnes: pointsGagnes.toInt(),
+          soldeRestant: soldeRestant,
+        ),
       ),
     );
-    if (mounted) Navigator.pop(context, true); // retour à la Home
+    if (mounted) Navigator.pop(context, true);
   }
 
-  /// Handles errors
   void _handleError(String message) {
     _setProcessing(false);
     _showSnackBar(message: 'Erreur: $message', backgroundColor: Colors.red);
     _resumeCamera();
   }
 
-  /// Shows a snack bar with the given message
-  void _showSnackBar({
-    required String message,
-    required Color backgroundColor,
-  }) {
+  void _showSnackBar({required String message, required Color backgroundColor}) {
     if (!mounted) return;
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -288,20 +454,17 @@ Widget _buildMainContent() {
     );
   }
 
-  /// Called when QR view is created
   void _onQRViewCreated(QRViewController controller) {
     _controller = controller;
     controller.scannedDataStream.listen(_handleQRScan);
   }
 
-  /// Flips between front and back camera
   Future<void> _flipCamera() async {
     await _controller?.flipCamera();
   }
 
-  /// Handles QR code scanning
   Future<void> _handleQRScan(Barcode scanData) async {
-    final L10n =AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context)!;
     if (!_canProcessScan(scanData)) return;
 
     _setProcessing(true);
@@ -312,51 +475,39 @@ Widget _buildMainContent() {
     } on FormatException catch (e) {
       _handleScanError(L10n.qrcodeinvalide, e);
     } catch (e) {
-      _handleScanError(L10n.erreurtraitement+': ${e.toString()}', e);
+      _handleScanError(L10n.erreurtraitement + ': ${e.toString()}', e);
     }
   }
 
-  /// Checks if scan can be processed
   bool _canProcessScan(Barcode scanData) {
     return scanData.code != null && mounted && !_isProcessing;
   }
 
-  /// Processes the QR code data
   Future<void> _processQRCode(String qrCode) async {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context)!;
     final clientData = _parseQRCode(qrCode);
     final currentUser = _getCurrentUser();
     _validateData(clientData, currentUser);
 
-    // mémos
     _lastClientId = clientData['user_id'].toString();
     _lastMagasinId = currentUser.id;
 
-    //--------------------------------------------------------
-    // 1️⃣  MODE « BALANCE » : on crédite et on laisse
-    //     _handleStateChanges gérer la suite
-    //--------------------------------------------------------
     if (widget.mode == ScanMode.balance) {
       await _cubit.ajouterSoldeClient(
         clientId: _lastClientId!,
         magasinId: _lastMagasinId!,
         montant: widget.montant!,
       );
-      return; // on s’arrête là
+      return;
     }
 
-    //--------------------------------------------------------
-    // 2️⃣  MODE « REWARDS » : on renvoie les infos vers la Home
-    //--------------------------------------------------------
     final points = await getIt<CaissierRepository>().getClientPoints(
       clientId: _lastClientId!,
       magasinId: _lastMagasinId!,
     );
 
     await _playSuccessSound();
-    _showSnackBar(message:L10n.qrreconu +'✔️', backgroundColor: Colors.green);
-
-    // petite pause esthétique
+    _showSnackBar(message: L10n.qrreconu + '✔️', backgroundColor: Colors.green);
     await Future.delayed(const Duration(milliseconds: 600));
 
     if (mounted) {
@@ -368,34 +519,27 @@ Widget _buildMainContent() {
     }
   }
 
-  /// Parses QR code JSON data
   Map<String, dynamic> _parseQRCode(String qrCode) {
     debugPrint('QR Data: $qrCode');
     return jsonDecode(qrCode) as Map<String, dynamic>;
   }
 
-  /// Gets current authenticated user
   dynamic _getCurrentUser() {
     final currentUser = getIt<AuthRepository>().getCurrentUser();
     debugPrint('Current User: ${currentUser?.id}');
     return currentUser;
   }
 
-  /// Validates QR data and user
   void _validateData(Map<String, dynamic> clientData, dynamic currentUser) {
     if (currentUser == null) {
       throw Exception('Aucun magasin connecté');
     }
-
     final userId = clientData['user_id'];
     if (userId == null || userId.toString().isEmpty) {
-      throw const FormatException(
-        'Le QR code ne contient pas de user_id valide',
-      );
+      throw const FormatException('Le QR code ne contient pas de user_id valide');
     }
   }
 
-  /// Handles scan errors
   void _handleScanError(String message, dynamic error) {
     debugPrint('Scan Error: $error');
     _setProcessing(false);
@@ -403,31 +547,110 @@ Widget _buildMainContent() {
     _resumeCamera();
   }
 
-  /// Sets processing state
   void _setProcessing(bool processing) {
     if (mounted) {
       setState(() => _isProcessing = processing);
     }
   }
 
-  /// Pauses the camera
   Future<void> _pauseCamera() async {
     await _controller?.pauseCamera();
   }
 
-  /// Resumes the camera
   Future<void> _resumeCamera() async {
     await _controller?.resumeCamera();
   }
 
-  /// Determines if loading should be shown
   bool _shouldShowLoading(CaissierState state) {
     return state is CaissierLoading || _isProcessing;
   }
 
   @override
   void dispose() {
+    _scanLineController.dispose();
+    _cornerController.dispose();
+    _pulseController.dispose();
     _controller?.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
+}
+
+// Custom painter for animated corners
+class CornerPainter extends CustomPainter {
+  final Color color;
+  final bool isTop;
+  final bool isLeft;
+  final double borderWidth;
+
+  CornerPainter({
+    required this.color,
+    required this.isTop,
+    required this.isLeft,
+    required this.borderWidth,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = borderWidth
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
+    final path = Path();
+
+    if (isTop && isLeft) {
+      path.moveTo(size.width, 0);
+      path.lineTo(0, 0);
+      path.lineTo(0, size.height);
+    } else if (isTop && !isLeft) {
+      path.moveTo(0, 0);
+      path.lineTo(size.width, 0);
+      path.lineTo(size.width, size.height);
+    } else if (!isTop && isLeft) {
+      path.moveTo(0, 0);
+      path.lineTo(0, size.height);
+      path.lineTo(size.width, size.height);
+    } else {
+      path.moveTo(size.width, 0);
+      path.lineTo(size.width, size.height);
+      path.lineTo(0, size.height);
+    }
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CornerPainter oldDelegate) => false;
+}
+
+// Custom painter for grid pattern
+class GridPainter extends CustomPainter {
+  final Color color;
+
+  GridPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+
+    const gridSize = 20.0;
+
+    // Vertical lines
+    for (double i = gridSize; i < size.width; i += gridSize) {
+      canvas.drawLine(Offset(i, 0), Offset(i, size.height), paint);
+    }
+
+    // Horizontal lines
+    for (double i = gridSize; i < size.height; i += gridSize) {
+      canvas.drawLine(Offset(0, i), Offset(size.width, i), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(GridPainter oldDelegate) => false;
 }

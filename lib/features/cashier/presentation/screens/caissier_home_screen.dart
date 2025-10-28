@@ -88,6 +88,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
       elevation: 0,
       toolbarHeight: 70,
       leading: Builder(
+
         builder:
             (context) => IconButton(
               icon: Container(
@@ -103,6 +104,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
                 ),
               ),
               onPressed: () => Scaffold.of(context).openDrawer(),
+
             ),
       ),
     );
