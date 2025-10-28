@@ -30,7 +30,7 @@ class ScanClientScreen extends StatefulWidget {
 class _ScanClientScreenState extends State<ScanClientScreen> with TickerProviderStateMixin {
   // Constants
   static const _qrDebugLabel = 'QR';
-  static const _cutOutSize = 1000.0;
+  static const _cutOutSize = 850.0;
   static const _borderWidth = 16.0;
   static const _borderLength = 80.0;
   static const _borderRadius = 40.0;
