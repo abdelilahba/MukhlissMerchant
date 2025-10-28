@@ -7,6 +7,7 @@ import 'package:mukhlissmagasin/features/cashier/presentation/screens/recompense
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
+import 'package:qr_flutter/qr_flutter.dart'; // AJOUT DE L'IMPORT
 
 class CaissierHomeScreen extends StatefulWidget {
   const CaissierHomeScreen({Key? key}) : super(key: key);
@@ -38,398 +39,823 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     final l10n = AppLocalizations.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
-    
+
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: const Color(0xFFF5F7FA),
       appBar: _buildModernAppBar(context, l10n),
       drawer: const AppDrawer(),
-      body: isTablet ? _buildTabletSplitLayout(context) : _buildMobileLayout(context),
+      body:
+          isTablet
+              ? _buildTabletSplitLayout(context)
+              : _buildMobileLayout(context),
     );
   }
 
-  // ========== APP BAR AMÉLIORÉ ==========
-  PreferredSizeWidget _buildModernAppBar(BuildContext context, AppLocalizations l10n) {
+  PreferredSizeWidget _buildModernAppBar(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
     return AppBar(
       title: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
               ),
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF667eea).withOpacity(0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(
               Icons.point_of_sale_rounded,
               color: Colors.white,
-              size: 26,
+              size: 24,
             ),
           ),
           const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.espacecaisier,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1E293B),
-                  letterSpacing: 0.5,
-                ),
-              ),
-              
-            ],
+          Text(
+            l10n.espacecaisier,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF1F2937),
+            ),
           ),
         ],
       ),
       backgroundColor: Colors.white,
-      elevation: 2,
-      shadowColor: Colors.black.withOpacity(0.1),
-      toolbarHeight: 80,
+      elevation: 0,
+      toolbarHeight: 70,
       leading: Builder(
-        builder: (context) => Container(
-          margin: const EdgeInsets.only(left: 8),
-          child: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey[200]!),
+        builder:
+            (context) => IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.menu_rounded,
+                  color: Color(0xFF374151),
+                  size: 24,
+                ),
               ),
-              child: const Icon(Icons.menu_rounded, color: Color(0xFF475569), size: 26),
+              onPressed: () => Scaffold.of(context).openDrawer(),
             ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
       ),
     );
   }
 
-  // ========== LAYOUT SPLIT AMÉLIORÉ ==========
   Widget _buildTabletSplitLayout(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFF8FAFC),
-            Color(0xFFF1F5F9),
-            Color(0xFFEFF6FF),
-          ],
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(28.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // PARTIE GAUCHE - LOGO APPLICATION (45%)
-            Expanded(
-              flex: 45,
-              child: _buildAppLogoSection(),
-            ),
-            
-            const SizedBox(width: 28),
-            
-            // PARTIE DROITE - CONTENU PRINCIPAL (55%)
-            Expanded(
-              flex: 55,
-              child: _buildMainContentSection(context),
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Carte principale (50%)
+          Expanded(flex: 50, child: _buildMainCard(context)),
+          const SizedBox(width: 24),
+          // Logo application (50%)
+          Expanded(flex: 50, child: _buildAppLogoSection()),
+        ],
       ),
     );
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFFF8FAFC),
-            Color(0xFFF1F5F9),
-          ],
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            // Logo app (35%)
-            Expanded(
-              flex: 35,
-              child: _buildAppLogoSection(),
-            ),
-            const SizedBox(height: 24),
-            // Contenu principal (65%)
-            Expanded(
-              flex: 65,
-              child: _buildMainContentSection(context),
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        children: [
+          Expanded(flex: 70, child: _buildMainCard(context)),
+          const SizedBox(height: 20),
+          Expanded(flex: 30, child: _buildAppLogoSection()),
+        ],
       ),
     );
   }
 
-  // ========== SECTION LOGO APPLICATION AMÉLIORÉE ==========
-  Widget _buildAppLogoSection() {
+  // ========== CARTE PRINCIPALE UNIQUE ==========
+  Widget _buildMainCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
-      height: double.infinity,
-     
       decoration: BoxDecoration(
         color: Colors.white,
-      
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 32,
-            offset: const Offset(0, 12),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            Color(0xFFFDFDFE),
-          ],
-        ),
       ),
-      padding: const EdgeInsets.all(36),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Logo container avec effet de profondeur
-          Container(
-            width: double.infinity,
-            constraints: const BoxConstraints(
-              maxWidth: 320,
-              maxHeight: 320,
-            ),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(28),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF667eea).withOpacity(0.15),
-                      blurRadius: 30,
-                      spreadRadius: 2,
-                      offset: const Offset(0, 12),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(28),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFFF8FAFC),
-                          Colors.white,
-                        ],
-                      ),
-                      border: Border.all(
-                        color: Colors.grey[100]!,
-                        width: 2,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Image.asset(
-                        'assets/images/mukhlislogo1.png',
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return _buildLogoErrorPlaceholder();
-                        },
-                      ),
-                    ),
-                  ),
-                ),
+      child: BlocBuilder<CaissierCubit, CaissierState>(
+        builder: (context, state) {
+          MagasinModel? currentMagasin;
+          bool isLoading = false;
+
+          if (state is CurrentMagasinLoaded) {
+            currentMagasin = state.magasin;
+          } else if (state is CaissierLoading) {
+            isLoading = true;
+          }
+
+          return Column(
+            children: [
+              // Logo du magasin (40%)
+              Expanded(
+                flex: 40,
+                child:
+                    isLoading
+                        ? _buildLoadingState()
+                        : currentMagasin != null
+                        ? _buildMagasinLogo(currentMagasin)
+                        : _buildNoMagasinState(),
               ),
+
+              // Input et bouton scanner (30%)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: _buildAddBalanceSection(context, l10n),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Bouton récompenses (30%)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: _buildRewardsButton(context, l10n),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildMagasinLogo(MagasinModel magasin) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          // Logo
+          Expanded(
+            child: ClipRRect(
+              child:
+                  magasin.imageUrl.isNotEmpty
+                      ? Image.network(
+                        magasin.imageUrl,
+                        fit: BoxFit.contain,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return _buildImageLoading();
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return _buildImageError();
+                        },
+                      )
+                      : _buildImageError(),
             ),
           ),
-          const SizedBox(height: 32),
-          
-          // Texte avec meilleure typographie
-          const Column(
-            children: [
-              Text(
-                'MukhlissManager',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF1E293B),
-                  letterSpacing: 0.8,
-                ),
-                textAlign: TextAlign.center,
+          const SizedBox(height: 16),
+          // Nom du magasin
+          Text(
+            magasin.nomEnseigne,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF1F2937),
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddBalanceSection(BuildContext context, AppLocalizations l10n) {
+    return Row(
+      children: [
+        // Champ de montant
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF9FAFB),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE5E7EB)),
+            ),
+            child: TextField(
+              controller: _montantController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
               ),
-              SizedBox(height: 8),
-              Text(
-                'Système de Gestion de Fidélité',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xFF64748B),
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.3,
+              textInputAction: TextInputAction.done,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF1F2937),
+              ),
+              decoration: InputDecoration(
+                hintText: '0.00',
+                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 18),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
                 ),
-                textAlign: TextAlign.center,
+                prefixIcon: const Icon(
+                  Icons.attach_money_rounded,
+                  color: Color(0xFF10B981),
+                  size: 28,
+                ),
+                suffixText: ' DH',
+                suffixStyle: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF6B7280),
+                ),
+              ),
+              onSubmitted: (value) {
+                if (value.isNotEmpty) {
+                  _handleAddBalance(context);
+                }
+              },
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        // Bouton scanner
+        Container(
+          width: 70,
+          height: 70,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF10B981), Color(0xFF059669)],
+            ),
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF10B981).withOpacity(0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(14),
+              onTap: () => _handleAddBalance(context),
+              child: const Icon(
+                Icons.qr_code_scanner_rounded,
+                color: Colors.white,
+                size: 32,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRewardsButton(BuildContext context, AppLocalizations l10n) {
+    return Container(
+      height: 70,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF8B5CF6).withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: () => _handleViewRewards(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.card_giftcard_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
+              const SizedBox(width: 12),
+              Flexible(
+                child: Text(
+                  l10n.scannerrecompenceqr,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppLogoSection() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          // Background decorative elements
+          Positioned(
+            top: -50,
+            right: -50,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFF6366F1).withOpacity(0.1),
+                    const Color(0xFF8B5CF6).withOpacity(0.05),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -30,
+            left: -30,
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFF10B981).withOpacity(0.1),
+                    const Color(0xFF059669).withOpacity(0.05),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Main content
+          Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Animated logo container with glassmorphism effect
+                Container(
+                  width: 130,
+                  height: 130,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                    ),
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF6366F1).withOpacity(0.4),
+                        blurRadius: 24,
+                        offset: const Offset(0, 12),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/mukhlislogo1.png', // Replace with your actual asset path
+                      width: 500,
+                      height: 500,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Brand name with modern typography
+                const Text(
+                  'MUKHLISS',
+                  style: TextStyle(
+                    fontSize: 31,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF1F2937),
+                    letterSpacing: -1,
+                    height: 1.1,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                // Tagline
+                Text(
+                  'Programme de fidélité universel',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF6B7280),
+                    letterSpacing: 0.3,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                const SizedBox(height: 32),
+
+                // Value propositions with icons
+                _buildValueProp(
+                  icon: Icons.qr_code_scanner_rounded,
+                  title: 'Scannez & Gagnez',
+                  description: 'Accumulez des points à chaque achat',
+                  gradientColors: const [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                ),
+
+                const SizedBox(height: 16),
+
+                _buildValueProp(
+                  icon: Icons.card_giftcard_rounded,
+                  title: 'Récompenses Exclusives',
+                  description: 'Échangez vos points contre des cadeaux',
+                  gradientColors: const [Color(0xFFEC4899), Color(0xFFDB2777)],
+                ),
+
+                const SizedBox(height: 16),
+
+                _buildValueProp(
+                  icon: Icons.store_mall_directory_rounded,
+                  title: 'Multi-Enseignes',
+                  description: 'Un seul compte pour tous vos magasins',
+                  gradientColors: const [Color(0xFF10B981), Color(0xFF059669)],
+                ),
+
+                const Spacer(),
+                _buildQrCodeSection(),
+
+                // Download section
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 12,
+                  ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Téléchargez l\'application',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF374151),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildStoreButton(type: 'apple'),
+                          const SizedBox(width: 12),
+                          _buildStoreButton(type: 'google'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // ========== SECTION CONTENU PRINCIPAL AMÉLIORÉE ==========
-  Widget _buildMainContentSection(BuildContext context) {
-    return BlocBuilder<CaissierCubit, CaissierState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget _buildStoreButton({required String type}) {
+    final isApple = type == 'apple';
+
+    return Flexible(
+      child: Container(
+        height: 52,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Carte magasin (48%)
-            Expanded(
-              flex: 48,
-              child: _buildMagasinCard(state),
-            ),
-            const SizedBox(height: 20),
-            // Carte actions (52%)
-            Expanded(
-              flex: 52,
-              child: _buildActionsCard(context),
+            if (isApple)
+              Icon(Icons.apple, color: Colors.white, size: 32)
+            else
+              Image.asset(
+                'assets/images/playstore.png', // Replace with your actual asset path
+                width: 32,
+                height: 32,
+              ),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    isApple ? 'Download on the' : 'GET IT ON',
+                    style: const TextStyle(
+                      fontSize: 9,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      height: 1.0,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    isApple ? 'App Store' : 'Google Play',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      height: 1.0,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 
-  // ========== CARTE MAGASIN AMÉLIORÉE ==========
-  Widget _buildMagasinCard(CaissierState state) {
-    MagasinModel? currentMagasin;
-    bool isLoading = false;
-    
-    if (state is CurrentMagasinLoaded) {
-      currentMagasin = state.magasin;
-    } else if (state is CaissierLoading) {
-      isLoading = true;
-    }
-
-    return _buildGlassCard(
-      child: isLoading
-          ? _buildLoadingState()
-          : currentMagasin != null
-              ? _buildMagasinContent(currentMagasin)
-              : _buildNoMagasinState(),
-    );
-  }
-
-Widget _buildMagasinContent(MagasinModel magasin) {
-  return Container(
-    padding: const EdgeInsets.all(8),
-    child: Column(
-      children: [
-        // Logo magasin - Prend presque tout l'espace
-        Expanded(
-          child: Container(
-            width: double.infinity,
+  // Helper widget for value propositions
+  Widget _buildValueProp({
+    required IconData icon,
+    required String title,
+    required String description,
+    required List<Color> gradientColors,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              gradient: LinearGradient(colors: gradientColors),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
+                  color: gradientColors[0].withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: magasin.imageUrl.isNotEmpty
-                  ? Image.network(
-                      magasin.imageUrl,
-                      fit: BoxFit.contain, // Image entière
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return _buildImageLoading();
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return _buildImageError();
-                      },
-                    )
-                  : _buildImageError(),
+            child: Icon(icon, color: Colors.white, size: 24),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1F2937),
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF6B7280),
+                    height: 1.3,
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-        
-        // Informations magasin en bas
+        ],
+      ),
+    );
+  }
+
+  // ========== NOUVELLE SECTION QR CODE AVEC BIBLIOTHÈQUE ==========
+  Widget _buildQrCodeSection() {
+    return Column(
+      children: [
+        const SizedBox(height: 2),
+
+        // QR Code container avec effet glassmorphism
         Container(
-          height: 60, // Hauteur fixe pour le texte
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                magasin.nomEnseigne,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1E293B),
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF6366F1).withOpacity(0.1),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
-              
+            ],
+            border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+          ),
+          child: Column(
+            children: [
+              // Vrai QR Code
+              QrImageView(
+                data:
+                    'https://play.google.com/store/apps/details?id=com.mukhliss.app',
+                version: QrVersions.auto,
+                size: 160,
+
+                eyeStyle: const QrEyeStyle(
+                  eyeShape: QrEyeShape.square,
+                  color: Color(0xFF6366F1),
+                ),
+                dataModuleStyle: const QrDataModuleStyle(
+                  dataModuleShape: QrDataModuleShape.square,
+                  color: Color(0xFF1F2937),
+                ),
+
+                // Espace pour le logo au centre
+              ),
             ],
           ),
         ),
       ],
-    ),
-  );
-}
+    );
+  }
+
+  // Widget pour les feature chips
+  Widget _buildFeatureChip({
+    required IconData icon,
+    required String label,
+    required List<Color> colors,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: colors),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: colors[0].withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: Colors.white),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget pour les badges store modernes
+  Widget _buildModernStoreBadge({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+  }) {
+    return Flexible(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color(0xFFE5E7EB), width: 2),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF1F2937), Color(0xFF111827)],
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, size: 18, color: Colors.white),
+            ),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 8,
+                      color: Color(0xFF6B7280),
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF1F2937),
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ========== ÉTATS DE CHARGEMENT ==========
   Widget _buildLoadingState() {
     return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: 50,
-            height: 50,
+            width: 40,
+            height: 40,
             child: CircularProgressIndicator(
               strokeWidth: 3,
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
             ),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: 16),
           Text(
             'Chargement...',
             style: TextStyle(
               fontSize: 14,
-              color: Color(0xFF64748B),
+              color: Color(0xFF6B7280),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -445,341 +871,33 @@ Widget _buildMagasinContent(MagasinModel magasin) {
         children: [
           Icon(
             Icons.store_mall_directory_rounded,
-            size: 60,
-            color: Color(0xFF94A3B8),
+            size: 64,
+            color: Color(0xFF9CA3AF),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: 16),
           Text(
             'Aucun magasin',
             style: TextStyle(
               fontSize: 16,
-              color: Color(0xFF64748B),
-              fontWeight: FontWeight.w500,
+              color: Color(0xFF6B7280),
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
       ),
-    );
-  }
-
-  // ========== CARTE ACTIONS CORRIGÉE (SANS OVERFLOW) ==========
-  Widget _buildActionsCard(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
-    return _buildGlassCard(
-      child: Padding(
-        padding: const EdgeInsets.all(20), // Padding réduit
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // En-tête - Taille fixe
-                SizedBox(
-                  height: 40,
-                  child: _buildSectionHeader(
-                    icon: Icons.qr_code_scanner_rounded,
-                    title:l10n.actionrapide,
-                    color: const Color(0xFF10B981),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Section ajout de solde - Flexible
-                Expanded(
-                  flex: 55,
-                  child: _buildAddBalanceSection(context, l10n),
-                ),
-
-                const SizedBox(height: 12),
-
-                // Section récompenses - Flexible
-                Expanded(
-                  flex: 45,
-                  child: _buildRewardsSection(context, l10n),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAddBalanceSection(BuildContext context, AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8, left: 4),
-          child: Text(
-            l10n.ajoutersolde.toUpperCase(),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[600],
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    controller: _montantController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    textInputAction: TextInputAction.done,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF1E293B),
-                    ),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: '0.00',
-                      hintStyle: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 16,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      prefixIcon: Container(
-                        margin: const EdgeInsets.only(left: 12, right: 8),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF10B981), Color(0xFF059669)],
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.attach_money_rounded,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                      suffixText: ' DH',
-                      suffixStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF475569),
-                      ),
-                    ),
-                    onSubmitted: (value) {
-                      if (value.isNotEmpty) {
-                        _handleAddBalance(context);
-                      }
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF10B981), Color(0xFF059669)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF10B981).withOpacity(0.3),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(16),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(16),
-                    onTap: () => _handleAddBalance(context),
-                    child: const Icon(
-                      Icons.qr_code_scanner_rounded,
-                      color: Colors.white,
-                      size: 26,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRewardsSection(BuildContext context, AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8, left: 4),
-          child: Text(
-            l10n.recompences.toUpperCase(),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[600],
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: const LinearGradient(
-                colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF8B5CF6).withOpacity(0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Material(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(16),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(16),
-                onTap: () => _handleViewRewards(context),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.qr_code_scanner_rounded,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Flexible(
-                        child: Text(
-                          l10n.scannerrecompenceqr,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // ========== COMPOSANTS RÉUTILISABLES AMÉLIORÉS ==========
-  Widget _buildGlassCard({required Widget child}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-        ],
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            Color(0xFFFDFDFE),
-          ],
-        ),
-      ),
-      child: child,
-    );
-  }
-
-  Widget _buildSectionHeader({
-    required IconData icon,
-    required String title,
-    required Color color,
-  }) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [color, Color.lerp(color, Colors.black, 0.1)!],
-            ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icon, color: Colors.white, size: 20),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF1E293B),
-          ),
-        ),
-      ],
     );
   }
 
   Widget _buildImageLoading() {
     return Container(
-      color: Colors.grey[50],
+      color: const Color(0xFFF9FAFB),
       child: const Center(
         child: SizedBox(
-          width: 30,
-          height: 30,
+          width: 32,
+          height: 32,
           child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+            strokeWidth: 2.5,
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
           ),
         ),
       ),
@@ -788,33 +906,29 @@ Widget _buildMagasinContent(MagasinModel magasin) {
 
   Widget _buildImageError() {
     return Container(
-      color: Colors.grey[50],
+      color: const Color(0xFFF9FAFB),
       child: const Center(
-        child: Icon(
-          Icons.store_rounded,
-          size: 50,
-          color: Color(0xFF94A3B8),
-        ),
+        child: Icon(Icons.store_rounded, size: 56, color: Color(0xFF9CA3AF)),
       ),
     );
   }
 
   Widget _buildLogoErrorPlaceholder() {
     return Container(
-      color: Colors.grey[50],
+      color: const Color(0xFFF9FAFB),
       child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.image_not_supported_rounded,
-            size: 60,
-            color: Color(0xFF94A3B8),
+            size: 64,
+            color: Color(0xFF9CA3AF),
           ),
           SizedBox(height: 12),
           Text(
             'Logo non disponible',
             style: TextStyle(
-              color: Color(0xFF64748B),
+              color: Color(0xFF6B7280),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -837,15 +951,13 @@ Widget _buildMagasinContent(MagasinModel magasin) {
 
     final success = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (_) => ScanClientScreen.balance(montant),
-      ),
+      MaterialPageRoute(builder: (_) => ScanClientScreen.balance(montant)),
     );
 
     if (success == true && context.mounted) {
       _showSuccessSnackBar(
-        context, 
-        '${l10n.soldede}${montant.toStringAsFixed(2)} ${l10n.dhajoute}'
+        context,
+        '${l10n.soldede}${montant.toStringAsFixed(2)} ${l10n.dhajoute}',
       );
       _montantController.clear();
     }
@@ -861,50 +973,42 @@ Widget _buildMagasinContent(MagasinModel magasin) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => RewardSelectionScreen(
-            clientId: data['clientId']!,
-            magasinId: data['magasinId']!,
-            clientPoints: int.parse(data['clientPoints']!),
-          ),
+          builder:
+              (_) => RewardSelectionScreen(
+                clientId: data['clientId']!,
+                magasinId: data['magasinId']!,
+                clientPoints: int.parse(data['clientPoints']!),
+              ),
         ),
       );
     }
   }
 
-  // ========== SNACKBARS AMÉLIORÉES ==========
+  // ========== SNACKBARS ==========
   void _showErrorSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(Icons.error_rounded, color: Color(0xFFEF4444), size: 20),
-            ),
+            const Icon(Icons.error_rounded, color: Color(0xFFEF4444), size: 22),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 message,
                 style: const TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF991B1B),
                 ),
               ),
             ),
           ],
         ),
-        backgroundColor: const Color(0xFFFEF2F2),
+        backgroundColor: const Color(0xFFFEE2E2),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: Colors.red[100]!),
-        ),
-        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -914,13 +1018,10 @@ Widget _buildMagasinContent(MagasinModel magasin) {
       SnackBar(
         content: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(Icons.check_circle_rounded, color: Color(0xFF10B981), size: 20),
+            const Icon(
+              Icons.check_circle_rounded,
+              color: Color(0xFF10B981),
+              size: 22,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -928,20 +1029,18 @@ Widget _buildMagasinContent(MagasinModel magasin) {
                 message,
                 style: const TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF065F46),
                 ),
               ),
             ),
           ],
         ),
-        backgroundColor: const Color(0xFFF0FDF4),
+        backgroundColor: const Color(0xFFD1FAE5),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: Colors.green[100]!),
-        ),
-        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
