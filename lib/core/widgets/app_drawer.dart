@@ -145,7 +145,7 @@ class AppDrawer extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 12),
+             
               
               // Titre
               Flexible(
@@ -153,7 +153,7 @@ class AppDrawer extends StatelessWidget {
                   l10n.menuprincipale,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
                   ),
@@ -162,8 +162,7 @@ class AppDrawer extends StatelessWidget {
                 ),
               ),
               
-              const SizedBox(height: 4),
-              
+            
               // Sous-titre
               Text(
                 'Mukhliss Magasin',
