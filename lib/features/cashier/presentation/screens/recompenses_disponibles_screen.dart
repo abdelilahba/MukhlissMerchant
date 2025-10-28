@@ -606,7 +606,7 @@ Widget _buildExchangeButton(int clientPoints) {
   }
 
   Widget _buildEmptyState() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),

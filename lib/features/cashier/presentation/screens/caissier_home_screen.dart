@@ -100,15 +100,11 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
       toolbarHeight: 80,
       leading: Builder(
         builder: (context) => Container(
-          margin: const EdgeInsets.only(left: 8),
+          margin: const EdgeInsets.only(left: 10),
           child: IconButton(
             icon: Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey[200]!),
-              ),
+           
               child: const Icon(Icons.menu_rounded, color: Color(0xFF475569), size: 26),
             ),
             onPressed: () => Scaffold.of(context).openDrawer(),
