@@ -616,4 +616,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get exemple =>
       'Ex: \"Café gratuit\", \"Réduction 10%\", \"Produit offert\"';
+
+  @override
+  String get total => 'total';
 }
