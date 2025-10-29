@@ -242,70 +242,80 @@ Widget _buildScaffold(List<Reward> rewards, int clientPoints) {
 }
 
 void _confirmMultipleClaims() async {
-  final L10n = AppLocalizations.of(context)!;
+  final L10n = AppLocalizations.of(context);
   final totalCost = _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
   
   final confirm = await showDialog<bool>(
     context: context,
     barrierDismissible: false,
-    builder: (_) => AlertDialog(
+    builder: (_) => Dialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      contentPadding: EdgeInsets.zero,
-      content: Container(
-        width: double.maxFinite,
-        padding: const EdgeInsets.all(32),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60), // ✅ Marges réduites mais réalistes
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 800), // ✅ Largeur maximale raisonnable
+        padding: const EdgeInsets.all(20), // ✅ Padding encore réduit
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // ✅ Icône encore plus petite
             Container(
-              width: 80,
-              height: 80,
+              width: 50,
+              height: 50,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
                 ),
-                borderRadius: BorderRadius.circular(40),
+                borderRadius: BorderRadius.circular(25),
               ),
               child: const Icon(
                 Icons.card_giftcard_rounded,
                 color: Colors.white,
-                size: 40,
+                size: 24,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
+            
+            // ✅ Titre plus compact
             Text(
-              'confirmer l\'échange',
+              L10n.confirmerechange,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 16, // ✅ Taille de police encore réduite
                 fontWeight: FontWeight.bold,
                 color: Colors.grey[800],
               ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            
+            // ✅ Conteneur des récompenses ultra compact
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 children: [
-                  // Liste des récompenses sélectionnées
+                  // Liste des récompenses avec hauteur réduite
                   ..._selectedRewards.map((reward) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.only(bottom: 4),
                     child: Row(
                       children: [
                         Expanded(
                           child: Text(
                             reward.name,
-                            style: const TextStyle(fontSize: 14),
+                            style: const TextStyle(
+                              fontSize: 12, // ✅ Texte encore plus petit
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Text(
                           '${reward.requiredPoints} pts',
                           style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF6366F1),
                           ),
@@ -313,76 +323,54 @@ void _confirmMultipleClaims() async {
                       ],
                     ),
                   )),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 6),
                   Container(height: 1, color: Colors.grey[300]),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Text('total', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-                      const Spacer(),
-                      Text(
-                        '$totalCost pts',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF6366F1),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Text(L10n.newsolde, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-                      const Spacer(),
-                      Text(
-                        '${widget.clientPoints - totalCost} pts',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF10B981),
-                        ),
-                      ),
-                    ],
-                  ),
+                  const SizedBox(height: 6),
+                  
+                  // ✅ Lignes de total ultra compactes
+                  _buildSummaryRow('total', '$totalCost pts', const Color(0xFF6366F1)),
+                  const SizedBox(height: 4),
+                  _buildSummaryRow(L10n.newsolde, '${widget.clientPoints - totalCost} pts', const Color(0xFF10B981)),
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
+            
+            // ✅ Boutons plus compacts
             Row(
               children: [
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(context, false),
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      padding: const EdgeInsets.symmetric(vertical: 10), // ✅ Hauteur encore réduite
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       side: BorderSide(color: Colors.grey[300]!),
                     ),
                     child: Text(
                       L10n.annuler,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 13, // ✅ Police réduite
                         fontWeight: FontWeight.w600,
                         color: Colors.grey[700],
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(context, true),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6366F1),
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     child: Text(
                       L10n.confirmer,
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -397,7 +385,6 @@ void _confirmMultipleClaims() async {
   );
 
   if (confirm == true) {
-    // Appeler votre cubit pour échanger toutes les récompenses sélectionnées
     for (final reward in _selectedRewards) {
       _cubit.claimReward(
         clientId: widget.clientId,
@@ -408,6 +395,28 @@ void _confirmMultipleClaims() async {
     }
   }
 }
+
+// ✅ Helper pour les lignes de résumé
+Widget _buildSummaryRow(String label, String value, Color color) {
+  return Row(
+    children: [
+      Text(
+        label, 
+        style: TextStyle(fontSize: 11, color: Colors.grey[600]) // ✅ Texte plus petit
+      ),
+      const Spacer(),
+      Text(
+        value,
+        style: TextStyle(
+          fontSize: 12, // ✅ Taille réduite
+          fontWeight: FontWeight.bold,
+          color: color,
+        ),
+      ),
+    ],
+  );
+}
+
 Widget _buildExchangeButton(int clientPoints) {
   final L10n = AppLocalizations.of(context)!;
   final totalCost = _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
@@ -433,14 +442,14 @@ Widget _buildExchangeButton(int clientPoints) {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${_selectedRewards.length} confirmer l\'échange',
+                '${_selectedRewards.length} ${L10n.confirmerechange}',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[700],
                 ),
               ),
               Text(
-                'Total: $totalCost ${L10n.pts}',
+                '${L10n.total}: $totalCost ${L10n.pts}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -476,7 +485,7 @@ Widget _buildExchangeButton(int clientPoints) {
 
 
   Widget _buildModernAppBar({int? clientPoints}) {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
@@ -606,7 +615,7 @@ Widget _buildExchangeButton(int clientPoints) {
   }
 
   Widget _buildEmptyState() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -865,194 +874,10 @@ bool _isRewardSelected(Reward reward) {
   return _selectedRewards.contains(reward);
 }
 
-bool _canAffordAllSelectedRewards(int clientPoints) {
-  final totalCost = _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
-  return clientPoints >= totalCost;
-}
 
 
-  void _confirmClaim(Reward reward) async {
-    final L10n =AppLocalizations.of(context)!;
-    final confirm = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        contentPadding: EdgeInsets.zero,
-        content: Container(
-          width: double.maxFinite,
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                  ),
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: const Icon(
-                  Icons.card_giftcard_rounded,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-              L10n.confirmerechange  ,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8FAFC),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                         L10n.recompences ,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          reward.name,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Text(
-                        L10n.cout  ,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          '${reward.requiredPoints}'+L10n.pts,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF6366F1),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      height: 1,
-                      color: Colors.grey[300],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Text(
-                         L10n.newsolde ,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          '${widget.clientPoints - reward.requiredPoints}'+L10n.pts,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF10B981),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 32),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        side: BorderSide(color: Colors.grey[300]!),
-                      ),
-                      child: Text(
-                      L10n.annuler  ,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF6366F1),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 0,
-                      ),
-                      child:  Text(
-                       L10n.confirmer ,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
 
-    if (confirm == true) {
-      _cubit.claimReward(
-        clientId: widget.clientId,
-        magasinId: widget.magasinId,
-        rewardId: reward.id,
-        pointsRequired: reward.requiredPoints,
-      );
-     
-    }
-  }
+
 
   void _handleState(BuildContext context, CaissierState state) async {
     if (state is RecompenseReclamee) {

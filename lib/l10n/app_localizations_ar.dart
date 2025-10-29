@@ -595,4 +595,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get exemple => 'مثال: \"قهوة مجانية\"، \"خصم 10٪\"، \"منتج مجاني\"';
+
+  @override
+  String get total => 'المجموع';
 }

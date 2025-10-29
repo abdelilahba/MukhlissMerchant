@@ -1251,6 +1251,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ex: \"Free coffee\", \"10% discount\", \"Free product\"'**
   String get exemple;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'total'**
+  String get total;
 }
 
 class _AppLocalizationsDelegate
