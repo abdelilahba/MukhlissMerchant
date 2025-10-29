@@ -453,7 +453,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
                   ),
                   child: Center(
                     child: Image.asset(
-                      'assets/images/mukhlislogo1.png', // Replace with your actual asset path
+                      'assets/images/mukhlis1.png', // Replace with your actual asset path
                       width: 500,
                       height: 500,
                     ),
