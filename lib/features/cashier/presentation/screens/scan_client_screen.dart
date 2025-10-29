@@ -35,6 +35,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
   static const _borderLength = 80.0;
   static const _borderRadius = 40.0;
 
+
   // Controllers and state
   final GlobalKey _qrKey = GlobalKey(debugLabel: _qrDebugLabel);
   QRViewController? _controller;
