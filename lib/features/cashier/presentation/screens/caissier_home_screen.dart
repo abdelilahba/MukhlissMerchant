@@ -385,170 +385,24 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
           ),
         ],
       ),
-      child: Stack(
-        children: [
-          // Background decorative elements
-          Positioned(
-            top: -50,
-            right: -50,
-            child: Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFF6366F1).withOpacity(0.1),
-                    const Color(0xFF8B5CF6).withOpacity(0.05),
-                  ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.asset(
+          'assets/images/section4.jpeg',
+          fit: BoxFit.fill,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: const Color(0xFFF9FAFB),
+              child: const Center(
+                child: Icon(
+                  Icons.image_not_supported_rounded,
+                  size: 64,
+                  color: Color(0xFF9CA3AF),
                 ),
               ),
-            ),
-          ),
-          Positioned(
-            bottom: -30,
-            left: -30,
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFF10B981).withOpacity(0.1),
-                    const Color(0xFF059669).withOpacity(0.05),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          // Main content
-          Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Animated logo container with glassmorphism effect
-                Container(
-                  width: 130,
-                  height: 130,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                    ),
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF6366F1).withOpacity(0.4),
-                        blurRadius: 24,
-                        offset: const Offset(0, 12),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Image.asset(
-                      'assets/images/mukhlislogo1.png', // Replace with your actual asset path
-                      width: 500,
-                      height: 500,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Brand name with modern typography
-                const Text(
-                  'MUKHLISS',
-                  style: TextStyle(
-                    fontSize: 31,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xFF1F2937),
-                    letterSpacing: -1,
-                    height: 1.1,
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                // Tagline
-                Text(
-                  'Programme de fidélité universel',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFF6B7280),
-                    letterSpacing: 0.3,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                const SizedBox(height: 32),
-
-                // Value propositions with icons
-                _buildValueProp(
-                  icon: Icons.qr_code_scanner_rounded,
-                  title: 'Scannez & Gagnez',
-                  description: 'Accumulez des points à chaque achat',
-                  gradientColors: const [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                ),
-
-                const SizedBox(height: 16),
-
-                _buildValueProp(
-                  icon: Icons.card_giftcard_rounded,
-                  title: 'Récompenses Exclusives',
-                  description: 'Échangez vos points contre des cadeaux',
-                  gradientColors: const [Color(0xFFEC4899), Color(0xFFDB2777)],
-                ),
-
-                const SizedBox(height: 16),
-
-                _buildValueProp(
-                  icon: Icons.store_mall_directory_rounded,
-                  title: 'Multi-Enseignes',
-                  description: 'Un seul compte pour tous vos magasins',
-                  gradientColors: const [Color(0xFF10B981), Color(0xFF059669)],
-                ),
-
-                const Spacer(),
-                _buildQrCodeSection(),
-
-                // Download section
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 12,
-                  ),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Téléchargez l\'application',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF374151),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildStoreButton(type: 'apple'),
-                          const SizedBox(width: 12),
-                          _buildStoreButton(type: 'google'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -932,6 +786,91 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMiniFeatureBadge({
+    required IconData icon,
+    required String label,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.25),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: Colors.white),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCompactFeature({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required List<Color> colors,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: colors),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colors[0].withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.25),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: Colors.white, size: 28),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+              height: 1.2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            subtitle,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: Colors.white.withOpacity(0.9),
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

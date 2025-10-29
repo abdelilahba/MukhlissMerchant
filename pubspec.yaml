@@ -88,6 +88,9 @@ flutter:
     - assets/images/mukhlis1.png
     - assets/images/mukhlislogo1.png
     - assets/images/playstore.png
+    - assets/images/section2.jpeg
+    - assets/images/section4.jpeg
+    - assets/images/section3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
