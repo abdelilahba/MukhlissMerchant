@@ -608,4 +608,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get exemple =>
       'Ex: \"Free coffee\", \"10% discount\", \"Free product\"';
+
+  @override
+  String get total => 'total';
 }
