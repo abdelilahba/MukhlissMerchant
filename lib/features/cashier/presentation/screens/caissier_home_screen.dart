@@ -88,7 +88,6 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
       elevation: 0,
       toolbarHeight: 70,
       leading: Builder(
-
         builder:
             (context) => IconButton(
               icon: Container(
@@ -104,7 +103,6 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
                 ),
               ),
               onPressed: () => Scaffold.of(context).openDrawer(),
-
             ),
       ),
     );
@@ -390,7 +388,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Image.asset(
-          'assets/images/section4.jpeg',
+          'assets/images/aps (7).png',
           fit: BoxFit.fill,
           errorBuilder: (context, error, stackTrace) {
             return Container(
@@ -541,156 +539,10 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
   }
 
   // ========== NOUVELLE SECTION QR CODE AVEC BIBLIOTHÈQUE ==========
-  Widget _buildQrCodeSection() {
-    return Column(
-      children: [
-        const SizedBox(height: 2),
-
-        // QR Code container avec effet glassmorphism
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF6366F1).withOpacity(0.1),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-            border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
-          ),
-          child: Column(
-            children: [
-              // Vrai QR Code
-              QrImageView(
-                data:
-                    'https://play.google.com/store/apps/details?id=com.mukhliss.app',
-                version: QrVersions.auto,
-                size: 160,
-
-                eyeStyle: const QrEyeStyle(
-                  eyeShape: QrEyeShape.square,
-                  color: Color(0xFF6366F1),
-                ),
-                dataModuleStyle: const QrDataModuleStyle(
-                  dataModuleShape: QrDataModuleShape.square,
-                  color: Color(0xFF1F2937),
-                ),
-
-                // Espace pour le logo au centre
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
   // Widget pour les feature chips
-  Widget _buildFeatureChip({
-    required IconData icon,
-    required String label,
-    required List<Color> colors,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: colors),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: colors[0].withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16, color: Colors.white),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              letterSpacing: 0.3,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // Widget pour les badges store modernes
-  Widget _buildModernStoreBadge({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    return Flexible(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFE5E7EB), width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF1F2937), Color(0xFF111827)],
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, size: 18, color: Colors.white),
-            ),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      fontSize: 8,
-                      color: Color(0xFF6B7280),
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF1F2937),
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.2,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   // ========== ÉTATS DE CHARGEMENT ==========
   Widget _buildLoadingState() {
@@ -765,116 +617,6 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
       color: const Color(0xFFF9FAFB),
       child: const Center(
         child: Icon(Icons.store_rounded, size: 56, color: Color(0xFF9CA3AF)),
-      ),
-    );
-  }
-
-  Widget _buildLogoErrorPlaceholder() {
-    return Container(
-      color: const Color(0xFFF9FAFB),
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.image_not_supported_rounded,
-            size: 64,
-            color: Color(0xFF9CA3AF),
-          ),
-          SizedBox(height: 12),
-          Text(
-            'Logo non disponible',
-            style: TextStyle(
-              color: Color(0xFF6B7280),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMiniFeatureBadge({
-    required IconData icon,
-    required String label,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.25),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: Colors.white),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-              letterSpacing: 0.3,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCompactFeature({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required List<Color> colors,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: colors),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: colors[0].withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.25),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: Colors.white, size: 28),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: Colors.white,
-              height: 1.2,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: Colors.white.withOpacity(0.9),
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
       ),
     );
   }

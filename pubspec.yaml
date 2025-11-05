@@ -91,6 +91,11 @@ flutter:
     - assets/images/section2.jpeg
     - assets/images/section4.jpeg
     - assets/images/section3.png
+    - assets/images/section5.jpg
+    - assets/images/section6.png
+    - assets/images/aps (5).png
+    - assets/images/aps (6).png
+    - assets/images/aps (7).png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
