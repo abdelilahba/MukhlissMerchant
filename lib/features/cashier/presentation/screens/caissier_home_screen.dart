@@ -388,7 +388,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Image.asset(
-          'assets/images/aps (7).png',
+          'assets/images/aps (8).png',
           fit: BoxFit.fill,
           errorBuilder: (context, error, stackTrace) {
             return Container(
