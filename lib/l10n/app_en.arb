@@ -67,7 +67,7 @@
  "gererrecompence":"Manage Rewards",
  "aidezclientconsulterrecompence":"Help customers view and claim their rewards",
  "scannerrecompence":"Scan the customer's QR code to access their rewards",
-"scannerrecompenceqr":"Scanner for Rewards",
+"scannerrecompenceqr":"Scan and win",
  "commentmarche":"How does it work?",
  "validation":"Validation",
 "confiremeztransaction":"Confirm transactions and notify the customer of changes",
@@ -192,13 +192,19 @@
 "votrerecompenceestdisponible":"Your reward is now available",
 "errerusurvenu":"Error occurred",
 "exemple":"Ex: \"Free coffee\", \"10% discount\", \"Free product\"",
-"total":"total"
-
-
-
-
-
-
-
-
+"total":"total",
+"utiliserscanne":"Use the scanner",
+"codemanuelle":"Saisir le code manuellement",
+"scannefonctionnepas":"If the scan does not work",
+"saisimanuelle":"Manual entry",
+"entrzcodemanuelle":"Enter the customer's unique code",
+"entrezcodeunique":"Enter the unique code...",
+"validercode":"Validate the code",
+"codeuniquedanslapplicationclient":"The unique code is located in the client application.",
+"recompencedisponible":"Rewards available",
+"fermer":"Close",
+"soldepoints":"Votre solde de points",
+"problemconnexion":"Connection problem",
+"problemeconnexiondetails":"Unable to connect to the server. Check your internet connection and try again.",
+"ressayer":"Réessayer"
 }

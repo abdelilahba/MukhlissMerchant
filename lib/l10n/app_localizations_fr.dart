@@ -221,7 +221,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Scannez le QR code du client pour accéder à ses récompenses';
 
   @override
-  String get scannerrecompenceqr => 'Scanner pour Récompenses';
+  String get scannerrecompenceqr => 'Scannez et gagnez';
 
   @override
   String get commentmarche => 'Comment ça marche ?';
@@ -619,4 +619,45 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get total => 'total';
+
+  @override
+  String get utiliserscanne => 'Utiliser le scanner';
+
+  @override
+  String get codemanuelle => 'Saisir le code manuellement';
+
+  @override
+  String get scannefonctionnepas => 'Si le scan ne fonctionne pas';
+
+  @override
+  String get saisimanuelle => 'Saisie manuelle';
+
+  @override
+  String get entrzcodemanuelle => 'Enter the customer\'s unique code';
+
+  @override
+  String get entrezcodeunique => 'Entrez le code unique...';
+
+  @override
+  String get validercode => 'Valider le code';
+
+  @override
+  String get codeuniquedanslapplicationclient =>
+      'Le code unique se trouve dans l\'application client';
+
+  @override
+  String get recompencedisponible => 'Récompenses disponibles';
+
+  @override
+  String get fermer => 'Ferme';
+
+  @override
+  String get soldepoints => 'Votre solde de points';
+
+  @override
+  String get problemconnexion => 'Problème de Connexion';
+
+  @override
+  String get problemeconnexiondetails =>
+      'Impossible de se connecter au serveur. Vérifiez votre connexion internet et réessayez.';
 }

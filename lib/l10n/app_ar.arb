@@ -66,7 +66,7 @@
      "gererrecompence":"إدارة المكافآت",
      "aidezclientconsulterrecompence":"ساعد العملاء على الاطلاع والمطالبة بمكافآتهم",
      "scannerrecompence":"امسح رمز الاستجابة السريعة للعميل للوصول إلى مكافآته",
-"scannerrecompenceqr":"امسح للمكافآت",
+"scannerrecompenceqr":"امسح واربح",
  "commentmarche":"كيف تتم العملية؟",
  "validation":"التأكيد",
  "confiremeztransaction":"أكد المعاملات وأبلغ العميل بالتغييرات",
@@ -191,15 +191,20 @@
 "votrerecompenceestdisponible":"مكافأتك متاحة الآن",
 "errerusurvenu":"حدث خطأ",
 "exemple":"مثال: \"قهوة مجانية\"، \"خصم 10٪\"، \"منتج مجاني\"",
-"total":"المجموع"
-
-
-
-
-
-
-
-
-
+"total":"المجموع",
+"utiliserscanne":"استخدم الماسح الضوئي",
+"codemanuelle":"أدخل الرمز يدويًا",
+"scannefonctionnepas":" إذا كان المسح لا يعمل ",
+"saisimanuelle":"إدخال يدوي",
+"entrzcodemanuelle":"أدخل الرمز الفريد للعميل",
+"entrezcodeunique":"أدخل الرمز الفريد…",
+"validercode":"تأكيد الرمز",
+"codeuniquedanslapplicationclient":"يوجد الرمز الفريد في تطبيق العميل.",
+"recompencedisponible":"المكافآت المتاحة",
+"fermer":"أغلق",
+"soldepoints":"رصيد نقاطك",
+"problemconnexion":"مشكلة اتصال بالشبكة",
+"problemeconnexiondetails":"يتعذّر الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت ثم إعادة المحاولة.",
+"ressayer":"إعادة المحاولة"
 
 }

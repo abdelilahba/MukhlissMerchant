@@ -1,7 +1,10 @@
 // caissier_cubit.dart
 import 'package:bloc/bloc.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/entities/Client_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/ajouter_solde.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/usecases/ajouter_solde_clientcode.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/charger_recompenses_usecase.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/usecases/getclient_byuniquecode.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/getcurrent_magazin.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/reclamer_recompense_usecase.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
@@ -14,11 +17,15 @@ class CaissierCubit extends Cubit<CaissierState> {
   final ChargerRecompensesClientUseCase chargerRecompensesClient;
   final ReclamerRecompenseUseCase reclamerRecompense;
    final GetCurrentMagazin getCurrentMagazin;
+   final AjouterSoldeClientcode ajouterSoldeClientcode;
+   final GetclientByuniquecode getclientByuniquecode;
   CaissierCubit({
     required this.ajouterSolde,
     required this.chargerRecompensesClient,
     required this.reclamerRecompense,
     required this.getCurrentMagazin,
+    required this.ajouterSoldeClientcode,
+    required this.getclientByuniquecode,
   }) : super(CaissierInitial());
 
   Future<void> ajouterSoldeClient({
@@ -39,7 +46,26 @@ class CaissierCubit extends Cubit<CaissierState> {
     }
   }
 
-  
+  Future<void> ajouterSoldeViaCodeUnique({
+    required int uniqueCode,
+    required String magasinId,
+    required double montant,
+  }) async {
+    emit(CaissierLoading());
+    try {
+      print('arrrived to cubit');
+      final clientMagasin = await ajouterSoldeClientcode.execute(
+        magasinId: magasinId,
+        uniqueCode: uniqueCode,
+        montant: montant,
+      );
+       print('clientMagasin: $clientMagasin');
+  emit(SoldeCodeUniqueAjoute(clientMagasin: clientMagasin));
+     
+    } catch (e) {
+      emit(CaissierError(message: e.toString()));
+    }
+  }
 
 
 
@@ -83,6 +109,8 @@ class CaissierCubit extends Cubit<CaissierState> {
   }
 
 // Dans CaissierCubit
+// caissier_cubit.dart
+// caissier_cubit.dart
 Future<MagasinModel> getCurrentMagasin() async {
   emit(CaissierLoading());
   try {
@@ -90,9 +118,23 @@ Future<MagasinModel> getCurrentMagasin() async {
     emit(CurrentMagasinLoaded(magasin: magasin));
     return magasin;
   } catch (e) {
+    // ✅ Vérifier si c'est une erreur d'authentification
+    if (e.toString().contains('Aucun utilisateur connecté')) {
+      emit(CaissierAuthenticationRequired());
+      rethrow;
+    }
+    
     emit(CaissierError(message: e.toString()));
-    throw Exception('Failed to load current magasin: $e');
+    rethrow;
   }
 }
 
+Future<Client> getClientByUniqueCode(int uniqueCode) async {
+    try {
+      return await getclientByuniquecode.execute(uniqueCode: uniqueCode);
+    } catch (e) {
+      rethrow;
+    }
+  }
+  
 }

@@ -10,7 +10,9 @@ import 'package:mukhlissmagasin/features/cashier/data/datasources/caissier_remot
 import 'package:mukhlissmagasin/features/cashier/data/repositories/caissier_repository_impl.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/ajouter_solde.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/usecases/ajouter_solde_clientcode.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/charger_recompenses_usecase.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/usecases/getclient_byuniquecode.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/getcurrent_magazin.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/reclamer_recompense_usecase.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
@@ -141,12 +143,19 @@ getIt.registerLazySingleton(() => AjouterSoldeUseCase(repository: getIt()));
 getIt.registerLazySingleton(() => ChargerRecompensesClientUseCase(repository: getIt() ));
 getIt.registerLazySingleton(() => ReclamerRecompenseUseCase(repository: getIt()));
 getIt.registerLazySingleton(() => GetCurrentMagazin(repository: getIt()) );
+// New Use Case for Unique Code
+getIt.registerLazySingleton(() => AjouterSoldeClientcode(repository: getIt()) );
+ getIt.registerLazySingleton<GetclientByuniquecode>(
+    () => GetclientByuniquecode(repository:getIt()),
+  );
 // Caissier Cubit
 getIt.registerFactory(() => CaissierCubit(
   ajouterSolde: getIt(),
   chargerRecompensesClient: getIt(),
   reclamerRecompense: getIt(),
   getCurrentMagazin: getIt(),
+  ajouterSoldeClientcode: getIt(),
+  getclientByuniquecode: getIt(),
 ));
 // Language dependencies
 getIt.registerLazySingleton<LocaleDatasource>(() => SharedPrefsLocaleDatasource());

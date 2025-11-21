@@ -1,3 +1,4 @@
+import 'package:mukhlissmagasin/features/cashier/domain/entities/Client_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart' show MagasinModel;
 
@@ -41,4 +42,18 @@ abstract class CaissierRepository {
    User? getCurrentUser();
 
   Future<MagasinModel> currentMagazin();
+
+  Future<ClientMagasinEntity> ajouterSoldeUniqueColdeAppliquerOffres({
+  required int uniqueCode,
+  required String magasinId,
+  required double montant,
+}) ;
+
+  Future<Client> getClientByCodeUnique({
+    required int uniqueCode,
+  });
+
 }
+
+
+   

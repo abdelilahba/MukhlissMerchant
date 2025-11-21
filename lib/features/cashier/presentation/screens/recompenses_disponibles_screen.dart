@@ -12,12 +12,15 @@ class RewardSelectionScreen extends StatefulWidget {
   final String clientId;
   final String magasinId;
   final int clientPoints;
-
+  final VoidCallback? onRewardsCompleted;
+   final Function(int pointsGagnes)? onRewardClaimed; // ✅ NOUVEAU callback
   const RewardSelectionScreen({
     super.key,
     required this.clientId,
     required this.magasinId,
     required this.clientPoints,
+    this.onRewardsCompleted,
+    this.onRewardClaimed,
   });
 
   @override
@@ -126,7 +129,7 @@ List<Reward> _selectedRewards = [];
       body: SafeArea(
         child: Column(
           children: [
-            _buildModernAppBar(),
+        
             Expanded(
               child: Center(
                 child: Padding(
@@ -220,26 +223,28 @@ List<Reward> _selectedRewards = [];
 Widget _buildScaffold(List<Reward> rewards, int clientPoints) {
   return Scaffold(
     backgroundColor: const Color(0xFFF8FAFC),
+    // ✅ Utiliser floatingActionButton
+    floatingActionButton: _selectedRewards.isNotEmpty 
+        ? _buildExchangeButton(clientPoints) 
+        : null,
+    floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     body: SafeArea(
       child: FadeTransition(
         opacity: _fadeAnimation,
         child: Column(
           children: [
-            _buildModernAppBar(clientPoints: clientPoints),
-            _buildHeaderSection(),
             Expanded(
               child: rewards.isEmpty
                   ? _buildEmptyState()
                   : _buildRewardsList(rewards, clientPoints),
             ),
-            // Nouveau bouton d'échange
-            if (_selectedRewards.isNotEmpty) _buildExchangeButton(clientPoints),
           ],
         ),
       ),
     ),
   );
 }
+
 
 void _confirmMultipleClaims() async {
   final L10n = AppLocalizations.of(context);
@@ -251,9 +256,9 @@ void _confirmMultipleClaims() async {
     builder: (_) => Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60), // ✅ Marges réduites mais réalistes
+      insetPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 60), // ✅ Marges réduites mais réalistes
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 800), // ✅ Largeur maximale raisonnable
+        constraints: const BoxConstraints(maxWidth: 400), // ✅ Largeur maximale raisonnable
         padding: const EdgeInsets.all(20), // ✅ Padding encore réduit
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -273,7 +278,7 @@ void _confirmMultipleClaims() async {
                 color: Colors.white,
                 size: 24,
               ),
-            ),
+             ),
             const SizedBox(height: 12),
             
             // ✅ Titre plus compact
@@ -286,7 +291,7 @@ void _confirmMultipleClaims() async {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+             const SizedBox(height: 8),
             
             // ✅ Conteneur des récompenses ultra compact
             Container(
@@ -313,7 +318,7 @@ void _confirmMultipleClaims() async {
                           ),
                         ),
                         Text(
-                          '${reward.requiredPoints} pts',
+                          '${reward.requiredPoints} ${L10n.pts}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -328,9 +333,9 @@ void _confirmMultipleClaims() async {
                   const SizedBox(height: 6),
                   
                   // ✅ Lignes de total ultra compactes
-                  _buildSummaryRow('total', '$totalCost pts', const Color(0xFF6366F1)),
+                  _buildSummaryRow(L10n.total, '$totalCost '+L10n.pts, const Color(0xFF6366F1)),
                   const SizedBox(height: 4),
-                  _buildSummaryRow(L10n.newsolde, '${widget.clientPoints - totalCost} pts', const Color(0xFF10B981)),
+                  _buildSummaryRow(L10n.newsolde, '${widget.clientPoints - totalCost} '+L10n.pts, const Color(0xFF10B981)),
                 ],
               ),
             ),
@@ -398,10 +403,11 @@ void _confirmMultipleClaims() async {
 
 // ✅ Helper pour les lignes de résumé
 Widget _buildSummaryRow(String label, String value, Color color) {
+
   return Row(
     children: [
       Text(
-        label, 
+    label, 
         style: TextStyle(fontSize: 11, color: Colors.grey[600]) // ✅ Texte plus petit
       ),
       const Spacer(),
@@ -418,138 +424,26 @@ Widget _buildSummaryRow(String label, String value, Color color) {
 }
 
 Widget _buildExchangeButton(int clientPoints) {
-  final L10n = AppLocalizations.of(context)!;
   final totalCost = _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
   final canAfford = clientPoints >= totalCost;
   
-  return Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 20,
-          offset: const Offset(0, -5),
-        ),
-      ],
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${_selectedRewards.length} ${L10n.confirmerechange}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[700],
-                ),
-              ),
-              Text(
-                '${L10n.total}: $totalCost ${L10n.pts}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF6366F1),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 16),
-        ElevatedButton(
-          onPressed: canAfford ? () => _confirmMultipleClaims() : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: canAfford ? const Color(0xFF6366F1) : Colors.grey.shade400,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
-          child: Text(
-            "échanger",
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
+  return AnimatedScale(
+    scale: _selectedRewards.isNotEmpty ? 1.0 : 0.0,
+    duration: const Duration(milliseconds: 200),
+    child: FloatingActionButton(
+      onPressed: canAfford ? () => _confirmMultipleClaims() : null,
+      backgroundColor: canAfford ? const Color.fromARGB(255, 60, 228, 116) : Colors.grey.shade400,
+      elevation: canAfford ? 8 : 2,
+      child: Icon(
+        Icons.check_rounded,
+        color: Colors.white,
+        size: 28,
+      ),
     ),
   );
 }
 
-
-  Widget _buildModernAppBar({int? clientPoints}) {
-    final L10n=AppLocalizations.of(context);
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x0D000000),
-            blurRadius: 24,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_rounded),
-              onPressed: () => Navigator.pop(context),
-              color: const Color(0xFF64748B),
-            ),
-          ),
-           Spacer(),
-          Text(
-          L10n.recompences  ,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[800],
-            ),
-          ),
-          const Spacer(),
-          if (clientPoints != null)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.stars_rounded, color: Colors.white, size: 18),
-                  const SizedBox(width: 6),
-                  Text(
-                    '$clientPoints '+L10n.pts,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
+ 
 
   Widget _buildHeaderSection() {
     final L10n=AppLocalizations.of(context)!;
@@ -787,7 +681,7 @@ Widget _buildRewardsList(List<Reward> rewards, int clientPoints) {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          '${L10n.ilvousmanque} ${reward.requiredPoints - clientPoints} pts',
+                          '${L10n.ilvousmanque} ${reward.requiredPoints - clientPoints} ${L10n.pts}',
                           style: const TextStyle(
                             fontSize: 11,
                             color: Color(0xFFF87171),
@@ -880,40 +774,58 @@ bool _isRewardSelected(Reward reward) {
 
 
   void _handleState(BuildContext context, CaissierState state) async {
-    if (state is RecompenseReclamee) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => FelicitationScreen(
-            pointsGagnes: widget.clientPoints - state.pointsDeduits, // placeholder
-            soldeRestant: null,
-          ),
-        ),
-      );
-      if (mounted) Navigator.pop(context, true);
-    } else if (state is CaissierError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.error_outline_rounded, color: Colors.white),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  state.message,
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: const Color(0xFFF87171),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          margin: const EdgeInsets.all(20),
-        ),
-      );
+  if (state is RecompenseReclamee) {
+    // ✅ Si callback fourni, l'utiliser au lieu de naviguer
+    if (widget.onRewardClaimed != null) {
+      widget.onRewardClaimed!(state.pointsDeduits);
+      
+      // Appeler aussi onRewardsCompleted si fourni
+      if (widget.onRewardsCompleted != null) {
+        widget.onRewardsCompleted!();
+      }
+      return;
     }
+
+    // ✅ Comportement par défaut (navigation plein écran)
+    if (widget.onRewardsCompleted != null) {
+      widget.onRewardsCompleted!();
+    }
+    
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => FelicitationScreen(
+          pointsGagnes: widget.clientPoints - state.pointsDeduits,
+          soldeRestant: null,
+        ),
+      ),
+    );
+    if (mounted) Navigator.pop(context, true);
+    
+  } else if (state is CaissierError) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.error_outline_rounded, color: Colors.white),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                state.message,
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: const Color(0xFFF87171),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        margin: const EdgeInsets.all(20),
+      ),
+    );
   }
+}
+
 }
