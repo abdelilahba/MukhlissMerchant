@@ -220,7 +220,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Scan the customer\'s QR code to access their rewards';
 
   @override
-  String get scannerrecompenceqr => 'Scanner for Rewards';
+  String get scannerrecompenceqr => 'Scan and win';
 
   @override
   String get commentmarche => 'How does it work?';
@@ -338,7 +338,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get oups => 'Oops! An error has occurred';
 
   @override
-  String get ressayer => 'Try again';
+  String get ressayer => 'Réessayer';
 
   @override
   String get choisissezrecompence => 'Choose a reward that makes you happy';
@@ -611,4 +611,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get total => 'total';
+
+  @override
+  String get utiliserscanne => 'Use the scanner';
+
+  @override
+  String get codemanuelle => 'Saisir le code manuellement';
+
+  @override
+  String get scannefonctionnepas => 'If the scan does not work';
+
+  @override
+  String get saisimanuelle => 'Manual entry';
+
+  @override
+  String get entrzcodemanuelle => 'Enter the customer\'s unique code';
+
+  @override
+  String get entrezcodeunique => 'Enter the unique code...';
+
+  @override
+  String get validercode => 'Validate the code';
+
+  @override
+  String get codeuniquedanslapplicationclient =>
+      'The unique code is located in the client application.';
+
+  @override
+  String get recompencedisponible => 'Rewards available';
+
+  @override
+  String get fermer => 'Close';
+
+  @override
+  String get soldepoints => 'Votre solde de points';
+
+  @override
+  String get problemconnexion => 'Connection problem';
+
+  @override
+  String get problemeconnexiondetails =>
+      'Unable to connect to the server. Check your internet connection and try again.';
 }

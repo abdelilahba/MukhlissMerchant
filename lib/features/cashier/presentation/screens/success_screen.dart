@@ -1,21 +1,25 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:mukhlissmagasin/features/cashier/presentation/screens/caissier_home_screen.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 import 'package:mukhlissmagasin/l10n/l10n.dart';
 
-/// Écran affiché juste après un scan réussi pour féliciter le client
-/// et montrer le nombre de points cumulés.
-class FelicitationScreen extends StatefulWidget {
-  /// Nombre de points que le client vient de gagner
-  final int pointsGagnes;
 
+class FelicitationScreen extends StatefulWidget {
+  
+  final int pointsGagnes;
+    final bool isEmbedded; // ✅ Nouveau paramètre
+  final VoidCallback? onCompleted; 
   /// Solde restant éventuel (facultatif)
   final double? soldeRestant;
-
+      final bool isForRewards; 
   const FelicitationScreen({
     super.key,
     required this.pointsGagnes,
     this.soldeRestant,
+    this.isEmbedded = false,
+    this.onCompleted,
+        this.isForRewards = false,
   });
 
   @override
@@ -339,6 +343,7 @@ class _FelicitationScreenState extends State<FelicitationScreen>
   }
 
   Widget _buildPointsDisplay() {
+    final L10n=AppLocalizations.of(context)!;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
@@ -366,7 +371,7 @@ class _FelicitationScreenState extends State<FelicitationScreen>
             ),
             const SizedBox(width: 12),
             Text(
-              '${widget.pointsGagnes.toStringAsFixed(0)} points',
+              '${widget.pointsGagnes.toStringAsFixed(0)} '+L10n.point,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -432,60 +437,75 @@ class _FelicitationScreenState extends State<FelicitationScreen>
     );
   }
 
-  Widget _buildActionButton() {
-    final L10n=AppLocalizations.of(context)!;
-    return SlideTransition(
-      position: _slideAnimation,
-      child: Container(
-        width: double.infinity,
-        height: 60,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
-          ),
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF667EEA).withOpacity(0.4),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
+Widget _buildActionButton() {
+  final L10n = AppLocalizations.of(context)!;
+  
+  // Si intégré, ne pas afficher le bouton ou afficher un bouton différent
+  if (widget.isEmbedded) {
+    return const SizedBox.shrink(); // Pas de bouton en mode intégré
+  }
+  
+  return SlideTransition(
+    position: _slideAnimation,
+    child: Container(
+      width: double.infinity,
+      height: 60,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(30),
-            onTap: () {
-              Navigator.pop(context, true);
-            },
-            child:  Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.check_circle_outline_rounded,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF667EEA).withOpacity(0.4),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(30),
+          onTap: () {
+            if (widget.onCompleted != null) {
+              widget.onCompleted!();
+            } else {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const CaissierHomeScreen(),
+                ),
+              );
+            }
+          },
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.check_circle_outline_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  L10n.terminer,
+                  style: const TextStyle(
                     color: Colors.white,
-                    size: 24,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                  SizedBox(width: 12),
-                  Text(
-                     L10n.terminer,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }
+    }
+
 
 // Custom painter for background pattern
 class BackgroundPatternPainter extends CustomPainter {

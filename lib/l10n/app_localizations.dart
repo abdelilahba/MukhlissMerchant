@@ -505,7 +505,7 @@ abstract class AppLocalizations {
   /// No description provided for @scannerrecompenceqr.
   ///
   /// In en, this message translates to:
-  /// **'Scanner for Rewards'**
+  /// **'Scan and win'**
   String get scannerrecompenceqr;
 
   /// No description provided for @commentmarche.
@@ -739,7 +739,7 @@ abstract class AppLocalizations {
   /// No description provided for @ressayer.
   ///
   /// In en, this message translates to:
-  /// **'Try again'**
+  /// **'Réessayer'**
   String get ressayer;
 
   /// No description provided for @choisissezrecompence.
@@ -1257,6 +1257,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'total'**
   String get total;
+
+  /// No description provided for @utiliserscanne.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the scanner'**
+  String get utiliserscanne;
+
+  /// No description provided for @codemanuelle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saisir le code manuellement'**
+  String get codemanuelle;
+
+  /// No description provided for @scannefonctionnepas.
+  ///
+  /// In en, this message translates to:
+  /// **'If the scan does not work'**
+  String get scannefonctionnepas;
+
+  /// No description provided for @saisimanuelle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual entry'**
+  String get saisimanuelle;
+
+  /// No description provided for @entrzcodemanuelle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the customer\'s unique code'**
+  String get entrzcodemanuelle;
+
+  /// No description provided for @entrezcodeunique.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the unique code...'**
+  String get entrezcodeunique;
+
+  /// No description provided for @validercode.
+  ///
+  /// In en, this message translates to:
+  /// **'Validate the code'**
+  String get validercode;
+
+  /// No description provided for @codeuniquedanslapplicationclient.
+  ///
+  /// In en, this message translates to:
+  /// **'The unique code is located in the client application.'**
+  String get codeuniquedanslapplicationclient;
+
+  /// No description provided for @recompencedisponible.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards available'**
+  String get recompencedisponible;
+
+  /// No description provided for @fermer.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get fermer;
+
+  /// No description provided for @soldepoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Votre solde de points'**
+  String get soldepoints;
+
+  /// No description provided for @problemconnexion.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection problem'**
+  String get problemconnexion;
+
+  /// No description provided for @problemeconnexiondetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to connect to the server. Check your internet connection and try again.'**
+  String get problemeconnexiondetails;
 }
 
 class _AppLocalizationsDelegate
