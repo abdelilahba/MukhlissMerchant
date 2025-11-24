@@ -75,7 +75,7 @@ class ProfileCubit extends Cubit<ProfileState> {
  Future<void> updateUser(MagasinModel updatedProfile) async {
     emit(ProfileUpdated());
     try {
-      final result = await updateprofileusecase.execute(updatedProfile);
+      await updateprofileusecase.execute(updatedProfile);
       emit(ProfileUpdated());
       
       // Recharge le profil après mise à jour

@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +6,6 @@ import 'package:mukhlissmagasin/core/widgets/offer_card.dart';
 import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dart';
 import 'package:mukhlissmagasin/features/offers/presentation/cubit/offer_cubit.dart';
 import 'package:mukhlissmagasin/features/offers/presentation/managers/offer_manager.dart';
-import 'package:mukhlissmagasin/l10n/l10n.dart';
 
 import '../../../../l10n/app_localizations.dart';
 
@@ -29,10 +27,6 @@ class _OffersScreenState extends State<OffersScreen>
   // Largeur de la sidebar
   static const double sidebarWidth = 280.0;
    String _selectedFilter = 'all'; 
-  final TextEditingController _minPriceController = TextEditingController();
-  final TextEditingController _maxPriceController = TextEditingController();
-  final TextEditingController _minPointsController = TextEditingController();
-  final TextEditingController _maxPointsController = TextEditingController();
   
   // Variables pour stocker les valeurs de recherche
   double? _minPriceFilter;
@@ -106,7 +100,7 @@ Widget build(BuildContext context) {
 }
 
   Widget _buildSidebar(BuildContext context, OfferManager manager) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Container(
       decoration: BoxDecoration(
@@ -472,7 +466,7 @@ Widget build(BuildContext context) {
   }
 
  SliverAppBar _buildSliverAppBar(BuildContext context, OfferManager manager) {
-  final l10n = AppLocalizations.of(context)!;
+  final l10n = AppLocalizations.of(context);
   
   return SliverAppBar(
     expandedHeight: 120,
@@ -561,7 +555,7 @@ Widget build(BuildContext context) {
   }
 
   Widget _buildContent(BuildContext context, OfferState state, OfferManager manager) {
-  final l10n = AppLocalizations.of(context)!;
+  final l10n = AppLocalizations.of(context);
   if (state is OffersLoaded) {
     List<Offer> filteredOffers = state.offers.where((offer) {
       if (_selectedFilter == 'active' && !offer.isActive) {
@@ -748,7 +742,7 @@ Widget build(BuildContext context) {
   }
 
   Widget _buildEmptyState(BuildContext context, OfferManager manager) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -855,7 +849,7 @@ Widget build(BuildContext context) {
   }
 
   Future<void> _handleDelete(BuildContext context, String id, OfferManager manager) async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final confirmed = await _showModernDeleteDialog(context);
     if (confirmed) {
       try {
@@ -900,7 +894,7 @@ Widget build(BuildContext context) {
   }
 
   Future<bool> _showModernDeleteDialog(BuildContext context) async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(

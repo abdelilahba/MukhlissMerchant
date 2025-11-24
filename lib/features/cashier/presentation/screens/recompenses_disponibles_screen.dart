@@ -120,7 +120,7 @@ List<Reward> _selectedRewards = [];
   }
 
   Widget _buildErrorScreen(String message) {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
@@ -418,7 +418,7 @@ Widget _buildSummaryRow(String label, String value, Color color) {
 }
 
 Widget _buildExchangeButton(int clientPoints) {
-  final L10n = AppLocalizations.of(context)!;
+  final L10n = AppLocalizations.of(context);
   final totalCost = _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
   final canAfford = clientPoints >= totalCost;
   
@@ -552,7 +552,7 @@ Widget _buildExchangeButton(int clientPoints) {
   }
 
   Widget _buildHeaderSection() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(24),
@@ -677,7 +677,7 @@ Widget _buildRewardsList(List<Reward> rewards, int clientPoints) {
 }
 
   Widget _buildModernRewardCard(Reward reward, bool disponible, int index, int clientPoints) {
-  final L10n = AppLocalizations.of(context)!;
+  final L10n = AppLocalizations.of(context);
   final isSelected = _isRewardSelected(reward);
   final canAfford = clientPoints >= reward.requiredPoints;
   

@@ -19,7 +19,6 @@ class RewardDetailScreen extends StatelessWidget {
       body: BlocBuilder<RewardCubit, RewardState>(
         builder: (context, state) {
           if (state is RewardDetailLoaded) {
-            final reward = state.reward;
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

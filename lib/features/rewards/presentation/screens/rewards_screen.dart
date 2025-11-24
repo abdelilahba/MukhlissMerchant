@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/widgets/app_drawer.dart';
 import 'package:mukhlissmagasin/core/widgets/reward_card.dart';
-import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_cubit.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_state.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/managers/reward_manager.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
-import 'package:mukhlissmagasin/l10n/l10n.dart';
 
 
 class RewardsScreen extends StatefulWidget {
@@ -25,7 +23,6 @@ class _RewardsScreenState extends State<RewardsScreen> with SingleTickerProvider
    bool _isGridView = true;
    String _selectedFilter = 'all'; 
    // all, active, expired
-final TextEditingController _pointsController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -92,7 +89,7 @@ final TextEditingController _pointsController = TextEditingController();
   }
 
   Widget _buildSidebar(BuildContext context, RewardManager manager) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Container(
       width: 320,
@@ -385,59 +382,6 @@ final TextEditingController _pointsController = TextEditingController();
     );
   }
 
-  Widget _buildRecompencesList(BuildContext context, List<Reward> offers, RewardManager manager) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return FadeTransition(
-            opacity: _fadeAnimation,
-            child: SlideTransition(
-              position: _slideAnimation,
-              child: TweenAnimationBuilder<double>(
-                duration: Duration(milliseconds: 300 + (index * 50)),
-                tween: Tween(begin: 0.0, end: 1.0),
-                builder: (context, value, child) {
-                  return Transform.translate(
-                    offset: Offset(0, 20 * (1 - value)),
-                    child: Opacity(
-                      opacity: value,
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.08),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: SizedBox(
-                            height: 120,
-                            child: RewardCard(
-                              reward: offers[index],
-                              onTap: () => manager.showRewardDetail(offers[index]),
-                             onDelete: () => _showDeleteDialog(context, manager, offers[index].id),
-                             onEdit: () => manager.navigateToEditReward(context, offers[index]),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        },
-        childCount: offers.length,
-      ),
-    );
-  }
 
   Widget _buildFilterChip(String title, String value) {
     final isSelected = _selectedFilter == value;
@@ -483,7 +427,7 @@ final TextEditingController _pointsController = TextEditingController();
   }
 
   Widget _buildStats(BuildContext context, List<dynamic> rewards) {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     final activereward=rewards.where((reward)=>reward.isActive).length;
     return Container(
       padding: const EdgeInsets.all(20),
@@ -550,7 +494,7 @@ final TextEditingController _pointsController = TextEditingController();
  
 
 Widget _buildTopBar(BuildContext context, RewardManager manager) {
-  final l10n = AppLocalizations.of(context)!;
+  final l10n = AppLocalizations.of(context);
   
   return Container(
     height: 120,
@@ -777,7 +721,7 @@ Widget _buildTopBar(BuildContext context, RewardManager manager) {
   }
 
   Widget _buildEmptyState(BuildContext context, RewardManager manager) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -865,7 +809,7 @@ Widget _buildTopBar(BuildContext context, RewardManager manager) {
   }
 
 Widget _buildRewardsGrid(RewardsLoaded state, RewardManager manager, BuildContext context) {
-  final l10n = AppLocalizations.of(context)!;
+  AppLocalizations.of(context);
   
   List<dynamic> filteredRewards = state.rewards.where((reward) {
     // Filtre par statut (nouveau)
@@ -950,7 +894,7 @@ Widget _buildRewardsGrid(RewardsLoaded state, RewardManager manager, BuildContex
 }
 
 Widget _buildNoResultsState(BuildContext context, RewardManager manager) {
-  final l10n = AppLocalizations.of(context)!;
+  AppLocalizations.of(context);
   
   return Center(
     child: Container(
@@ -1140,7 +1084,7 @@ Widget _buildNoResultsState(BuildContext context, RewardManager manager) {
   );
 }
   void _showDeleteDialog(BuildContext context, RewardManager manager, String id) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       barrierDismissible: false,

@@ -3,11 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
 import 'package:mukhlissmagasin/features/auth/presentation/cubit/auth_cubit.dart';
 
-import 'package:mukhlissmagasin/features/auth/presentation/screens/auth_wrapper.dart';
 import 'package:mukhlissmagasin/features/auth/presentation/screens/login_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart' show CaissierCubit;
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/caissier_home_screen.dart';
-import 'package:mukhlissmagasin/features/auth/presentation/screens/splash_screen.dart';
 import 'package:mukhlissmagasin/features/language/domain/usecases/changeluanguage.dart';
 import 'package:mukhlissmagasin/features/language/presentation/cubit/language_cubit.dart';
 import 'package:mukhlissmagasin/features/offers/presentation/cubit/offer_cubit.dart';

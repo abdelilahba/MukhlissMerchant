@@ -30,14 +30,11 @@ final ProfileRemoteDataSource remoteDataSource;
 
   @override
   Future<void> updateuser(MagasinModel magasindata)async {
-   final currentUser = await this.authRepository.getCurrentUser();
+   final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) {
       throw Exception('No current user found');
     }
-    final magasin = await remoteDataSource.UpdatecurrentMagasin(magasindata);
-    if (magasin == null) {
-      throw Exception('No magasin found for current user');
-    }
+    await remoteDataSource.UpdatecurrentMagasin(magasindata);
   }
 
 

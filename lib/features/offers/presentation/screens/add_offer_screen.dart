@@ -61,45 +61,43 @@ class _AddOfferScreenState extends State<AddOfferScreen>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.3, 1.0, curve: Curves.easeInOut),
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.3, 1.0, curve: Curves.easeInOut),
+      ),
+    );
 
-    _headerAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.0, 0.6, curve: Curves.easeOutCubic),
-    ));
+    _headerAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOutCubic),
+      ),
+    );
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.4),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: const Interval(0.2, 0.9, curve: Curves.easeOutCubic),
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.2, 0.9, curve: Curves.easeOutCubic),
+      ),
+    );
 
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _submitAnimationController,
-      curve: Curves.easeInOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(
+        parent: _submitAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
-    _floatingScaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _floatingActionController,
-      curve: Curves.elasticOut,
-    ));
+    _floatingScaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _floatingActionController,
+        curve: Curves.elasticOut,
+      ),
+    );
 
     _animationController.forward();
     Future.delayed(const Duration(milliseconds: 1000), () {
@@ -166,7 +164,11 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                child: const Icon(
+                  Icons.check_circle,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -175,14 +177,16 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      isEditing ? 'Offre mise à jour!' : 'Offre créée avec succès!',
+                      isEditing
+                          ? 'Offre mise à jour!'
+                          : 'Offre créée avec succès!',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      isEditing 
+                      isEditing
                           ? 'Les modifications ont été enregistrées'
                           : 'Votre offre est maintenant active',
                       style: TextStyle(
@@ -218,7 +222,11 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Icon(Icons.error_outline, color: Colors.white, size: 20),
+                child: const Icon(
+                  Icons.error_outline,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -265,9 +273,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
         child: Column(
           children: [
             _buildEnhancedAppBar(),
-            Expanded(
-              child: _buildFormContent(),
-            ),
+            Expanded(child: _buildFormContent()),
           ],
         ),
       ),
@@ -278,8 +284,8 @@ class _AddOfferScreenState extends State<AddOfferScreen>
 
   Widget _buildEnhancedAppBar() {
     final isEditing = widget.offer != null;
-    final l10n = AppLocalizations.of(context)!;
-    
+    final l10n = AppLocalizations.of(context);
+
     return AnimatedBuilder(
       animation: _headerAnimation,
       builder: (context, child) {
@@ -313,16 +319,25 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                           ),
                           child: IconButton(
                             onPressed: () => Navigator.pop(context),
-                            icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+                            icon: const Icon(
+                              Icons.arrow_back_ios_new,
+                              size: 18,
+                            ),
                             color: Colors.grey.shade700,
                           ),
                         ),
                         const Spacer(),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Colors.blue.shade100, Colors.cyan.shade50],
+                              colors: [
+                                Colors.blue.shade100,
+                                Colors.cyan.shade50,
+                              ],
                             ),
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -356,7 +371,9 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                isEditing ? l10n.modifieroffre : l10n.nouvelleoffre,
+                                isEditing
+                                    ? l10n.modifieroffre
+                                    : l10n.nouvelleoffre,
                                 style: const TextStyle(
                                   fontSize: 26,
                                   fontWeight: FontWeight.bold,
@@ -365,7 +382,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                isEditing 
+                                isEditing
                                     ? l10n.modifieroffreexiste
                                     : l10n.credesoffre,
                                 style: TextStyle(
@@ -418,9 +435,10 @@ class _AddOfferScreenState extends State<AddOfferScreen>
   }
 
   Widget _buildMotivationalCard() {
+
     final isEditing = widget.offer != null;
-    final l10n = AppLocalizations.of(context)!;
-    
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
@@ -536,8 +554,8 @@ class _AddOfferScreenState extends State<AddOfferScreen>
   }
 
   Widget _buildEnhancedFormCard() {
-    final l10n = AppLocalizations.of(context)!;
-    
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
@@ -581,10 +599,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
       decoration: BoxDecoration(
         color: color.withOpacity(0.08),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: color.withOpacity(0.2),
-          width: 1,
-        ),
+        border: Border.all(color: color.withOpacity(0.2), width: 1),
       ),
       child: Row(
         children: [
@@ -594,11 +609,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
               color: color.withOpacity(0.15),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 22,
-            ),
+            child: Icon(icon, color: color, size: 22),
           ),
           const SizedBox(width: 16),
           Text(
@@ -631,13 +642,13 @@ class _AddOfferScreenState extends State<AddOfferScreen>
   }
 
   Widget _buildEnhancedActiveToggle() {
-    final l10n = AppLocalizations.of(context)!;
-    
+    final l10n = AppLocalizations.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-         l10n.stausoffre ,
+          l10n.stausoffre,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -646,21 +657,22 @@ class _AddOfferScreenState extends State<AddOfferScreen>
         ),
         const SizedBox(height: 10),
         Text(
-          _manager.isactive 
-              ? l10n.cetteoffreestactuve 
+          _manager.isactive
+              ? l10n.cetteoffreestactuve
               : l10n.cetteoffreesttemporairement,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey.shade600,
-          ),
+          style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
         ),
         const SizedBox(height: 18),
         Container(
           decoration: BoxDecoration(
-            color: _manager.isactive ? Colors.green.shade50 : Colors.red.shade50,
+            color:
+                _manager.isactive ? Colors.green.shade50 : Colors.red.shade50,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: _manager.isactive ? Colors.green.shade200 : Colors.red.shade200,
+              color:
+                  _manager.isactive
+                      ? Colors.green.shade200
+                      : Colors.red.shade200,
             ),
           ),
           child: SwitchListTile(
@@ -669,28 +681,33 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: _manager.isactive 
-                        ? Colors.green.shade100 
-                        : Colors.red.shade100,
+                    color:
+                        _manager.isactive
+                            ? Colors.green.shade100
+                            : Colors.red.shade100,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
-                    _manager.isactive ? Icons.check_circle_rounded : Icons.cancel_rounded,
+                    _manager.isactive
+                        ? Icons.check_circle_rounded
+                        : Icons.cancel_rounded,
                     size: 18,
-                    color: _manager.isactive 
-                        ? Colors.green.shade600 
-                        : Colors.red.shade600,
+                    color:
+                        _manager.isactive
+                            ? Colors.green.shade600
+                            : Colors.red.shade600,
                   ),
                 ),
                 const SizedBox(width: 14),
                 Text(
-                  _manager.isactive ? l10n.active  : l10n.inactif,
+                  _manager.isactive ? l10n.active : l10n.inactif,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
-                    color: _manager.isactive 
-                        ? Colors.green.shade700 
-                        : Colors.red.shade700,
+                    color:
+                        _manager.isactive
+                            ? Colors.green.shade700
+                            : Colors.red.shade700,
                   ),
                 ),
               ],
@@ -703,7 +720,10 @@ class _AddOfferScreenState extends State<AddOfferScreen>
             },
             activeColor: Colors.green.shade600,
             inactiveTrackColor: Colors.red.shade300,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 12,
+            ),
           ),
         ),
       ],
@@ -712,13 +732,10 @@ class _AddOfferScreenState extends State<AddOfferScreen>
 
   Widget _buildFloatingSubmitButton() {
     final isEditing = widget.offer != null;
-    final l10n = AppLocalizations.of(context)!;
-    
+    final l10n = AppLocalizations.of(context);
+
     return AnimatedBuilder(
-      animation: Listenable.merge([
-        _floatingScaleAnimation,
-        _scaleAnimation,
-      ]),
+      animation: Listenable.merge([_floatingScaleAnimation, _scaleAnimation]),
       builder: (context, child) {
         return Transform.scale(
           scale: _floatingScaleAnimation.value * _scaleAnimation.value,
@@ -726,9 +743,10 @@ class _AddOfferScreenState extends State<AddOfferScreen>
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: _isSubmitting
-                    ? [Colors.grey.shade400, Colors.grey.shade500]
-                    : [Colors.green.shade600, Colors.green.shade400],
+                colors:
+                    _isSubmitting
+                        ? [Colors.grey.shade400, Colors.grey.shade500]
+                        : [Colors.green.shade600, Colors.green.shade400],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -766,7 +784,9 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                         ),
                         const SizedBox(width: 18),
                         Text(
-                          isEditing ? 'Modification en cours...' : l10n.creationencours,
+                          isEditing
+                              ? 'Modification en cours...'
+                              : l10n.creationencours,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 17,
@@ -781,14 +801,18 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
-                            isEditing ? Icons.save_rounded : Icons.rocket_launch_rounded,
+                            isEditing
+                                ? Icons.save_rounded
+                                : Icons.rocket_launch_rounded,
                             color: Colors.white,
                             size: 22,
                           ),
                         ),
                         const SizedBox(width: 18),
                         Text(
-                          isEditing ? l10n.enredisterlesmodifiaction : l10n.creeoffre,
+                          isEditing
+                              ? l10n.enredisterlesmodifiaction
+                              : l10n.creeoffre,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 17,

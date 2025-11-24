@@ -10,7 +10,6 @@ import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cub
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/success_screen.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
-import 'package:mukhlissmagasin/l10n/l10n.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 enum ScanMode { balance, rewards }
@@ -128,7 +127,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
   }
 
   PreferredSizeWidget _buildAppBar() {
-    final L10n = AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context);
     return AppBar(
       title: Text(
         _isBalanceMode ? L10n.scannerajoutersolde : L10n.scannervoiroffre,
@@ -145,7 +144,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
   }
 
   Widget _buildMainContent() {
-    final L10n = AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context);
     return Column(
       children: [
         Expanded(
@@ -363,7 +362,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
   }
 
   Widget _buildAmountDisplay() {
-    final L10n = AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -382,7 +381,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
   }
 
   Widget _buildLoadingOverlay() {
-    final L10n = AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context);
     return Container(
       color: Colors.black54,
       child: Center(
@@ -465,7 +464,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
   }
 
   Future<void> _handleQRScan(Barcode scanData) async {
-    final L10n = AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context);
     if (!_canProcessScan(scanData)) return;
 
     _setProcessing(true);
@@ -485,7 +484,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
   }
 
   Future<void> _processQRCode(String qrCode) async {
-    final L10n = AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context);
     final clientData = _parseQRCode(qrCode);
     final currentUser = _getCurrentUser();
     _validateData(clientData, currentUser);

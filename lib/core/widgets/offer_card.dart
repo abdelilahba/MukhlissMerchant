@@ -75,7 +75,7 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-   final l10n = AppLocalizations.of(context)!;
+   final l10n = AppLocalizations.of(context);
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {

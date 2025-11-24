@@ -4,7 +4,6 @@ import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_
 import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class CaissierState {}
 

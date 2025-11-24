@@ -1,4 +1,3 @@
-import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -54,19 +53,12 @@ Future<bool> UpdatecurrentMagasin(MagasinModel magasindata) async {
       print('Aucun utilisateur connecté');
       return false;
     }
-
     // Convertir le MagasinModel en Map<String, dynamic>
-    final Map<String, dynamic> updateData = magasindata.toJson();
-    
-    // Ajouter le timestamp de mise à jour
-  
-    
+    final Map<String, dynamic> updateData = magasindata.toJson();  
     // Supprimer les champs qui ne doivent pas être mis à jour
     updateData.remove('id'); // L'ID ne doit pas être modifié
     updateData.remove('created_at'); // La date de création ne doit pas être modifiée
-
     print('Données à mettre à jour: $updateData');
-
     final response = await _client
         .from('magasins')
         .update(updateData)

@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:mukhlissmagasin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:mukhlissmagasin/features/profile/presentation/managers/profile_manager.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
-import 'package:mukhlissmagasin/l10n/l10n.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -85,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
 
   Future<void> _pickImage() async {
     if (!_isEditMode) return;
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     final result = await showModalBottomSheet<ImageSource?>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -219,7 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
         description: state.profile.description,
         geom: state.profile.geom,
         categorieId: state.profile.categorieId,
-        imageUrl: newImageUrl ?? '',
+        imageUrl: newImageUrl,
       );
 
       await manager.profileUpdate(updatedProfile);
@@ -470,7 +469,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
   }
 
    Widget _buildPersonalInfoCard() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -571,7 +570,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
   }
 
   Widget _buildPasswordCard() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -636,7 +635,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     String? hint,
     TextInputType? keyboardType,
   }) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return TextFormField(
       controller: controller,
       enabled: _isEditMode,
@@ -676,7 +675,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     String? hint,
   }) {
     bool obscureText = true;
-       final l10n = AppLocalizations.of(context)!;
+       final l10n = AppLocalizations.of(context);
     return StatefulBuilder(
       builder: (context, setState) {
         return TextFormField(

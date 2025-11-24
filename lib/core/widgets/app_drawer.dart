@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:mukhlissmagasin/features/auth/presentation/cubit/auth_state.dart';
-
 import 'package:mukhlissmagasin/features/auth/presentation/screens/login_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/caissier_home_screen.dart';
 import 'package:mukhlissmagasin/features/offers/presentation/screens/offers_screen.dart';
@@ -15,9 +14,7 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-  final bool isPermanent;
-    
+    final l10n = AppLocalizations.of(context);    
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.85,
       elevation: 16,
@@ -328,7 +325,7 @@ class AppDrawer extends StatelessWidget {
   }
 
   void _showLogoutDialog(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     showDialog(
       context: context,

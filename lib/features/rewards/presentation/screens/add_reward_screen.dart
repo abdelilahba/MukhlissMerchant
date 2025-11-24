@@ -1,11 +1,9 @@
-// features/rewards/presentation/screens/add_reward_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_cubit.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/managers/reward_manager.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
-import 'package:mukhlissmagasin/l10n/l10n.dart';
 
 
 
@@ -97,7 +95,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
     if (widget.reward != null) {
       _manager.titleController.text = widget.reward!.name;
       _manager.pointsController.text = widget.reward!.requiredPoints.toString();
-      _manager.isActive = widget.reward!.isActive ?? true;
+      _manager.isActive = widget.reward!.isActive;
     }
   }
 
@@ -266,7 +264,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
 
   Widget _buildEnhancedAppBar() {
     final isEditing = widget.reward != null;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -397,7 +395,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   Widget _buildMotivationalCard() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final isEditing = widget.reward != null;
     
     return Container(
@@ -505,7 +503,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   Widget _buildEnhancedFormCard() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -589,7 +587,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   Widget _buildEnhancedRewardNameField() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -653,7 +651,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   Widget _buildEnhancedPointsField() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -732,7 +730,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   Widget _buildEnhancedActiveToggle() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -812,7 +810,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
 
   Widget _buildFloatingSubmitButton() {
     final isEditing = widget.reward != null;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return AnimatedBuilder(
       animation: Listenable.merge([

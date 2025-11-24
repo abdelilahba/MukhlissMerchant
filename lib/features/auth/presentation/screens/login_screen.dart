@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
    
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(

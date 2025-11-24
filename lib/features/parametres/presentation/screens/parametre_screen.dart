@@ -53,7 +53,7 @@ class _ParametreScreenState extends State<ParametreScreen> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
     
     return Scaffold(

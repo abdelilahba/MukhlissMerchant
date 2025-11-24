@@ -7,7 +7,6 @@ import 'package:mukhlissmagasin/features/cashier/domain/usecases/reclamer_recomp
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CaissierCubit extends Cubit<CaissierState> {
   final AjouterSoldeUseCase ajouterSolde;

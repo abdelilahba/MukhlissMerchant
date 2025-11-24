@@ -1,7 +1,6 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
-import 'package:mukhlissmagasin/l10n/l10n.dart';
 
 /// Écran affiché juste après un scan réussi pour féliciter le client
 /// et montrer le nombre de points cumulés.
@@ -302,7 +301,7 @@ class _FelicitationScreenState extends State<FelicitationScreen>
   }
 
   Widget _buildTitle() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return FadeTransition(
       opacity: _fadeAnimation,
       child: ShaderMask(
@@ -323,7 +322,7 @@ class _FelicitationScreenState extends State<FelicitationScreen>
   }
 
   Widget _buildSubtitle() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Text(
@@ -380,7 +379,7 @@ class _FelicitationScreenState extends State<FelicitationScreen>
   }
 
   Widget _buildSoldeDisplay() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
@@ -433,7 +432,7 @@ class _FelicitationScreenState extends State<FelicitationScreen>
   }
 
   Widget _buildActionButton() {
-    final L10n=AppLocalizations.of(context)!;
+    final L10n=AppLocalizations.of(context);
     return SlideTransition(
       position: _slideAnimation,
       child: Container(
