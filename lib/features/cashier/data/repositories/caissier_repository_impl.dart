@@ -1,6 +1,7 @@
 import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/data/datasources/caissier_remote_data_source.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/entities/Client_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
@@ -90,5 +91,25 @@ class CaissierRepositoryImpl implements CaissierRepository {
  @override
   Future<MagasinModel> currentMagazin() async {
     return await remoteDataSource.currentMagazin();
+  }
+
+  @override
+  Future<ClientMagasinEntity> ajouterSoldeUniqueColdeAppliquerOffres({
+    required int uniqueCode,
+    required String magasinId,
+    required double montant,
+  }) {
+    print('++++++++++++++++++++++ Solde ajouté via code unique +++++++++++++++++++++');
+     return remoteDataSource.ajouterSoldeUniqueColdeAppliquerOffres(uniqueCode: uniqueCode, magasinId: magasinId, montant: montant);
+  }
+
+
+  @override
+  Future<Client> getClientByCodeUnique({
+    required int uniqueCode,
+  }) {
+    return remoteDataSource.getClientByCodeUnique(
+      uniqueCode: uniqueCode,
+    );
   }
 }

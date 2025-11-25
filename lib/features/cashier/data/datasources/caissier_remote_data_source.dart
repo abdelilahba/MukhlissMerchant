@@ -1,4 +1,5 @@
 import 'package:mukhlissmagasin/core/services/supabase_service.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/entities/Client_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
 
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
@@ -77,6 +78,26 @@ class CaissierRemoteDataSource {
     } catch (e) {
       throw Exception(
         'Erreur lors de la récupération du solde: ${e.toString()}',
+      );
+    }
+  }
+
+Future<Client> getClientByCodeUnique({
+    required int uniqueCode,
+  }) async {
+    try {
+      print("Fetching client by unique code: $uniqueCode");
+      final response = await supabase
+          .from('clients')
+          .select()
+          .eq('code_unique', uniqueCode)
+          .single();
+       print('Fetched client data: $response');
+      return Client.fromJson(response);
+    } catch (e) {
+       print('ERROR in getClientByCodeUnique: $e'); 
+      throw Exception(
+        'Erreur lors de la récupération du client par code unique: ${e.toString()}',
       );
     }
   }
@@ -215,6 +236,42 @@ class CaissierRemoteDataSource {
         'Erreur lors de la récupération de la récompense: ${e.toString()}',
       );
       
+    }
+  }
+
+  Future<ClientMagasinEntity> ajouterSoldeUniqueColdeAppliquerOffres({
+    required int uniqueCode,
+    required String magasinId,
+    required double montant,
+  }) async {
+    try {
+       print("===============================================================");
+      final client = await getClientByCodeUnique(uniqueCode: uniqueCode);
+      final clientId = client.id;
+      print("------------------- Retrieved clientId: $clientId ------------------");
+      final result = await supabase
+         .rpc(
+            'apply_offers_auto',
+            params: {
+              'p_client_id': clientId,
+              'p_magasin_id': magasinId,
+              'p_montant': montant,
+            },
+          )
+        .single()
+        .then(ClientMagasinEntity.fromJson);
+        print('result after adding balance and applying offers: $result');
+      print('=============================== clientId solde: $clientId ============================= $montant');
+      // Invalider les autres caches car les données ont changé
+
+      _invalidateClientCache(clientId, magasinId);
+
+      return result;
+    } catch (e) {
+      print('ERROR in ajouterSoldeUniqueColdeAppliquerOffres: $e');
+      throw Exception(
+        'Erreur lors de l\'ajout du solde avec code unique et application des offres: ${e.toString()}',
+      );
     }
   }
 

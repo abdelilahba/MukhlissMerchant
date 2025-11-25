@@ -588,6 +588,7 @@ Widget _buildTopBar(BuildContext context, RewardManager manager) {
   );
 }
 
+
   Widget _buildBody(BuildContext context, RewardManager manager) {
     return BlocBuilder<RewardCubit, RewardState>(
       builder: (context, state) {

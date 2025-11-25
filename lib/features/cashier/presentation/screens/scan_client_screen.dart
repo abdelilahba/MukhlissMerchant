@@ -18,22 +18,33 @@ enum ScanMode { balance, rewards }
 class ScanClientScreen extends StatefulWidget {
   final double? montant;
   final ScanMode mode;
-
-  const ScanClientScreen.balance(this.montant, {super.key}) : mode = ScanMode.balance;
-  const ScanClientScreen.rewards({super.key}) : mode = ScanMode.rewards, montant = null;
+  final VoidCallback? onScanCompleted;
+  final Function(Map<String, dynamic>)? onScanSuccess;
+  const ScanClientScreen.balance(
+    this.montant, {
+    super.key,
+    this.onScanCompleted, // AJOUTEZ
+    this.onScanSuccess, // AJOUTEZ
+  }) : mode = ScanMode.balance;
+  const ScanClientScreen.rewards({
+    super.key,
+    this.onScanCompleted, // AJOUTEZ
+    this.onScanSuccess, // AJOUTEZ
+  }) : mode = ScanMode.rewards,
+       montant = null;
 
   @override
   State<ScanClientScreen> createState() => _ScanClientScreenState();
 }
 
-class _ScanClientScreenState extends State<ScanClientScreen> with TickerProviderStateMixin {
+class _ScanClientScreenState extends State<ScanClientScreen>
+    with TickerProviderStateMixin {
   // Constants
   static const _qrDebugLabel = 'QR';
-  static const _cutOutSize = 850.0;
-  static const _borderWidth = 16.0;
-  static const _borderLength = 80.0;
-  static const _borderRadius = 40.0;
-
+  static const _cutOutSize = 1000.0;
+  static const _borderWidth = 10.0;
+  static const _borderLength = 100.0;
+  // static const _borderRadius = 60.0;
 
   // Controllers and state
   final GlobalKey _qrKey = GlobalKey(debugLabel: _qrDebugLabel);
@@ -54,7 +65,8 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
   String? _lastMagasinId;
 
   bool get _isBalanceMode => widget.montant != null;
-  final AudioPlayer _audioPlayer = AudioPlayer()..setReleaseMode(ReleaseMode.stop);
+  final AudioPlayer _audioPlayer =
+      AudioPlayer()..setReleaseMode(ReleaseMode.stop);
 
   @override
   void initState() {
@@ -68,7 +80,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     _scanLineAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _scanLineController, curve: Curves.easeInOut),
     );
@@ -78,7 +90,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     _cornerAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _cornerController, curve: Curves.easeInOut),
     );
@@ -88,10 +100,11 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     )..repeat();
-    
-    _pulseAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeOut),
-    );
+
+    _pulseAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeOut));
   }
 
   Future<void> _playSuccessSound() async {
@@ -116,7 +129,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
 
   Widget _buildScaffold(CaissierState state) {
     return Scaffold(
-      appBar: _buildAppBar(),
+      // appBar: _buildAppBar(),
       body: Stack(
         children: [
           _buildMainContent(),
@@ -126,22 +139,20 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    final L10n = AppLocalizations.of(context);
-    return AppBar(
-      title: Text(
-        _isBalanceMode ? L10n.scannerajoutersolde : L10n.scannervoiroffre,
-      ),
-      elevation: 0,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.flip_camera_ios),
-          onPressed: _flipCamera,
-          tooltip: L10n.chnangercamera,
-        ),
-      ],
-    );
-  }
+  // PreferredSizeWidget _buildAppBar() {
+  //   final L10n = AppLocalizations.of(context)!;
+  //   return AppBar(
+
+  //     elevation: 0,
+  //     actions: [
+  //       IconButton(
+  //         icon: const Icon(Icons.flip_camera_ios),
+  //         onPressed: _flipCamera,
+  //         tooltip: L10n.chnangercamera,
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildMainContent() {
     final L10n = AppLocalizations.of(context);
@@ -156,7 +167,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
                 onQRViewCreated: _onQRViewCreated,
                 overlay: QrScannerOverlayShape(
                   borderColor: Colors.transparent,
-                  borderRadius: _borderRadius,
+                  // borderRadius: _borderRadius,
                   borderLength: 0,
                   borderWidth: 0,
                   cutOutSize: _cutOutSize,
@@ -169,41 +180,41 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
             ],
           ),
         ),
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                _isBalanceMode ? Icons.add_circle : Icons.local_offer,
-                size: 32,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                _isBalanceMode
-                    ? L10n.scannerpourajoutersolde
-                    : L10n.scannerpourvoiroffre,
-                style: const TextStyle(fontSize: 16, color: Colors.grey),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              if (_isBalanceMode) _buildAmountDisplay(),
-              if (_isBalanceMode) ...[
-                const SizedBox(height: 12),
-                Text(
-                  L10n.vousserezrederigervers,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                    fontStyle: FontStyle.italic,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ],
-          ),
-        ),
+        // Container(
+        //   padding: const EdgeInsets.all(16.0),
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       Icon(
+        //         _isBalanceMode ? Icons.add_circle : Icons.local_offer,
+        //         size: 32,
+        //         color: Colors.grey,
+        //       ),
+        //       const SizedBox(height: 8),
+        //       Text(
+        //         _isBalanceMode
+        //             ? L10n.scannerpourajoutersolde
+        //             : L10n.scannerpourvoiroffre,
+        //         style: const TextStyle(fontSize: 16, color: Colors.grey),
+        //         textAlign: TextAlign.center,
+        //       ),
+        //       const SizedBox(height: 8),
+        //       if (_isBalanceMode) _buildAmountDisplay(),
+        //       if (_isBalanceMode) ...[
+        //         const SizedBox(height: 12),
+        //         Text(
+        //           L10n.vousserezrederigervers,
+        //           style: TextStyle(
+        //             fontSize: 12,
+        //             color: Colors.grey.shade600,
+        //             fontStyle: FontStyle.italic,
+        //           ),
+        //           textAlign: TextAlign.center,
+        //         ),
+        //       ],
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
@@ -223,7 +234,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
                   opacity: 1 - _pulseAnimation.value,
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(_borderRadius),
+                      // borderRadius: BorderRadius.circular(_borderRadius),
                       border: Border.all(
                         color: Theme.of(context).primaryColor,
                         width: _borderWidth * (1 + _pulseAnimation.value * 0.5),
@@ -236,7 +247,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
             // Main border with gradient
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(_borderRadius),
+                // borderRadius: BorderRadius.circular(_borderRadius),
                 border: Border.all(
                   color: Theme.of(context).primaryColor,
                   width: _borderWidth,
@@ -265,7 +276,9 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).primaryColor.withOpacity(0.5),
+                          color: Theme.of(
+                            context,
+                          ).primaryColor.withOpacity(0.5),
                           blurRadius: 8,
                           spreadRadius: 2,
                         ),
@@ -424,26 +437,113 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
     }
   }
 
-  Future<void> _handleBalanceAdded(double pointsGagnes, double soldeRestant) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => FelicitationScreen(
-          pointsGagnes: pointsGagnes.toInt(),
-          soldeRestant: soldeRestant,
-        ),
-      ),
-    );
-    if (mounted) Navigator.pop(context, true);
+void _handleBalanceAdded(double pointsGagnes, double soldeRestant) async {
+  await _playSuccessSound();
+
+  // ✅ MODE INTÉGRÉ : Si callback personnalisé fourni, l'utiliser
+  if (widget.onScanSuccess != null) {
+    widget.onScanSuccess!({
+      'pointsGagnes': pointsGagnes.toInt(),
+      'soldeRestant': soldeRestant,
+      'scanMode': 'balance',
+    });
+
+    // Appeler onScanCompleted si fourni
+    if (widget.onScanCompleted != null) {
+      widget.onScanCompleted!();
+    }
+
+    // Important : arrêter le traitement
+    _setProcessing(false);
+    return;
   }
 
+  // ✅ MODE NAVIGATION : Afficher un toast au lieu de naviguer
+  if (mounted) {
+    final L10n = AppLocalizations.of(context);
+    _showSuccessToast(
+      message: '${L10n.felicitation } ! ${pointsGagnes.toInt()} ${L10n.pts } gagnés',
+      solde: soldeRestant,
+    );
+  }
+
+  // Fermer l'écran de scan après un court délai
+  Future.delayed(const Duration(milliseconds: 1500), () {
+    if (mounted) {
+      Navigator.pop(context, true);
+    }
+  });
+}
+void _showSuccessToast({required String message, required double solde}) {
+  final L10n = AppLocalizations.of(context);
+  
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.check_circle_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    message,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${L10n.solderestant }: ${solde.toStringAsFixed(2)} ${L10n.dh ?? "DH"}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      backgroundColor: const Color(0xFF10B981),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      margin: const EdgeInsets.all(16),
+      duration: const Duration(seconds: 3),
+      elevation: 8,
+    ),
+  );
+}
   void _handleError(String message) {
     _setProcessing(false);
     _showSnackBar(message: 'Erreur: $message', backgroundColor: Colors.red);
     _resumeCamera();
   }
 
-  void _showSnackBar({required String message, required Color backgroundColor}) {
+  void _showSnackBar({
+    required String message,
+    required Color backgroundColor,
+  }) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -464,11 +564,13 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
   }
 
   Future<void> _handleQRScan(Barcode scanData) async {
-    final L10n = AppLocalizations.of(context);
+    final L10n = AppLocalizations.of(context)!;
+
+    // Arrêter immédiatement le scanner si un code est détecté
     if (!_canProcessScan(scanData)) return;
 
     _setProcessing(true);
-    await _pauseCamera();
+    await _pauseCamera(); // Pause la caméra immédiatement
 
     try {
       await _processQRCode(scanData.code!);
@@ -484,7 +586,7 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
   }
 
   Future<void> _processQRCode(String qrCode) async {
-    final L10n = AppLocalizations.of(context);
+    final L10n = AppLocalizations.of(context)!;
     final clientData = _parseQRCode(qrCode);
     final currentUser = _getCurrentUser();
     _validateData(clientData, currentUser);
@@ -501,20 +603,37 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
       return;
     }
 
+    // ✅ MODE REWARDS - Utiliser le callback personnalisé
     final points = await getIt<CaissierRepository>().getClientPoints(
       clientId: _lastClientId!,
       magasinId: _lastMagasinId!,
     );
 
     await _playSuccessSound();
-    _showSnackBar(message: L10n.qrreconu + '✔️', backgroundColor: Colors.green);
-    await Future.delayed(const Duration(milliseconds: 600));
 
+    // ✅ Si callback personnalisé fourni, l'utiliser
+    if (widget.onScanSuccess != null) {
+      widget.onScanSuccess!({
+        'clientId': _lastClientId!,
+        'magasinId': _lastMagasinId!,
+        'clientPoints': points,
+        'scanMode': 'rewards',
+      });
+
+      // Appeler aussi onScanCompleted si fourni
+      if (widget.onScanCompleted != null) {
+        widget.onScanCompleted!();
+      }
+      return;
+    }
+
+    // ✅ Comportement par défaut (navigation)
     if (mounted) {
       Navigator.pop(context, {
         'clientId': _lastClientId!,
         'magasinId': _lastMagasinId!,
-        'clientPoints': points.toString(),
+        'clientPoints': points,
+        'scanMode': 'rewards',
       });
     }
   }
@@ -536,7 +655,9 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
     }
     final userId = clientData['user_id'];
     if (userId == null || userId.toString().isEmpty) {
-      throw const FormatException('Le QR code ne contient pas de user_id valide');
+      throw const FormatException(
+        'Le QR code ne contient pas de user_id valide',
+      );
     }
   }
 
@@ -544,6 +665,8 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
     debugPrint('Scan Error: $error');
     _setProcessing(false);
     _showSnackBar(message: message, backgroundColor: Colors.red);
+
+    // Reprendre la caméra SEULEMENT en cas d'erreur
     _resumeCamera();
   }
 
@@ -565,12 +688,21 @@ class _ScanClientScreenState extends State<ScanClientScreen> with TickerProvider
     return state is CaissierLoading || _isProcessing;
   }
 
+  Future<void> _pauseScanner() async {
+    try {
+      await _controller?.pauseCamera();
+    } catch (e) {
+      debugPrint('Error pausing camera: $e');
+    }
+  }
+
   @override
   void dispose() {
+    _pauseScanner();
     _scanLineController.dispose();
     _cornerController.dispose();
     _pulseController.dispose();
-    _controller?.dispose();
+
     _audioPlayer.dispose();
     super.dispose();
   }
@@ -592,11 +724,12 @@ class CornerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = borderWidth
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
+    final paint =
+        Paint()
+          ..color = color
+          ..strokeWidth = borderWidth
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke;
 
     final path = Path();
 
@@ -633,10 +766,11 @@ class GridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 1
-      ..style = PaintingStyle.stroke;
+    final paint =
+        Paint()
+          ..color = color
+          ..strokeWidth = 1
+          ..style = PaintingStyle.stroke;
 
     const gridSize = 20.0;
 

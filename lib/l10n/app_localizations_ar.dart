@@ -216,7 +216,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'امسح رمز الاستجابة السريعة للعميل للوصول إلى مكافآته';
 
   @override
-  String get scannerrecompenceqr => 'امسح للمكافآت';
+  String get scannerrecompenceqr => 'امسح واربح';
 
   @override
   String get commentmarche => 'كيف تتم العملية؟';
@@ -333,7 +333,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get oups => 'عفوًا! حدث خطأ ما';
 
   @override
-  String get ressayer => 'أعد المحاولة';
+  String get ressayer => 'إعادة المحاولة';
 
   @override
   String get choisissezrecompence => 'اختر مكافأة تُسعدك';
@@ -598,4 +598,45 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get total => 'المجموع';
+
+  @override
+  String get utiliserscanne => 'استخدم الماسح الضوئي';
+
+  @override
+  String get codemanuelle => 'أدخل الرمز يدويًا';
+
+  @override
+  String get scannefonctionnepas => ' إذا كان المسح لا يعمل ';
+
+  @override
+  String get saisimanuelle => 'إدخال يدوي';
+
+  @override
+  String get entrzcodemanuelle => 'أدخل الرمز الفريد للعميل';
+
+  @override
+  String get entrezcodeunique => 'أدخل الرمز الفريد…';
+
+  @override
+  String get validercode => 'تأكيد الرمز';
+
+  @override
+  String get codeuniquedanslapplicationclient =>
+      'يوجد الرمز الفريد في تطبيق العميل.';
+
+  @override
+  String get recompencedisponible => 'المكافآت المتاحة';
+
+  @override
+  String get fermer => 'أغلق';
+
+  @override
+  String get soldepoints => 'رصيد نقاطك';
+
+  @override
+  String get problemconnexion => 'مشكلة اتصال بالشبكة';
+
+  @override
+  String get problemeconnexiondetails =>
+      'يتعذّر الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت ثم إعادة المحاولة.';
 }

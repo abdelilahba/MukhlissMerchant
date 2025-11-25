@@ -78,7 +78,8 @@ class _RewardCardState extends State<RewardCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -90,6 +91,9 @@ class _RewardCardState extends State<RewardCard>
             onTapCancel: _onTapCancel,
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              constraints: const BoxConstraints(
+                minHeight: 110, // ✅ RÉDUIRE ENCORE LA HAUTEUR MINIMALE
+              ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
@@ -194,15 +198,16 @@ class _RewardCardState extends State<RewardCard>
                       
                       // Main content
                       Padding(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(14), // ✅ RÉDUIRE ENCORE LE PADDING
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Points container with glassmorphism effect
+                            // Points container - VERSION ULTRA COMPACTE
                             Container(
-                              width: 70,
-                              height: 70,
+                              width: 55, // ✅ RÉDUIRE ENCORE
+                              height: 55,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
+                                borderRadius: BorderRadius.circular(14),
                                 gradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -217,63 +222,39 @@ class _RewardCardState extends State<RewardCard>
                                     blurRadius: 15,
                                     offset: const Offset(0, 5),
                                   ),
-                                  BoxShadow(
-                                    color: theme.primaryColor.withOpacity(0.2),
-                                    blurRadius: 25,
-                                    offset: const Offset(0, 10),
-                                  ),
                                 ],
                               ),
-                              child: Stack(
-                                children: [
-                                  // Inner glow
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(18),
-                                      gradient: RadialGradient(
-                                        center: Alignment.topLeft,
-                                        radius: 1.5,
-                                        colors: [
-                                          Colors.white.withOpacity(0.3),
-                                          Colors.transparent,
-                                        ],
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '${widget.reward.requiredPoints}',
+                                      style: const TextStyle(
+                                        fontSize: 13, // ✅ RÉDUIRE ENCORE
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        height: 0.9, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
                                       ),
                                     ),
-                                  ),
-                                  
-                                  // Points text
-                                  Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        FittedBox(
-                                          child: Text(
-                                            '${widget.reward.requiredPoints}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 0.5,
-                                            ),
-                                          ),
-                                        ),
-                                         Text(
-                                         l10n.point ,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            letterSpacing: 0.5,
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      l10n.point,
+                                      style: TextStyle(
+                                        fontSize: 9, // ✅ RÉDUIRE ENCORE
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        height: 0.9, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 10), // ✅ RÉDUIRE ENCORE
                             
-                            // Reward information
+                            // Reward information - VERSION ULTRA COMPACTE
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -284,94 +265,113 @@ class _RewardCardState extends State<RewardCard>
                                   Text(
                                     widget.reward.name,
                                     style: TextStyle(
+                                      fontSize: 13, // ✅ RÉDUIRE ENCORE
                                       fontWeight: FontWeight.w700,
                                       color: isDark 
                                           ? Colors.white 
                                           : const Color(0xFF1A1A1A),
-                                      letterSpacing: -0.5,
-                                      height: 1.2,
+                                      letterSpacing: -0.3, // ✅ RÉDUIRE
+                                      height: 1.1, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
                                     ),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: 4), // ✅ RÉDUIRE ENCORE
                                   
                                   // Points requirement
                                   Text(
-                                    l10n.echange+' ${widget.reward.requiredPoints}'+l10n.point,
+                                    '${l10n.echange} ${widget.reward.requiredPoints} ${l10n.point}',
                                     style: TextStyle(
+                                      fontSize: 11, // ✅ RÉDUIRE ENCORE
                                       fontWeight: FontWeight.w500,
                                       color: isDark 
                                           ? Colors.white.withOpacity(0.7)
                                           : Colors.grey[600],
-                                      letterSpacing: 0.2,
+                                      letterSpacing: 0.1, // ✅ RÉDUIRE
+                                      height: 1.0, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
                             ),
                             
-                            // Three-dot menu for actions
-                            PopupMenuButton<String>(
-                              icon: Icon(
-                                Icons.more_vert,
-                                color: isDark 
-                                    ? Colors.white.withOpacity(0.8)
-                                    : theme.primaryColor,
-                              ),
-                              itemBuilder: (BuildContext context) => [
-                                PopupMenuItem<String>(
-                                  value: 'edit',
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.edit, size: 20, color: theme.primaryColor),
-                                      const SizedBox(width: 8),
-                                       Text(l10n.modifier),
-                                    ],
-                                  ),
+                            // Three-dot menu - VERSION ULTRA COMPACTE
+                            SizedBox(
+                              width: 24, // ✅ FORCER LA LARGEUR
+                              height: 24,
+                              child: PopupMenuButton<String>(
+                                padding: EdgeInsets.zero, // ✅ SUPPRIMER LE PADDING
+                                icon: Icon(
+                                  Icons.more_vert,
+                                  size: 18, // ✅ RÉDUIRE ENCORE
+                                  color: isDark 
+                                      ? Colors.white.withOpacity(0.8)
+                                      : theme.primaryColor,
                                 ),
-                                PopupMenuItem<String>(
-                                  value: 'delete',
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.delete, size: 20, color: Colors.red),
-                                      const SizedBox(width: 8),
-                                       Text(l10n.supprimer),
-                                    ],
+                                itemBuilder: (BuildContext context) => [
+                                  PopupMenuItem<String>(
+                                    value: 'edit',
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.edit, size: 16, color: theme.primaryColor),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          l10n.modifier,
+                                          style: const TextStyle(fontSize: 11),
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                  PopupMenuItem<String>(
+                                    value: 'delete',
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.delete, size: 16, color: Colors.red),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          l10n.supprimer,
+                                          style: const TextStyle(fontSize: 11),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                                onSelected: (String value) {
+                                  if (value == 'edit') {
+                                    widget.onEdit();
+                                  } else if (value == 'delete') {
+                                    widget.onDelete();
+                                  }
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                              ],
-                              onSelected: (String value) {
-                                if (value == 'edit') {
-                                  widget.onEdit();
-                                } else if (value == 'delete') {
-                                  widget.onDelete();
-                                }
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                elevation: 2,
                               ),
-                              elevation: 4,
                             ),
                           ],
                         ),
                       ),
                       
-                      // Top accent line
+                      // Top accent line - OPTIONNEL: SUPPRIMER SI NÉCESSAIRE
                       Positioned(
                         top: 0,
-                        left: 20,
-                        right: 20,
+                        left: 16,
+                        right: 16,
                         child: Container(
-                          height: 2,
+                          height: 1, // ✅ RÉDUIRE L'ÉPAISSEUR
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(1),
                             gradient: LinearGradient(
                               colors: [
                                 Colors.transparent,
-                                theme.primaryColor.withOpacity(0.6),
-                                theme.primaryColor.withOpacity(0.3),
+                                theme.primaryColor.withOpacity(0.4),
+                                theme.primaryColor.withOpacity(0.2),
                                 Colors.transparent,
                               ],
                             ),
