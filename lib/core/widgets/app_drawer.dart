@@ -16,7 +16,7 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);    
     return Drawer(
-      width: MediaQuery.of(context).size.width * 0.85,
+      width: MediaQuery.of(context).size.width * 0.65,
       elevation: 16,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.horizontal(right: Radius.circular(24)),
@@ -34,60 +34,81 @@ class AppDrawer extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // Header moderne avec gradient
+            // Header compact
             _buildModernHeader(context, l10n),
             
-            // Menu items
+            // Menu items - SANS ListView, directement dans Column
             Expanded(
-              child: ListView(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                children: [
-                  _buildMenuSection(
-                    title: l10n.navigation,
-                    items: [
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Section Navigation
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                          child: Text(
+                            l10n.navigation,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                        _buildCompactListTile(
+                          icon: Icons.local_offer_rounded,
+                          title: l10n.offre,
+                          color: Colors.orange,
+                          onTap: () => _navigateTo(context, const OffersScreen()),
+                        ),
+                        _buildCompactListTile(
+                          icon: Icons.card_giftcard_rounded,
+                          title: l10n.recompences,
+                          color: Colors.purple,
+                          onTap: () => _navigateTo(context, RewardsScreen()),
+                        ),
+                        _buildCompactListTile(
+                          icon: Icons.point_of_sale_rounded,
+                          title: l10n.caissier,
+                          color: Colors.green,
+                          onTap: () => _navigateTo(context, CaissierHomeScreen()),
+                        ),
+                        
+                        const SizedBox(height: 8),
+                        
+                        // Section Paramètres
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                          child: Text(
+                            l10n.setting,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                        _buildCompactListTile(
+                          icon: Icons.settings_rounded,
+                          title: l10n.setting,
+                          color: Colors.blue,
+                          onTap: () => _navigateTo(context, ParametreScreen()),
+                        ),
+                      ],
+                    ),
                     
-                      _MenuItemData(
-                        icon: Icons.local_offer_rounded,
-                        title: l10n.offre,
-                        color: Colors.orange,
-                        onTap: () => _navigateTo(context, const OffersScreen()),
-                      ),
-                      _MenuItemData(
-                        icon: Icons.card_giftcard_rounded,
-                        title: l10n.recompences,
-                        color: Colors.purple,
-                        onTap: () => _navigateTo(context, RewardsScreen()),
-                      ),
-                      _MenuItemData(
-                        icon: Icons.point_of_sale_rounded,
-                        title: l10n.caissier,
-                        color: Colors.green,
-                        onTap: () => _navigateTo(context, CaissierHomeScreen()),
-                      ),
-                    ],
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  _buildMenuSection(
-                    title:l10n.setting ,
-                    items: [
-                      _MenuItemData(
-                        icon: Icons.settings_rounded,
-                        title: l10n.setting,
-                        color: Colors.blue,
-                        onTap: () => _navigateTo(context, ParametreScreen()),
-                      ),
-                    ],
-                  ),
-                  
-                  const SizedBox(height: 40),
+                    // Section Déconnexion en bas
                     _buildLogoutSection(context, l10n),
-                ],
+                  ],
+                ),
               ),
             ),
-            
-          
           ],
         ),
       ),
@@ -96,80 +117,85 @@ class AppDrawer extends StatelessWidget {
 
   Widget _buildModernHeader(BuildContext context, AppLocalizations l10n) {
     return Container(
-      height: 200,
+      height: 140, // Réduit pour plus d'espace au contenu
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.deepPurple,
-            Colors.deepPurple.shade700,
-            Colors.purple.shade600,
+            Colors.deepPurple.shade800,
+            Colors.deepPurple.shade600,
+            Colors.purple.shade500,
           ],
         ),
         boxShadow: [
           BoxShadow(
             color: Colors.deepPurple.withOpacity(0.3),
-            blurRadius: 10,
+            blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
+        borderRadius: const BorderRadius.only(
+          bottomRight: Radius.circular(24),
+        ),
       ),
       child: SafeArea(
+        bottom: false,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Logo ou icône de l'app
+              // Logo compact
               Container(
-                width: 50,
-                height: 50,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withOpacity(0.25),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.3),
-                    width: 2,
+                    color: Colors.white.withOpacity(0.4),
+                    width: 1.5,
                   ),
                 ),
                 child: const Icon(
                   Icons.store_rounded,
-                  size: 28,
+                  size: 20,
                   color: Colors.white,
                 ),
               ),
-             
               
-              // Titre
-              Flexible(
-                child: Text(
-                  l10n.menuprincipale,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5,
+              // Textes
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.menuprincipale,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.5,
+                      height: 1.1,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              
-            
-              // Sous-titre
-              Text(
-                'Mukhliss Magasin',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                  const SizedBox(height: 4),
+                  Text(
+                    'Mukhliss Magasin',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.85),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      height: 1.2,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ],
           ),
@@ -178,76 +204,54 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuSection({
+  Widget _buildCompactListTile({
+    required IconData icon,
     required String title,
-    required List<_MenuItemData> items,
+    required Color color,
+    required VoidCallback onTap,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey.shade600,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ),
-        ...items.map((item) => _buildModernListTile(item)),
-      ],
-    );
-  }
-
-  Widget _buildModernListTile(_MenuItemData item) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 1),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+        minVerticalPadding: 0,
+        visualDensity: VisualDensity.compact, // Réduit l'espacement
         leading: Container(
-          width: 44,
-          height: 44,
+          width: 38,
+          height: 38,
           decoration: BoxDecoration(
-            color: item.color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(
-            item.icon,
-            color: item.color,
-            size: 24,
+            icon,
+            color: color,
+            size: 20,
           ),
         ),
         title: Text(
-          item.title,
+          title,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios_rounded,
-          size: 16,
+          size: 14,
           color: Colors.grey.shade400,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
         ),
-        onTap: item.onTap,
-        hoverColor: item.color.withOpacity(0.05),
-        focusColor: item.color.withOpacity(0.1),
+        onTap: onTap,
       ),
     );
   }
 
   Widget _buildLogoutSection(BuildContext context, AppLocalizations l10n) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 60),
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
@@ -269,42 +273,44 @@ class AppDrawer extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.red.shade50,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
             border: Border.all(
               color: Colors.red.shade200,
               width: 1,
             ),
           ),
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+            minVerticalPadding: 0,
+            visualDensity: VisualDensity.compact,
             leading: Container(
-              width: 44,
-              height: 44,
+              width: 38,
+              height: 38,
               decoration: BoxDecoration(
                 color: Colors.red.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(
                 Icons.logout_rounded,
                 color: Colors.red,
-                size: 24,
+                size: 20,
               ),
             ),
             title: Text(
               l10n.deconnexion,
               style: const TextStyle(
                 color: Colors.red,
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
             trailing: const Icon(
               Icons.arrow_forward_ios_rounded,
-              size: 16,
+              size: 14,
               color: Colors.red,
             ),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
             ),
             onTap: () {
               Navigator.pop(context);
@@ -346,14 +352,14 @@ class AppDrawer extends StatelessWidget {
             ],
           ),
           content: Text(
-          l10n.etevoussur ,
+            l10n.etevoussur,
             style: TextStyle(fontSize: 16),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
-               l10n.annuler ,
+                l10n.annuler,
                 style: TextStyle(
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500,
@@ -365,9 +371,9 @@ class AppDrawer extends StatelessWidget {
                 Navigator.of(context).pop();
                 context.read<AuthCubit>().logout();
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                '/login', // Route de votre page de login
-                (Route<dynamic> route) => false, // Supprime toutes les routes
-              );
+                  '/login',
+                  (Route<dynamic> route) => false,
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,

@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
@@ -13,7 +16,7 @@ class RewardSelectionScreen extends StatefulWidget {
   final int clientPoints;
   final VoidCallback? onRewardsCompleted;
   final Function(int pointsRestants)? onRewardClaimed;
-
+    final Function(bool hasSelectedRewards)? onBackPressed; 
   const RewardSelectionScreen({
     super.key,
     required this.clientId,
@@ -21,6 +24,7 @@ class RewardSelectionScreen extends StatefulWidget {
     required this.clientPoints,
     this.onRewardsCompleted,
     this.onRewardClaimed,
+    this.onBackPressed,
   });
 
   @override
@@ -29,11 +33,15 @@ class RewardSelectionScreen extends StatefulWidget {
 
 class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     with TickerProviderStateMixin {
+   bool _hasSelectedRewards = false; 
   final CaissierCubit _cubit = getIt<CaissierCubit>();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   List<Reward> _selectedRewards = [];
-
+   int _totalRewardsToClaim = 0;
+  int _rewardsClaimedCount = 0;
+  int _finalPointsAfterAllClaims = 0;
+  
   @override
   void initState() {
     super.initState();
@@ -78,141 +86,43 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     );
   }
 
-  // ✅ NOUVELLE MÉTHODE pour afficher le toast de succès
-  void _showRewardSuccessToast({
-    required int pointsRestants,
-    required int pointsDeduits,
-  }) {
-    final l10n = AppLocalizations.of(context);
+ 
 
+void _handleState(BuildContext context, CaissierState state) async {
+  if (state is RecompenseReclamee) {
+    // ✅ NE RIEN FAIRE ICI POUR LES RÉCOMPENSES MULTIPLES
+    // La logique est maintenant gérée dans _claimRewardsSequentially()
+    print('📝 Récompense individuelle réclamée - points restants: ${state.pointsDeduits}');
+    
+    // ❌ NE PAS APPELER LES CALLBACKS ICI - ça causait le problème
+    // Les callbacks sont maintenant appelés dans _claimRewardsSequentially()
+    // après que TOUTES les récompenses soient traitées
+    
+  } else if (state is CaissierError) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.card_giftcard_rounded,
-                  color: Colors.white,
-                  size: 32,
-                ),
+        content: Row(
+          children: [
+            const Icon(Icons.error_outline_rounded, color: Colors.white),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                state.message,
+                style: const TextStyle(fontSize: 14),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Félicitations !',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${"Récompense échangée avec succès"}',
-                      style: const TextStyle(fontSize: 14, color: Colors.white),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.stars_rounded,
-                          color: Colors.white70,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${"Points restants"}: $pointsRestants ${l10n.pts ?? "pts"}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        backgroundColor: const Color(0xFF8B5CF6),
+        backgroundColor: const Color(0xFFF87171),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
         margin: const EdgeInsets.all(20),
-        duration: const Duration(seconds: 4),
-        elevation: 12,
       ),
     );
   }
-
-  // Dans recompenses_disponibles_screen.dart
-  // Remplacer la méthode _handleState (lignes 131-165)
-
-  void _handleState(BuildContext context, CaissierState state) async {
-    if (state is RecompenseReclamee) {
-      // ✅ CORRECTION : Clarifier la signification de state.pointsDeduits
-      // state.pointsDeduits contient les points RESTANTS après l'échange
-      final pointsRestantsApresEchange = state.pointsDeduits;
-      final pointsUtilisesPourRecompense =
-          widget.clientPoints - state.pointsDeduits;
-
-      // ✅ Afficher le toast de succès avec les bonnes valeurs
-
-
-      // ✅ Si callback fourni, l'utiliser avec les points restants
-      if (widget.onRewardClaimed != null) {
-        await Future.delayed(const Duration(milliseconds: 300));
-        widget.onRewardClaimed!(pointsRestantsApresEchange);
-      }
-
-      // ✅ Appeler onRewardsCompleted si fourni
-      if (widget.onRewardsCompleted != null) {
-        await Future.delayed(const Duration(milliseconds: 500));
-        widget.onRewardsCompleted!();
-      }
-
-      // ✅ Fermer l'écran après un délai
-      await Future.delayed(const Duration(milliseconds: 1500));
-      if (mounted) {
-        Navigator.pop(context, true);
-      }
-    } else if (state is CaissierError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.error_outline_rounded, color: Colors.white),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  state.message,
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: const Color(0xFFF87171),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          margin: const EdgeInsets.all(20),
-        ),
-      );
-    }
-  }
+}
 
   void _confirmMultipleClaims() async {
     final L10n = AppLocalizations.of(context);
@@ -373,16 +283,107 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     );
 
     if (confirm == true) {
-      for (final reward in _selectedRewards) {
-        _cubit.claimReward(
-          clientId: widget.clientId,
-          magasinId: widget.magasinId,
-          rewardId: reward.id,
-          pointsRequired: reward.requiredPoints,
-        );
-      }
+      _totalRewardsToClaim = _selectedRewards.length;
+      _rewardsClaimedCount = 0;
+      _finalPointsAfterAllClaims = widget.clientPoints - totalCost;
+      
+      print('🎯 Début de réclamation de $_totalRewardsToClaim récompenses');
+      print('🎯 Points finaux attendus: $_finalPointsAfterAllClaims');
+      await _claimRewardsSequentially();
     }
   }
+
+ Future<void> _claimRewardsSequentially() async {
+  final totalCost = _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
+  final expectedFinalPoints = widget.clientPoints - totalCost;
+  
+  print('🎯 Réclamation de ${_selectedRewards.length} récompenses');
+
+  // ✅ RÉCLAMER TOUTES LES RÉCOMPENSES
+  for (final reward in _selectedRewards) {
+    try {
+      await _claimSingleReward(reward);
+      await Future.delayed(const Duration(milliseconds: 500));
+    } catch (e) {
+      print('❌ Erreur réclamation ${reward.name}: $e');
+    }
+  }
+
+  // ✅ ATTENDRE QUE TOUTES LES OPÉRATIONS SOIENT TERMINÉES
+  await Future.delayed(const Duration(seconds: 2));
+  
+  try {
+    // ✅ RÉCUPÉRER LES POINTS RÉELS
+    final realFinalPoints = await getIt<CaissierRepository>().getClientPoints(
+      clientId: widget.clientId,
+      magasinId: widget.magasinId,
+    );
+    
+    print('🎉 Points réels après toutes les réclamations: $realFinalPoints');
+
+    // ✅ SEULEMENT onRewardClaimed - NE PAS APPELER onRewardsCompleted
+    if (widget.onRewardClaimed != null) {
+      widget.onRewardClaimed!(realFinalPoints);
+    }
+
+   
+
+    // ✅ FERMER L'ÉCRAN
+    await Future.delayed(const Duration(milliseconds: 1000));
+    if (mounted) {
+      Navigator.pop(context, true);
+    }
+  } catch (e) {
+    print('❌ Erreur récupération points finaux: $e');
+    
+    // ✅ FALLBACK : UTILISER LE CALCUL
+    if (widget.onRewardClaimed != null) {
+      widget.onRewardClaimed!(expectedFinalPoints);
+    }
+    
+    // ❌ SUPPRIMER CET APPEL AUSSI
+    // if (widget.onRewardsCompleted != null) {
+    //   widget.onRewardsCompleted!();
+    // }
+    
+    if (mounted) {
+      Navigator.pop(context, true);
+    }
+  }
+}
+
+Future<void> _claimSingleReward(Reward reward) async {
+  // ✅ Créer un Completer pour attendre la fin de la réclamation
+  final completer = Completer<void>();
+  
+  // ✅ Écouter l'état une seule fois pour cette récompense
+  final subscription = _cubit.stream.listen((state) {
+    if (state is RecompenseReclamee) {
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    } else if (state is CaissierError) {
+      if (!completer.isCompleted) {
+        completer.completeError(Exception(state.message));
+      }
+    }
+  });
+
+  // ✅ Lancer la réclamation
+  _cubit.claimReward(
+    clientId: widget.clientId,
+    magasinId: widget.magasinId,
+    rewardId: reward.id,
+    pointsRequired: reward.requiredPoints,
+  );
+
+  // ✅ Attendre que la réclamation soit terminée
+  try {
+    await completer.future;
+  } finally {
+    subscription.cancel();
+  }
+}
 
   Widget _buildSummaryRow(String label, String value, Color color) {
     return Row(
@@ -854,17 +855,27 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     );
   }
 
-  void _toggleRewardSelection(Reward reward) {
+ void _toggleRewardSelection(Reward reward) {
     setState(() {
       if (_selectedRewards.contains(reward)) {
         _selectedRewards.remove(reward);
       } else {
         _selectedRewards.add(reward);
       }
+      _hasSelectedRewards = _selectedRewards.isNotEmpty; // ✅ METTRE À JOUR LE TRACKER
     });
   }
 
   bool _isRewardSelected(Reward reward) {
     return _selectedRewards.contains(reward);
+  }
+    void _handleBackButton() {
+    // ✅ APPELER LE CALLBACK AVEC L'INFORMATION SUR LES SÉLECTIONS
+    if (widget.onBackPressed != null) {
+      widget.onBackPressed!(_hasSelectedRewards);
+    } else {
+      // ✅ FALLBACK : SI PAS DE CALLBACK, FERMER NORMALEMENT
+      Navigator.pop(context);
+    }
   }
 }

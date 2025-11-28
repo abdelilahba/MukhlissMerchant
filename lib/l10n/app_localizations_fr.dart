@@ -660,4 +660,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get problemeconnexiondetails =>
       'Impossible de se connecter au serveur. Vérifiez votre connexion internet et réessayez.';
+
+  @override
+  String get recompenceechange => 'Récompense(s) échangée(s) avec succès';
 }

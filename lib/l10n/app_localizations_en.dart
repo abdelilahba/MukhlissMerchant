@@ -652,4 +652,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get problemeconnexiondetails =>
       'Unable to connect to the server. Check your internet connection and try again.';
+
+  @override
+  String get recompenceechange => 'تم استبدال المكافأة (المكافآت) بنجاح';
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -72,6 +73,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   void initState() {
     super.initState();
     _initAnimations();
+  //  _initAudioPlayer ();
   }
 
   void _initAnimations() {
@@ -107,12 +109,26 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeOut));
   }
 
-  Future<void> _playSuccessSound() async {
-    try {
-      await _audioPlayer.stop();
-      await _audioPlayer.play(AssetSource('audio/success.mp3'));
-    } catch (_) {}
+// Dans scan_client_screen.dart
+Future<void> _playSuccessSound() async {
+  try {
+    print('🔊 Tentative de lecture du son...');
+    
+    // ✅ JOUER DIRECTEMENT SANS ATTENDRE (fire and forget)
+    unawaited(_audioPlayer.play(
+      AssetSource('audio/success.mp3'),
+      volume: 1.0,
+      mode: PlayerMode.lowLatency,
+    ));
+    
+    print('✅ Son lancé en arrière-plan');
+    
+  } catch (e) {
+    print('❌ Erreur lecture audio: $e');
   }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -374,24 +390,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     );
   }
 
-  Widget _buildAmountDisplay() {
-    final L10n = AppLocalizations.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        L10n.mantant + ': ${widget.montant!.toStringAsFixed(2)}' + L10n.dh,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-          color: Theme.of(context).primaryColor,
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildLoadingOverlay() {
     final L10n = AppLocalizations.of(context);
@@ -438,9 +437,10 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   }
 
 void _handleBalanceAdded(double pointsGagnes, double soldeRestant) async {
-  await _playSuccessSound();
+  // ✅ JOUER LE SON SANS ATTENDRE
+  _playSuccessSound(); // SUPPRIMER await !
 
-  // ✅ MODE INTÉGRÉ : Si callback personnalisé fourni, l'utiliser
+  // ✅ MODE INTÉGRÉ - TRAITEMENT IMMÉDIAT
   if (widget.onScanSuccess != null) {
     widget.onScanSuccess!({
       'pointsGagnes': pointsGagnes.toInt(),
@@ -448,32 +448,29 @@ void _handleBalanceAdded(double pointsGagnes, double soldeRestant) async {
       'scanMode': 'balance',
     });
 
-    // Appeler onScanCompleted si fourni
     if (widget.onScanCompleted != null) {
       widget.onScanCompleted!();
     }
 
-    // Important : arrêter le traitement
     _setProcessing(false);
     return;
   }
 
-  // ✅ MODE NAVIGATION : Afficher un toast au lieu de naviguer
+  // ✅ MODE NAVIGATION - FERMER IMMÉDIATEMENT
   if (mounted) {
     final L10n = AppLocalizations.of(context);
     _showSuccessToast(
-      message: '${L10n.felicitation } ! ${pointsGagnes.toInt()} ${L10n.pts } gagnés',
+      message: '${L10n.felicitation} ! ${pointsGagnes.toInt()} ${L10n.pts} gagnés',
       solde: soldeRestant,
     );
   }
 
-  // Fermer l'écran de scan après un court délai
-  Future.delayed(const Duration(milliseconds: 1500), () {
-    if (mounted) {
-      Navigator.pop(context, true);
-    }
-  });
+  // ✅ FERMER IMMÉDIATEMENT SANS DÉLAI
+  if (mounted) {
+    Navigator.pop(context, true);
+  }
 }
+
 void _showSuccessToast({required String message, required double solde}) {
   final L10n = AppLocalizations.of(context);
   
@@ -559,9 +556,7 @@ void _showSuccessToast({required String message, required double solde}) {
     controller.scannedDataStream.listen(_handleQRScan);
   }
 
-  Future<void> _flipCamera() async {
-    await _controller?.flipCamera();
-  }
+
 
   Future<void> _handleQRScan(Barcode scanData) async {
     final L10n = AppLocalizations.of(context)!;
@@ -585,58 +580,59 @@ void _showSuccessToast({required String message, required double solde}) {
     return scanData.code != null && mounted && !_isProcessing;
   }
 
-  Future<void> _processQRCode(String qrCode) async {
-    final L10n = AppLocalizations.of(context)!;
-    final clientData = _parseQRCode(qrCode);
-    final currentUser = _getCurrentUser();
-    _validateData(clientData, currentUser);
+Future<void> _processQRCode(String qrCode) async {
+  final L10n = AppLocalizations.of(context)!;
+  final clientData = _parseQRCode(qrCode);
+  final currentUser = _getCurrentUser();
+  _validateData(clientData, currentUser);
 
-    _lastClientId = clientData['user_id'].toString();
-    _lastMagasinId = currentUser.id;
+  _lastClientId = clientData['user_id'].toString();
+  _lastMagasinId = currentUser.id;
 
-    if (widget.mode == ScanMode.balance) {
-      await _cubit.ajouterSoldeClient(
-        clientId: _lastClientId!,
-        magasinId: _lastMagasinId!,
-        montant: widget.montant!,
-      );
-      return;
-    }
-
-    // ✅ MODE REWARDS - Utiliser le callback personnalisé
-    final points = await getIt<CaissierRepository>().getClientPoints(
+  if (widget.mode == ScanMode.balance) {
+    await _cubit.ajouterSoldeClient(
       clientId: _lastClientId!,
       magasinId: _lastMagasinId!,
+      montant: widget.montant!,
     );
-
-    await _playSuccessSound();
-
-    // ✅ Si callback personnalisé fourni, l'utiliser
-    if (widget.onScanSuccess != null) {
-      widget.onScanSuccess!({
-        'clientId': _lastClientId!,
-        'magasinId': _lastMagasinId!,
-        'clientPoints': points,
-        'scanMode': 'rewards',
-      });
-
-      // Appeler aussi onScanCompleted si fourni
-      if (widget.onScanCompleted != null) {
-        widget.onScanCompleted!();
-      }
-      return;
-    }
-
-    // ✅ Comportement par défaut (navigation)
-    if (mounted) {
-      Navigator.pop(context, {
-        'clientId': _lastClientId!,
-        'magasinId': _lastMagasinId!,
-        'clientPoints': points,
-        'scanMode': 'rewards',
-      });
-    }
+    return;
   }
+
+  // ✅ MODE REWARDS
+  final points = await getIt<CaissierRepository>().getClientPoints(
+    clientId: _lastClientId!,
+    magasinId: _lastMagasinId!,
+  );
+
+  // ✅ JOUER LE SON SANS ATTENDRE
+  _playSuccessSound(); // SUPPRIMER await !
+
+  // ✅ Si callback personnalisé fourni
+  if (widget.onScanSuccess != null) {
+    widget.onScanSuccess!({
+      'clientId': _lastClientId!,
+      'magasinId': _lastMagasinId!,
+      'clientPoints': points,
+      'scanMode': 'rewards',
+    });
+
+    if (widget.onScanCompleted != null) {
+      widget.onScanCompleted!();
+    }
+    return;
+  }
+
+  // ✅ Comportement par défaut - FERMER IMMÉDIATEMENT
+  if (mounted) {
+    Navigator.pop(context, {
+      'clientId': _lastClientId!,
+      'magasinId': _lastMagasinId!,
+      'clientPoints': points,
+      'scanMode': 'rewards',
+    });
+  }
+}
+
 
   Map<String, dynamic> _parseQRCode(String qrCode) {
     debugPrint('QR Data: $qrCode');
@@ -703,7 +699,7 @@ void _showSuccessToast({required String message, required double solde}) {
     _cornerController.dispose();
     _pulseController.dispose();
 
-    _audioPlayer.dispose();
+    // _audioPlayer.dispose();
     super.dispose();
   }
 }

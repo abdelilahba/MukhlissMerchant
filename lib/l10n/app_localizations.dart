@@ -1335,6 +1335,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unable to connect to the server. Check your internet connection and try again.'**
   String get problemeconnexiondetails;
+
+  /// No description provided for @recompenceechange.
+  ///
+  /// In en, this message translates to:
+  /// **'تم استبدال المكافأة (المكافآت) بنجاح'**
+  String get recompenceechange;
 }
 
 class _AppLocalizationsDelegate
