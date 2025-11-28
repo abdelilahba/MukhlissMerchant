@@ -639,4 +639,7 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get problemeconnexiondetails =>
       'يتعذّر الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت ثم إعادة المحاولة.';
+
+  @override
+  String get recompenceechange => 'Récompense(s) échangée(s) avec succès';
 }

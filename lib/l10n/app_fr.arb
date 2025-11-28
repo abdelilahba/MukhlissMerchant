@@ -205,5 +205,6 @@
 "soldepoints":"Votre solde de points",
 "problemconnexion":"Problème de Connexion",
 "problemeconnexiondetails":"Impossible de se connecter au serveur. Vérifiez votre connexion internet et réessayez.",
-"ressayer":"Réessayer"
+"ressayer":"Réessayer",
+"recompenceechange":"Récompense(s) échangée(s) avec succès"
 } 
