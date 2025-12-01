@@ -63,11 +63,18 @@ class CaissierRepositoryImpl implements CaissierRepository {
     required String rewardId,
     required int pointsRequired,
   }) async {
-    return await remoteDataSource.claimReward(
+    // 1. Réclamer la récompense
+    await remoteDataSource.claimReward(
       clientId: clientId,
       magasinId: magasinId,
       rewardId: rewardId,
       pointsRequired: pointsRequired,
+    );
+    
+    // 2. ✅ Invalider le cache pour garantir des données à jour
+    remoteDataSource.invalidateCache(
+      clientId: clientId,
+      magasinId: magasinId,
     );
   }
    @override
@@ -75,12 +82,21 @@ class CaissierRepositoryImpl implements CaissierRepository {
     required String clientId,
     required String magasinId,
     required double montant,
-  }) {
-    return remoteDataSource.ajouterSoldeEtAppliquerOffres(
+  }) async {
+    // 1. Ajouter le solde et appliquer les offres
+    final result = await remoteDataSource.ajouterSoldeEtAppliquerOffres(
       clientId: clientId,
       magasinId: magasinId,
       montant: montant,
     );
+    
+    // 2. ✅ Invalider le cache pour garantir des données à jour
+    remoteDataSource.invalidateCache(
+      clientId: clientId,
+      magasinId: magasinId,
+    );
+    
+    return result;
   }
 
 @override

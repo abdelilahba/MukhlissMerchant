@@ -10,12 +10,13 @@ import 'package:flutter/services.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
-
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/recompenses_disponibles_screen.dart';
+
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
 
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
+import 'package:mukhlissmagasin/features/cashier/presentation/widgets/rewards_celebration_sheet.dart';
 
 
 // AJOUT DE L'IMPORT
@@ -217,16 +218,21 @@ Widget _buildEmbeddedScanner() {
     child: _currentScanMode == ScanMode.balance
         ? ScanClientScreen.balance(
             double.tryParse(_montantController.text.replaceAll(',', '.')) ?? 0.0,
-            onScanSuccess: (data) { // ✅ SUPPRIMER async
+            onScanSuccess: (data) async { // ✅ Remettre async pour await
               print('🎉 Scan balance réussi: $data');
               
               // ✅ JOUER LE SON SANS ATTENDRE
-              _playSuccessSound(); // SUPPRIMER await
-               
+              _playSuccessSound();
+                
               if (mounted) {
-                _showSuccessToast(
-                  pointsGagnes: data['pointsGagnes'],
-                  soldeRestant: data['soldeRestant'],
+                // ⚡ NOUVEAU : Afficher le bottom sheet de célébration
+                // On doit récupérer le clientId depuis le scan
+                // Pour l'instant, on utilise les données disponibles
+                await _showRewardsCelebration(
+                  clientId: data['clientId'] ?? '', // Le scan devrait retourner le clientId  
+                  magasinId: data['magasinId'] ?? '',
+                  pointsAdded: data['pointsGagnes'] ?? 0,
+                  totalPoints: data['pointsGagnes'] ?? 0, // Si on a les points totaux, sinon faire une requête
                 );
 
                 _completeScanReset();
@@ -304,6 +310,12 @@ Future<void> _handleManualCodeSubmit(String code, ScanMode mode) async {
           .read<CaissierCubit>()
           .getClientByUniqueCode(uniqueCode);
       
+      // Récupérer les points AVANT l'ajout
+      final pointsAvant = await getIt<CaissierRepository>().getClientPoints(
+        clientId: client.id,
+        magasinId: currentUser.id,
+      );
+      
       // Ajouter le solde via code unique
       await context.read<CaissierCubit>().ajouterSoldeViaCodeUnique(
         uniqueCode: uniqueCode,
@@ -311,18 +323,24 @@ Future<void> _handleManualCodeSubmit(String code, ScanMode mode) async {
         montant: montant,
       );
 
+      // Récupérer les points APRÈS l'ajout
       final totalPointsClient = await getIt<CaissierRepository>().getClientPoints(
         clientId: client.id,
         magasinId: currentUser.id,
       );
       
+      // Calculer les points ajoutés
+      final pointsAjoutes = totalPointsClient - pointsAvant;
+      
       // ✅ JOUER LE SON SANS ATTENDRE
       _playSuccessSound(); // SUPPRIMER await
 
-      // ✅ Afficher le toast de succès
-      _showSuccessToast(
-        pointsGagnes: totalPointsClient,
-        soldeRestant: montant,
+      // ⚡ NOUVEAU : Afficher le bottom sheet de célébration avec les récompenses
+      await _showRewardsCelebration(
+        clientId: client.id,
+        magasinId: currentUser.id,
+        pointsAdded: pointsAjoutes,
+        totalPoints: totalPointsClient,
       );
 
       // ✅ RÉINITIALISATION COMPLÈTE SANS DÉLAI
@@ -334,9 +352,9 @@ Future<void> _handleManualCodeSubmit(String code, ScanMode mode) async {
           _codeController.clear();
           _montantController.clear();
           
-          _showFelicitationInRight = true;
-          _felicitationPoints = totalPointsClient;
-          _felicitationSolde = null;
+          // Ne plus afficher la félicitation dans le panneau de droite
+          // car le bottom sheet s'en occupe déjà
+          _showFelicitationInRight = false;
         });
       }
     } catch (e) {
@@ -449,6 +467,72 @@ Future<void> _handleManualCodeSubmit(String code, ScanMode mode) async {
         elevation: 12,
       ),
     );
+  }
+
+  /// 🎉 Affiche le bottom sheet de célébration avec les récompenses disponibles
+  Future<void> _showRewardsCelebration({
+    required String clientId,
+    required String magasinId,
+    required int pointsAdded,
+    required int totalPoints,
+  }) async {
+    try {
+      // Récupérer les récompenses disponibles
+      final availableRewards = await getIt<CaissierRepository>().getAvailableRewards(
+        clientId: clientId,
+        magasinId: magasinId,
+      );
+      
+      if (!mounted) return;
+      
+      // AFFICHER LE DIALOGUE CENTRÉ
+      await showDialog(
+        context: context,
+        barrierDismissible: false, // Oblige à cliquer sur un bouton
+        builder: (context) => Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 60, // Augmenté de 20 à 60 pour un dialogue plus étroit
+            vertical: 24,
+          ),
+          child: RewardsCelebrationSheet(
+            pointsAdded: pointsAdded,
+            totalPoints: totalPoints,
+            availableRewards: availableRewards,
+            onExchangeRewards: () {
+              // Fermer d'abord le dialogue
+              Navigator.of(context).pop();
+              
+              // Afficher les récompenses dans le panneau de droite (comme avant)
+              setState(() {
+                _showRewardsInRight = true;
+                _selectedClientId = clientId;
+                _selectedMagasinId = magasinId;
+                _clientPoints = totalPoints;
+              });
+            },
+            onSaveLater: () {
+              // Juste fermer (déjà géré par le pop du dialog)
+            },
+          ),
+        ),
+      );
+    } catch (e) {
+      print('Erreur lors de la récupération des récompenses: $e');
+      // En cas d'erreur, afficher quand même le bottom sheet sans récompenses
+      if (!mounted) return;
+      
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => RewardsCelebrationSheet(
+          pointsAdded: pointsAdded,
+          totalPoints: totalPoints,
+          availableRewards: [],
+        ),
+      );
+    }
   }
 
  

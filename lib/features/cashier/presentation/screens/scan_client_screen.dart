@@ -443,6 +443,8 @@ void _handleBalanceAdded(double pointsGagnes, double soldeRestant) async {
   // ✅ MODE INTÉGRÉ - TRAITEMENT IMMÉDIAT
   if (widget.onScanSuccess != null) {
     widget.onScanSuccess!({
+      'clientId': _lastClientId,
+      'magasinId': _lastMagasinId,
       'pointsGagnes': pointsGagnes.toInt(),
       'soldeRestant': soldeRestant,
       'scanMode': 'balance',

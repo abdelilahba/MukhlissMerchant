@@ -23,17 +23,38 @@ class CacheEntry<T> {
 class CaissierRemoteDataSource {
   final supabase = SupabaseService.client;
   
-  // Cache en mémoire avec TTL
+  // ✅ Cache en mémoire avec TTL et limite de taille
   final Map<String, CacheEntry<double>> _soldeCache = {};
   final Map<String, CacheEntry<int>> _pointsCache = {};
   final Map<String, CacheEntry<List<Reward>>> _rewardsCache = {};
   final Map<String, CacheEntry<ClientMagasinEntity>> _clientMagasinCache = {};
+  
+  // Limites de taille pour éviter memory leaks
+  static const int _maxCacheSize = 5000;
   
   // Configuration du cache
   static const Duration _soldeCacheTTL = Duration(minutes: 5);
   static const Duration _pointsCacheTTL = Duration(minutes: 5);
   static const Duration _rewardsCacheTTL = Duration(minutes: 15);
   static const Duration _clientMagasinCacheTTL = Duration(minutes: 2);
+
+  /// ✅ Nettoie le cache si trop grand
+  void _cleanupCacheIfNeeded(Map cache) {
+    if (cache.length > _maxCacheSize) {
+      // Garder seulement les entrées non expirées
+      cache.removeWhere((key, value) => value.isExpired);
+      
+      // Si toujours trop grand, supprimer les plus anciennes
+      if (cache.length > _maxCacheSize) {
+        final entries = cache.entries.toList()
+          ..sort((a, b) => a.value.timestamp.compareTo(b.value.timestamp));
+        final toRemove = entries.take(cache.length - _maxCacheSize);
+        for (var entry in toRemove) {
+          cache.remove(entry.key);
+        }
+      }
+    }
+  }
 
   String _getSoldeKey(String clientId, String magasinId) => 'solde_${clientId}_$magasinId';
   String _getPointsKey(String clientId, String magasinId) => 'points_${clientId}_$magasinId';
@@ -73,6 +94,7 @@ class CaissierRemoteDataSource {
         timestamp: DateTime.now(),
         ttl: _soldeCacheTTL,
       );
+      _cleanupCacheIfNeeded(_soldeCache);
 
       return solde;
     } catch (e) {
@@ -135,6 +157,7 @@ Future<Client> getClientByCodeUnique({
         timestamp: DateTime.now(),
         ttl: _pointsCacheTTL,
       );
+      _cleanupCacheIfNeeded(_pointsCache);
 
       return points;
     } catch (e) {
@@ -183,6 +206,7 @@ Future<Client> getClientByCodeUnique({
         timestamp: DateTime.now(),
         ttl: _rewardsCacheTTL,
       );
+      _cleanupCacheIfNeeded(_rewardsCache);
 
       return rewards;
     } catch (e) {
@@ -192,6 +216,9 @@ Future<Client> getClientByCodeUnique({
     }
   }
 
+  /// ✅ VERSION AMÉLIORÉE : Utilise une RPC atomique pour éviter les race conditions
+  /// Cette méthode garantit que plusieurs utilisateurs peuvent réclamer des récompenses
+  /// simultanément sans conflits grâce à une transaction atomique côté PostgreSQL
   Future<void> claimReward({
     required String clientId,
     required String magasinId,
@@ -199,43 +226,44 @@ Future<Client> getClientByCodeUnique({
     required int pointsRequired,
   }) async {
     try {
-      // 1. Get current client points (utilise le cache)
-      final currentPoints = await getClientPoints(
-        clientId: clientId,
-        magasinId: magasinId,
-        forceRefresh: true, // Force refresh pour avoir les données les plus récentes
-      );
-
-      if (currentPoints < pointsRequired) {
-        throw Exception('Points insuffisants');
-      }
-
-      // 2. Subtract points from client
-      final newPoints = currentPoints - pointsRequired;
-      await supabase
-          .from('clientmagasin')
-          .update({'cumulpoint': newPoints})
-          .eq('client_id', clientId)
-          .eq('magasin_id', magasinId);
-
-      // 3. Invalider les caches liés à ce client
-      _invalidateClientCache(clientId, magasinId);
-
-     // 4. Record the reward claim (commenté dans l'original)
-      await supabase.from('reward_claims').insert({
-        'client_id': clientId,
-        'reward_id': rewardId,
-        'points_used': pointsRequired,
-        'claimed_at': DateTime.now().toIso8601String(),
-        'status': 'claimed',
-      });
-      print('succees');
-    } catch (e) {
-      print('Erreur lors de la récupération de la récompense: ${e.toString()}');
-      throw Exception(
-        'Erreur lors de la récupération de la récompense: ${e.toString()}',
+      print('🎁 Réclamation de récompense - Client: $clientId, Points requis: $pointsRequired');
+      
+      // ✅ Utiliser une fonction RPC PostgreSQL pour garantir l'atomicité
+      // Cette fonction fait tout en une seule transaction :
+      // - Vérifier les points disponibles
+      // - Déduire les points
+      // - Enregistrer la réclamation
+      final result = await supabase.rpc(
+        'claim_reward_atomic',
+        params: {
+          'p_client_id': clientId,
+          'p_magasin_id': magasinId,
+          'p_reward_id': rewardId,
+          'p_points_required': pointsRequired,
+        },
       );
       
+      // Le résultat de la RPC est un booléen ou un objet avec status
+      if (result == null || result == false) {
+        throw Exception('Échec de la réclamation - points insuffisants ou erreur');
+      }
+      
+      print('✅ Récompense réclamée avec succès');
+      
+      // Invalider les caches liés à ce client APRÈS le succès
+      _invalidateClientCache(clientId, magasinId);
+      
+    } catch (e) {
+      print('❌ Erreur lors de la réclamation de la récompense: ${e.toString()}');
+      
+      // Messages d'erreur plus clairs
+      if (e.toString().contains('insufficient_points')) {
+        throw Exception('Points insuffisants pour réclamer cette récompense');
+      } else if (e.toString().contains('client_not_found')) {
+        throw Exception('Client non trouvé');
+      } else {
+        throw Exception('Erreur lors de la réclamation: ${e.toString()}');
+      }
     }
   }
 
@@ -374,5 +402,49 @@ Future<MagasinModel> currentMagazin() async {
       .single();
   
   return MagasinModel.fromJson(response);
+}
+
+// ================================================================================
+// 🔧 GESTION DU CACHE - Méthodes d'invalidation
+// ================================================================================
+
+/// ✅ Invalide le cache pour un client spécifique
+/// 
+/// À appeler après toute modification de solde, points ou récompenses
+/// pour garantir que les données affichées sont à jour.
+/// 
+/// Exemple d'utilisation :
+/// ```dart
+/// await claimReward(...);
+/// invalidateCache(clientId: '...', magasinId: '...');
+/// ```
+void invalidateCache({
+  required String clientId,
+  required String magasinId,
+}) {
+  final soldeKey = _getSoldeKey(clientId, magasinId);
+  final pointsKey = _getPointsKey(clientId, magasinId);
+  final rewardsKey = _getRewardsKey(clientId, magasinId);
+  final clientMagasinKey = _getClientMagasinKey(clientId, magasinId);
+  
+  _soldeCache.remove(soldeKey);
+  _pointsCache.remove(pointsKey);
+  _rewardsCache.remove(rewardsKey);
+  _clientMagasinCache.remove(clientMagasinKey);
+  
+  print('✅ Cache invalidé pour client $clientId dans magasin $magasinId');
+}
+
+/// Invalide TOUT le cache
+/// 
+/// À utiliser en cas de problème ou lors de la déconnexion.
+/// Force le rechargement de toutes les données depuis la DB.
+void invalidateAllCache() {
+  _soldeCache.clear();
+  _pointsCache.clear();
+  _rewardsCache.clear();
+  _clientMagasinCache.clear();
+  
+  print('✅ Tout le cache a été invalidé');
 }
 }

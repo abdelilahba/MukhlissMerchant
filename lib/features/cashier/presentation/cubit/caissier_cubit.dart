@@ -93,7 +93,10 @@ class CaissierCubit extends Cubit<CaissierState> {
     required String rewardId,
     required int pointsRequired,
   }) async {
-    emit(CaissierLoading());
+    // ❌ NE PAS émettre CaissierLoading() ici !
+    // L'UI affiche déjà un dialogue de chargement élégant
+    // emit(CaissierLoading());
+    
     try {
       // ✅ 1. Récupérer d'abord les points actuels du client
       final result = await chargerRecompensesClient.execute(
