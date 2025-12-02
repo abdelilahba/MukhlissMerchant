@@ -18,6 +18,10 @@ import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_cubit
 import 'package:mukhlissmagasin/features/rewards/presentation/screens/rewards_screen.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
+// ✅ Imports pour le système d'abonnement
+import 'package:mukhlissmagasin/core/guards/subscription_guard.dart';
+import 'package:mukhlissmagasin/core/services/supabase_service.dart';
+
 
 
 void main() async {
@@ -109,16 +113,97 @@ class _MyAppState extends State<MyApp> {
           ],
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           locale: locale, // Utilisez la locale du cubit
-          home: const CaissierHomeScreen(),
+          
+          // ✅ Home protégé par SubscriptionGuard
+          home: FutureBuilder<String?>(
+            future: _getMagasinId(),
+            builder: (context, snapshot) {
+              // Chargement
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+
+              // Erreur ou pas de magasin
+              if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+                return Scaffold(
+                  body: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Erreur de connexion',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: 8),
+                        const Text('Impossible de récupérer les informations du magasin'),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {}); // Retry
+                          },
+                          child: const Text('Réessayer'),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              // ✅ Wrapper avec SubscriptionGuard
+              return SubscriptionGuard(
+                magasinId: snapshot.data!,
+                child: const CaissierHomeScreen(),
+              );
+            },
+          ),
+          
           routes: {
             '/offers': (context) => const OffersScreen(),
             '/rewards': (context) => const RewardsScreen(),
-            '/caissiers': (context) => CaissierHomeScreen(),
+            '/caissiers': (context) => const CaissierHomeScreen(),
             '/profile':(context)=> ProfileScreen(),
             '/login' :(context)=>LoginScreen(),
           },
         );
       },
     );
+  }
+
+  /// Récupère l'ID du magasin de l'utilisateur connecté
+  Future<String?> _getMagasinId() async {
+    try {
+      final user = SupabaseService.client.auth.currentUser;
+      
+      if (user == null) {
+        print('❌ Aucun utilisateur connecté');
+        return null;
+      }
+
+      // Récupérer le magasin associé à cet utilisateur
+      // Adaptez cette requête selon votre structure de données
+      final response = await SupabaseService.client
+          .from('magasins')
+          .select('id')
+          .eq('id', user.id)
+          .maybeSingle();
+
+      if (response == null) {
+        print('❌ Aucun magasin trouvé pour l\'utilisateur ${user.email}');
+        return null;
+      }
+
+      final magasinId = response['id'] as String;
+      print('✅ Magasin ID récupéré: $magasinId');
+      return magasinId;
+    } catch (e) {
+      print('❌ Erreur récupération magasin: $e');
+      return null;
+    }
   }
 }
