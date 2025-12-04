@@ -24,7 +24,7 @@ flutter_icons:
   image_path: "assets/images/mukhlis1.png"
 
 environment:
-  sdk: ^3.7.2
+  sdk: ^3.5.0 # Compatible avec Flutter 3.24.0+ (Dart 3.5+)
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
