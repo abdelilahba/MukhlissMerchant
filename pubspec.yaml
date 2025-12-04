@@ -50,7 +50,7 @@ dependencies:
   path_provider: ^2.1.5
   image_picker: ^1.1.2
   qr_code_scanner_plus: ^2.0.10+1
-  audioplayers: ^6.5.0
+  audioplayers: ^6.4.0 # Compatible with Dart 3.5.0+ (CI)
   confetti: ^0.8.0
   hive_flutter: ^1.1.0
   flutter_localizations:
