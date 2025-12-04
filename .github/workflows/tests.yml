@@ -6,9 +6,9 @@ name: Tests Automatiques
 # QUAND lancer ce workflow?
 on:
   push:
-    branches: [main, develop] # Sur push vers main ou develop
+    branches: [mainD, develop] # Sur push vers mainD ou develop
   pull_request:
-    branches: [main] # Sur Pull Request vers main
+    branches: [mainD] # Sur Pull Request vers mainD
 
 # QUOI faire?
 jobs:
