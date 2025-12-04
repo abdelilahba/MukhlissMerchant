@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
 import 'package:mukhlissmagasin/features/auth/presentation/cubit/auth_cubit.dart';
 
 import 'package:mukhlissmagasin/features/auth/presentation/screens/login_screen.dart';
-import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart' show CaissierCubit;
+import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart'
+    show CaissierCubit;
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/caissier_home_screen.dart';
 import 'package:mukhlissmagasin/features/language/domain/usecases/changeluanguage.dart';
 import 'package:mukhlissmagasin/features/language/presentation/cubit/language_cubit.dart';
@@ -22,67 +24,95 @@ import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 import 'package:mukhlissmagasin/core/guards/subscription_guard.dart';
 import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize dependencies
-  await initDependencies();
 
-  runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => AuthCubit(
-                signUpUseCase: getIt(),
-                loginUseCase: getIt(),
-                repository: getIt(),
-              )..checkAuthStatus(),
+  // ✅ Initialiser Sentry pour monitoring
+  await SentryFlutter.init(
+    (options) {
+      // ✅ DSN Sentry (même que Laravel - tout au même endroit!)
+      options.dsn =
+          'https://c2330142af6d1c0fcf8f2206cc345eb8@o4510465596325888.ingest.de.sentry.io/4510465604976720';
+
+      // Capture 100% des transactions (bon pour commencer)
+      options.tracesSampleRate = 1.0;
+
+      // Environnement
+      options.environment = 'production';
+
+      // Activer breadcrumbs (contexte avant erreur)
+      options.enableAutoPerformanceTracing = true;
+
+      // Debug mode (désactiver en production)
+      options.debug = true;
+
+      // Nom de l'app
+      options.release = 'mukhliss-merchant@1.0.0';
+    },
+    appRunner: () async {
+      // Initialize dependencies
+      await initDependencies();
+
+      runApp(
+        MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create:
+                  (context) => AuthCubit(
+                    signUpUseCase: getIt(),
+                    loginUseCase: getIt(),
+                    repository: getIt(),
+                  )..checkAuthStatus(),
+            ),
+            BlocProvider(
+              create:
+                  (context) => OfferCubit(
+                    addOfferUseCase: getIt(),
+                    getOffersUseCase: getIt(),
+                    deleteOfferUseCase: getIt(),
+                    updateOfferUseCase: getIt(),
+                    getactivateofferUseCase: getIt(),
+                  ),
+            ),
+            BlocProvider(
+              create:
+                  (context) => LanguageCubit(
+                    getLocale: getIt<GetLocale>(),
+                    saveLocale: getIt<SaveLocale>(),
+                  ),
+            ),
+            BlocProvider(
+              create:
+                  (context) => RewardCubit(
+                    getShopRewardsUseCase: getIt(),
+                    addRewardUseCase: getIt(),
+                    updateRewardUseCase: getIt(),
+                    deleteRewardUseCase: getIt(),
+                  ),
+            ),
+            BlocProvider(
+              create:
+                  (context) => CaissierCubit(
+                    ajouterSolde: getIt(),
+                    chargerRecompensesClient: getIt(),
+                    reclamerRecompense: getIt(),
+                    getCurrentMagazin: getIt(),
+                    ajouterSoldeClientcode: getIt(),
+                    getclientByuniquecode: getIt(),
+                  ),
+            ),
+            BlocProvider(
+              create:
+                  (context) => ProfileCubit(
+                    getIt(), // First parameter: UpdateUserUsecase
+                    getIt(), // Second parameter: GetUserUsecase
+                  ),
+            ),
+          ],
+          child: const MyApp(),
         ),
-        BlocProvider(
-          create: (context) => OfferCubit(
-                addOfferUseCase: getIt(),
-                getOffersUseCase: getIt(),
-                deleteOfferUseCase: getIt(),
-                updateOfferUseCase: getIt(),
-                getactivateofferUseCase: getIt()
-              ),
-        ),
-      BlocProvider(
-    create: (context) => LanguageCubit(
-    getLocale: getIt<GetLocale>(),  
-    saveLocale: getIt<SaveLocale>(),
-      ),
-      ),
-        BlocProvider(
-          create: (context) => RewardCubit(
-                getShopRewardsUseCase: getIt(),
-                addRewardUseCase: getIt(),
-                updateRewardUseCase: getIt(),
-                deleteRewardUseCase: getIt(),
-              ),
-        ),
-          BlocProvider(
-          create: (context) => CaissierCubit(
-            ajouterSolde: getIt(),
-            chargerRecompensesClient: getIt(),
-            reclamerRecompense: getIt(),
-            getCurrentMagazin: getIt(),
-            ajouterSoldeClientcode: getIt(),
-            getclientByuniquecode: getIt(),
-          ),
-        ),
-     BlocProvider(
-  create: (context) => ProfileCubit(
-    getIt(),  // First parameter: UpdateUserUsecase
-    getIt(),     // Second parameter: GetUserUsecase
-  ),
-)  ,
- //
-      ],
-      child: const MyApp(),
-    ),
+      );
+    },
   );
 }
 
@@ -106,14 +136,9 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
           ),
           debugShowCheckedModeBanner: false,
-          supportedLocales: const [
-            Locale('en'),
-            Locale('fr'),
-            Locale('ar'),
-          ],
+          supportedLocales: const [Locale('en'), Locale('fr'), Locale('ar')],
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           locale: locale, // Utilisez la locale du cubit
-          
           // ✅ Home protégé par SubscriptionGuard
           home: FutureBuilder<String?>(
             future: _getMagasinId(),
@@ -121,38 +146,16 @@ class _MyAppState extends State<MyApp> {
               // Chargement
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                  body: Center(child: CircularProgressIndicator()),
                 );
               }
 
-              // Erreur ou pas de magasin
-              if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-                return Scaffold(
-                  body: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Erreur de connexion',
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        const SizedBox(height: 8),
-                        const Text('Impossible de récupérer les informations du magasin'),
-                        const SizedBox(height: 24),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {}); // Retry
-                          },
-                          child: const Text('Réessayer'),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+              // Erreur ou pas de magasin → Rediriger vers Login
+              if (snapshot.hasError ||
+                  !snapshot.hasData ||
+                  snapshot.data == null) {
+                // Retourner écran de login au lieu d'erreur
+                return LoginScreen();
               }
 
               // ✅ Wrapper avec SubscriptionGuard
@@ -162,13 +165,13 @@ class _MyAppState extends State<MyApp> {
               );
             },
           ),
-          
+
           routes: {
             '/offers': (context) => const OffersScreen(),
             '/rewards': (context) => const RewardsScreen(),
             '/caissiers': (context) => const CaissierHomeScreen(),
-            '/profile':(context)=> ProfileScreen(),
-            '/login' :(context)=>LoginScreen(),
+            '/profile': (context) => ProfileScreen(),
+            '/login': (context) => LoginScreen(),
           },
         );
       },
@@ -179,7 +182,7 @@ class _MyAppState extends State<MyApp> {
   Future<String?> _getMagasinId() async {
     try {
       final user = SupabaseService.client.auth.currentUser;
-      
+
       if (user == null) {
         print('❌ Aucun utilisateur connecté');
         return null;
@@ -187,11 +190,12 @@ class _MyAppState extends State<MyApp> {
 
       // Récupérer le magasin associé à cet utilisateur
       // Adaptez cette requête selon votre structure de données
-      final response = await SupabaseService.client
-          .from('magasins')
-          .select('id')
-          .eq('id', user.id)
-          .maybeSingle();
+      final response =
+          await SupabaseService.client
+              .from('magasins')
+              .select('id')
+              .eq('id', user.id)
+              .maybeSingle();
 
       if (response == null) {
         print('❌ Aucun magasin trouvé pour l\'utilisateur ${user.email}');

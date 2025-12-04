@@ -13,7 +13,7 @@ class PeriodicSubscriptionChecker {
   /// Démarre les vérifications périodiques
   void startPeriodicCheck({
     required String magasinId,
-    Duration interval = const Duration(minutes: 30),
+    Duration interval = const Duration(seconds: 10),
     Function(AccessResult)? onAccessChanged,
   }) {
     _currentMagasinId = magasinId;

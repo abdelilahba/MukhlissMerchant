@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sentry_flutter/sentry_flutter.dart'; // ✅ Import Sentry
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
 import 'package:mukhlissmagasin/core/widgets/app_drawer.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
@@ -159,6 +160,37 @@ Future<void> _playSuccessSound() async {
             isTablet
                 ? _buildTabletSplitLayout(context)
                 : _buildMobileLayout(context),
+        
+        // ✅ Bouton de test Sentry (à supprimer en production)
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Test Sentry
+            Sentry.captureMessage('Test Flutter - Monitoring fonctionne! 🎉');
+            Sentry.captureException(
+              Exception('Test exception Flutter'),
+              stackTrace: StackTrace.current,
+            );
+            
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.white),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Text('Erreur de test envoyée à Sentry!\nAllez voir sur sentry.io'),
+                    ),
+                  ],
+                ),
+                backgroundColor: Color(0xFF10B981),
+                behavior: SnackBarBehavior.floating,
+                duration: Duration(seconds: 5),
+              ),
+            );
+          },
+          backgroundColor: Colors.red,
+          child: const Icon(Icons.bug_report, color: Colors.white),
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mukhlissmagasin/core/services/subscription_service.dart';
 import 'package:mukhlissmagasin/core/services/periodic_subscription_checker.dart';
 
@@ -69,81 +70,107 @@ class _SubscriptionGuardState extends State<SubscriptionGuard> {
     );
   }
 
-  /// ✅ NOUVEAU : Affiche popup si expiration détectée
+  /// ✅ AMÉLIO 1: Affiche popup avec fermeture automatique
   void _showExpirationDialog(AccessResult result) {
+    int countdown = 10; // Compte à rebours de 10 secondes
+    
     showDialog(
       context: context,
-      barrierDismissible: false, // Ne peut pas fermer en cliquant dehors
-      builder: (context) => WillPopScope(
-        onWillPop: () async => false, // Ne peut pas fermer avec bouton retour
-        child: AlertDialog(
-          title: Row(
-            children: [
-              Icon(Icons.warning_amber, color: Colors.red[700], size: 32),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'Abonnement Expiré',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                result.message,
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'L\'application va se fermer.',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Contactez-nous pour renouveler :',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(height: 4),
-                    Text('📞 +212 XXX XXX XXX'),
-                    Text('📧 support@mukhliss.ma'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                // Reload l'app pour revenir à l'écran de blocage
-                setState(() {
-                  _accessResult = result;
+      barrierDismissible: false,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setState) {
+          // Démarrer le compte à rebours
+          Future.delayed(const Duration(seconds: 1), () {
+            if (countdown > 0 && context.mounted) {
+              setState(() => countdown--);
+              // Appel récursif toutes les secondes
+              if (countdown > 0) {
+                Future.delayed(const Duration(seconds: 1), () {
+                  if (context.mounted) {
+                    setState(() => countdown--);
+                  }
                 });
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+              }
+            }
+          });
+
+          // Fermeture automatique après 10 secondes
+          if (countdown == 0) {
+            Future.delayed(Duration.zero, () {
+              Navigator.of(context).pop();
+              SystemNavigator.pop(); // Ferme l'application
+            });
+          }
+
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              title: Row(
+                children: [
+                  Icon(Icons.warning_amber, color: Colors.red[700], size: 32),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Abonnement Expiré',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
               ),
-              child: const Text('Fermer l\'application'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    result.message,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'L\'application va se fermer dans $countdown secondes...',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Contactez-nous pour renouveler :',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(height: 4),
+                        Text('📞 +212 XXX XXX XXX'),
+                        Text('📧 support@mukhliss.ma'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    SystemNavigator.pop(); // Ferme l'application immédiatement
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Fermer maintenant'),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
