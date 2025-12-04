@@ -59,14 +59,14 @@ jobs:
 
       # ÉTAPE 9: Upload APK artifact
       - name: ⬆️ Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mukhliss-merchant-${{ steps.version.outputs.version }}.apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
       # ÉTAPE 10: Upload App Bundle artifact
       - name: ⬆️ Upload App Bundle
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mukhliss-merchant-${{ steps.version.outputs.version }}.aab
           path: build/app/outputs/bundle/release/app-release.aab
