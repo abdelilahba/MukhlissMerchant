@@ -17,3 +17,4 @@ export 'add_balance_section.dart';
 export 'magasin_logo_widget.dart';
 export 'manual_code_input.dart';
 export 'rewards_celebration_sheet.dart';
+export 'rewards_container_widget.dart';

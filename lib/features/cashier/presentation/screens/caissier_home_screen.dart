@@ -643,137 +643,32 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     return _buildAppLogoSection();
   }
 
+  /// Construit le conteneur de récompenses.
+  ///
+  /// Utilise le widget refactorisé [RewardsContainerWidget].
   Widget _buildRewardsContainer() {
-    final l10n = AppLocalizations.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // Header avec bouton retour
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            child: Row(
-              children: [
-                // Bouton retour à gauche
-                IconButton(
-                  icon: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3F4F6),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(Icons.arrow_back_rounded),
-                  ),
-                  onPressed: () {
-                    // ✅ APPELER LA MÉTHODE SPÉCIALE POUR LE BACK
-                    _handleRewardsBackButton();
-                  },
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  l10n.soldepoints,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1F2937),
-                  ),
-                ),
-                // Espace flexible pour pousser les points vers la droite
-                const Spacer(),
+    return RewardsContainerWidget(
+      clientId: _selectedClientId!,
+      magasinId: _selectedMagasinId!,
+      clientPoints: _clientPoints,
+      onBackPressed: _handleRewardsBackButton,
+      onRewardsCompleted: _handleRewardsCompleted,
+      onRewardClaimed: (pointsRestants) {
+        if (mounted) {
+          setState(() {
+            _showRewardsInRight = false;
+            _selectedClientId = null;
+            _selectedMagasinId = null;
+            _clientPoints = 0;
+          });
 
-                // Container des points à droite
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.stars_rounded,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '$_clientPoints ${l10n.pts}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // RewardSelectionScreen intégré
-          // Dans _buildRewardsContainer(), modifiez l'appel à RewardSelectionScreen :
-          Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
-              child: RewardSelectionScreen(
-                clientId: _selectedClientId!,
-                magasinId: _selectedMagasinId!,
-                clientPoints: _clientPoints,
-                onRewardsCompleted: _handleRewardsCompleted,
-                onRewardClaimed: (pointsRestants) {
-                  AppLogger.info(
-                      '🎉 Récompense réclamée ! Points restants: $pointsRestants',
-                      tag: 'Rewards');
-
-                  // ✅ UTILISER LES POINTS RESTANTS DIRECTEMENT POUR LE TOAST
-                  if (mounted) {
-                    setState(() {
-                      _showRewardsInRight = false;
-                      _selectedClientId = null;
-                      _selectedMagasinId = null;
-                      _clientPoints = 0;
-                    });
-
-                    // ✅ AFFICHER LE TOAST AVEC LES POINTS RESTANTS DIRECTEMENT
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      if (mounted) {
-                        _showRewardsSuccessToast(pointsRestants);
-                      }
-                    });
-                  }
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
+          Future.delayed(const Duration(milliseconds: 300), () {
+            if (mounted) {
+              _showRewardsSuccessToast(pointsRestants);
+            }
+          });
+        }
+      },
     );
   }
 
