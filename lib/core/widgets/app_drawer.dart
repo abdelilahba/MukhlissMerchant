@@ -342,7 +342,7 @@ class AppDrawer extends StatelessWidget {
           ),
           title: Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.logout_rounded,
                 color: Colors.red,
                 size: 28,
@@ -394,16 +394,3 @@ class AppDrawer extends StatelessWidget {
   }
 }
 
-class _MenuItemData {
-  final IconData icon;
-  final String title;
-  final Color color;
-  final VoidCallback onTap;
-
-  _MenuItemData({
-    required this.icon,
-    required this.title,
-    required this.color,
-    required this.onTap,
-  });
-}

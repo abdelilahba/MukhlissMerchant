@@ -108,16 +108,13 @@ Future<Client> getClientByCodeUnique({
     required int uniqueCode,
   }) async {
     try {
-      print("Fetching client by unique code: $uniqueCode");
       final response = await supabase
           .from('clients')
           .select()
           .eq('code_unique', uniqueCode)
           .single();
-       print('Fetched client data: $response');
       return Client.fromJson(response);
     } catch (e) {
-       print('ERROR in getClientByCodeUnique: $e'); 
       throw Exception(
         'Erreur lors de la récupération du client par code unique: ${e.toString()}',
       );
@@ -226,7 +223,6 @@ Future<Client> getClientByCodeUnique({
     required int pointsRequired,
   }) async {
     try {
-      print('🎁 Réclamation de récompense - Client: $clientId, Points requis: $pointsRequired');
       
       // ✅ Utiliser une fonction RPC PostgreSQL pour garantir l'atomicité
       // Cette fonction fait tout en une seule transaction :
@@ -248,13 +244,11 @@ Future<Client> getClientByCodeUnique({
         throw Exception('Échec de la réclamation - points insuffisants ou erreur');
       }
       
-      print('✅ Récompense réclamée avec succès');
       
       // Invalider les caches liés à ce client APRÈS le succès
       _invalidateClientCache(clientId, magasinId);
       
     } catch (e) {
-      print('❌ Erreur lors de la réclamation de la récompense: ${e.toString()}');
       
       // Messages d'erreur plus clairs
       if (e.toString().contains('insufficient_points')) {
@@ -273,10 +267,8 @@ Future<Client> getClientByCodeUnique({
     required double montant,
   }) async {
     try {
-       print("===============================================================");
       final client = await getClientByCodeUnique(uniqueCode: uniqueCode);
       final clientId = client.id;
-      print("------------------- Retrieved clientId: $clientId ------------------");
       final result = await supabase
          .rpc(
             'apply_offers_auto',
@@ -288,15 +280,12 @@ Future<Client> getClientByCodeUnique({
           )
         .single()
         .then(ClientMagasinEntity.fromJson);
-        print('result after adding balance and applying offers: $result');
-      print('=============================== clientId solde: $clientId ============================= $montant');
       // Invalider les autres caches car les données ont changé
 
       _invalidateClientCache(clientId, magasinId);
 
       return result;
     } catch (e) {
-      print('ERROR in ajouterSoldeUniqueColdeAppliquerOffres: $e');
       throw Exception(
         'Erreur lors de l\'ajout du solde avec code unique et application des offres: ${e.toString()}',
       );
@@ -383,7 +372,6 @@ Future<Client> getClientByCodeUnique({
       ]);
     } catch (e) {
       // Ignorer les erreurs de pré-chargement
-      print('Erreur lors du pré-chargement: $e');
     }
   }
 
@@ -432,7 +420,6 @@ void invalidateCache({
   _rewardsCache.remove(rewardsKey);
   _clientMagasinCache.remove(clientMagasinKey);
   
-  print('✅ Cache invalidé pour client $clientId dans magasin $magasinId');
 }
 
 /// Invalide TOUT le cache
@@ -445,6 +432,5 @@ void invalidateAllCache() {
   _rewardsCache.clear();
   _clientMagasinCache.clear();
   
-  print('✅ Tout le cache a été invalidé');
 }
 }

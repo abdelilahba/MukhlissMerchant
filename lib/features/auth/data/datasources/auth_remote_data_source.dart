@@ -83,7 +83,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       'created_at': DateTime.now().toIso8601String(),
       'siret': siret,
     });
-    print('Client profile created for user $userId');
   }
 
   @override

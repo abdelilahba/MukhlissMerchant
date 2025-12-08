@@ -52,13 +52,13 @@ class CaissierCubit extends Cubit<CaissierState> {
   }) async {
     emit(CaissierLoading());
     try {
-      print('arrrived to cubit');
-      final clientMagasin = await ajouterSoldeClientcode.execute(
+
+           final clientMagasin = await ajouterSoldeClientcode.execute(
         magasinId: magasinId,
         uniqueCode: uniqueCode,
         montant: montant,
       );
-      print('clientMagasin: $clientMagasin');
+
       emit(SoldeCodeUniqueAjoute(clientMagasin: clientMagasin));
     } catch (e) {
       emit(CaissierError(message: e.toString()));
@@ -105,8 +105,7 @@ class CaissierCubit extends Cubit<CaissierState> {
       );
       final pointsAvantEchange = result.clientPoints;
 
-      print('Points avant échange: $pointsAvantEchange');
-      print('Points requis: $pointsRequired');
+
 
       // ✅ 2. Réclamer la récompense
       await reclamerRecompense.execute(
@@ -118,7 +117,6 @@ class CaissierCubit extends Cubit<CaissierState> {
 
       // ✅ 3. Calculer les points RESTANTS après l'échange
       final pointsRestants = pointsAvantEchange - pointsRequired;
-      print('Points restants après échange: $pointsRestants');
 
       // ✅ 4. Émettre l'état avec les points RESTANTS (pas les points déduits)
       emit(
@@ -129,7 +127,6 @@ class CaissierCubit extends Cubit<CaissierState> {
         ),
       );
     } catch (e) {
-      print('Erreur dans claimReward: $e');
       emit(CaissierError(message: e.toString()));
     }
   }

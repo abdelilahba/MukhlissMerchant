@@ -36,7 +36,6 @@ Future<String> uploadImage(File imageFile) async {
 
       return imageUrl;
     } catch (e) {
-      print('Erreur lors de l\'upload: $e');
       throw Exception('Erreur lors de l\'upload de l\'image: $e');
     }
   }
@@ -57,9 +56,7 @@ Future<void> changePassword(String newPassword) async {
       throw Exception('Erreur lors de la mise à jour du mot de passe');
     }
 
-    print('Mot de passe mis à jour avec succès');
   } catch (e) {
-    print('Erreur lors du changement de mot de passe: $e');
     throw Exception('Erreur lors du changement de mot de passe: $e');
   }
 }
@@ -81,7 +78,6 @@ Future<void> changePassword(String newPassword) async {
 
       return response.user != null;
     } catch (e) {
-      print('Erreur lors de la vérification du mot de passe: $e');
       return false;
     }
   }

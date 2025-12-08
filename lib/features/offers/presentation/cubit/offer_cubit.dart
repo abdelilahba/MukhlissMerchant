@@ -123,7 +123,6 @@ class OfferCubit extends Cubit<OfferState> {
   }) async {
     emit(OfferLoading());
     try {
-      print('Updating offer with id: $id, amount: $amount, points: $points');
       // You'll need to implement this in your repository
       await updateOfferUseCase.execute(
         id: id,

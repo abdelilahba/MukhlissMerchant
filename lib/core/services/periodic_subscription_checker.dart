@@ -27,13 +27,11 @@ class PeriodicSubscriptionChecker {
       await _checkAccess();
     });
 
-    print('✅ Vérifications périodiques démarrées (toutes les ${interval.inMinutes} min)');
   }
 
   /// Vérifie l'accès maintenant (manuel)
   Future<AccessResult?> checkNow() async {
     if (_currentMagasinId == null) {
-      print('❌ Pas de magasinId configuré');
       return null;
     }
     
@@ -46,7 +44,6 @@ class PeriodicSubscriptionChecker {
     
     // Si l'accès a changé (devient bloqué), notifier
     if (!result.canAccess && onAccessChanged != null) {
-      print('⚠️ Abonnement expiré détecté pendant l\'utilisation !');
       onAccessChanged!(result);
     }
 
@@ -57,7 +54,6 @@ class PeriodicSubscriptionChecker {
   void stop() {
     _timer?.cancel();
     _timer = null;
-    print('🛑 Vérifications périodiques arrêtées');
   }
 
   /// Nettoyage

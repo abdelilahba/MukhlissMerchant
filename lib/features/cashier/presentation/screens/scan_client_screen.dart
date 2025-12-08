@@ -5,7 +5,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
-import 'package:mukhlissmagasin/core/utils/app_logger.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
@@ -31,8 +30,8 @@ class ScanClientScreen extends StatefulWidget {
     super.key,
     this.onScanCompleted, // AJOUTEZ
     this.onScanSuccess, // AJOUTEZ
-  }) : mode = ScanMode.rewards,
-       montant = null;
+  })  : mode = ScanMode.rewards,
+        montant = null;
 
   @override
   State<ScanClientScreen> createState() => _ScanClientScreenState();
@@ -66,14 +65,14 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   String? _lastMagasinId;
 
   bool get _isBalanceMode => widget.montant != null;
-  final AudioPlayer _audioPlayer =
-      AudioPlayer()..setReleaseMode(ReleaseMode.stop);
+  final AudioPlayer _audioPlayer = AudioPlayer()
+    ..setReleaseMode(ReleaseMode.stop);
 
   @override
   void initState() {
     super.initState();
     _initAnimations();
-  //  _initAudioPlayer ();
+    //  _initAudioPlayer ();
   }
 
   void _initAnimations() {
@@ -109,27 +108,16 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeOut));
   }
 
-  /// Play success sound when scan is successful
+// Dans scan_client_screen.dart
   Future<void> _playSuccessSound() async {
     try {
-      AppLogger.debug('Playing success sound', tag: 'Scanner');
-      
-      // Play sound without waiting (fire and forget)
+      // ✅ JOUER DIRECTEMENT SANS ATTENDRE (fire and forget)
       unawaited(_audioPlayer.play(
         AssetSource('audio/success.mp3'),
         volume: 1.0,
         mode: PlayerMode.lowLatency,
       ));
-      
-      AppLogger.debug('Sound started in background', tag: 'Scanner');
-    } catch (e, stackTrace) {
-      AppLogger.warning(
-        'Error playing audio',
-        tag: 'Scanner',
-        error: e,
-        stackTrace: stackTrace,
-      );
-    }
+    } catch (e) {}
   }
 
   @override
@@ -391,8 +379,6 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     );
   }
 
-
-
   Widget _buildLoadingOverlay() {
     final L10n = AppLocalizations.of(context);
     return Container(
@@ -437,103 +423,105 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     }
   }
 
-void _handleBalanceAdded(double pointsGagnes, double soldeRestant) async {
-  // ✅ JOUER LE SON SANS ATTENDRE
-  _playSuccessSound(); // SUPPRIMER await !
+  void _handleBalanceAdded(double pointsGagnes, double soldeRestant) async {
+    // ✅ JOUER LE SON SANS ATTENDRE
+    _playSuccessSound(); // SUPPRIMER await !
 
-  // ✅ MODE INTÉGRÉ - TRAITEMENT IMMÉDIAT
-  if (widget.onScanSuccess != null) {
-    widget.onScanSuccess!({
-      'clientId': _lastClientId,
-      'magasinId': _lastMagasinId,
-      'pointsGagnes': pointsGagnes.toInt(),
-      'soldeRestant': soldeRestant,
-      'scanMode': 'balance',
-    });
+    // ✅ MODE INTÉGRÉ - TRAITEMENT IMMÉDIAT
+    if (widget.onScanSuccess != null) {
+      widget.onScanSuccess!({
+        'clientId': _lastClientId,
+        'magasinId': _lastMagasinId,
+        'pointsGagnes': pointsGagnes.toInt(),
+        'soldeRestant': soldeRestant,
+        'scanMode': 'balance',
+      });
 
-    if (widget.onScanCompleted != null) {
-      widget.onScanCompleted!();
+      if (widget.onScanCompleted != null) {
+        widget.onScanCompleted!();
+      }
+
+      _setProcessing(false);
+      return;
     }
 
-    _setProcessing(false);
-    return;
+    // ✅ MODE NAVIGATION - FERMER IMMÉDIATEMENT
+    if (mounted) {
+      final L10n = AppLocalizations.of(context);
+      _showSuccessToast(
+        message:
+            '${L10n.felicitation} ! ${pointsGagnes.toInt()} ${L10n.pts} gagnés',
+        solde: soldeRestant,
+      );
+    }
+
+    // ✅ FERMER IMMÉDIATEMENT SANS DÉLAI
+    if (mounted) {
+      Navigator.pop(context, true);
+    }
   }
 
-  // ✅ MODE NAVIGATION - FERMER IMMÉDIATEMENT
-  if (mounted) {
+  void _showSuccessToast({required String message, required double solde}) {
     final L10n = AppLocalizations.of(context);
-    _showSuccessToast(
-      message: '${L10n.felicitation} ! ${pointsGagnes.toInt()} ${L10n.pts} gagnés',
-      solde: soldeRestant,
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.check_circle_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      message,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${L10n.solderestant}: ${solde.toStringAsFixed(2)} ${L10n.dh ?? "DH"}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: const Color(0xFF10B981),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 3),
+        elevation: 8,
+      ),
     );
   }
 
-  // ✅ FERMER IMMÉDIATEMENT SANS DÉLAI
-  if (mounted) {
-    Navigator.pop(context, true);
-  }
-}
-
-void _showSuccessToast({required String message, required double solde}) {
-  final L10n = AppLocalizations.of(context);
-  
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.check_circle_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    message,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${L10n.solderestant }: ${solde.toStringAsFixed(2)} ${L10n.dh ?? "DH"}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.white70,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      backgroundColor: const Color(0xFF10B981),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      margin: const EdgeInsets.all(16),
-      duration: const Duration(seconds: 3),
-      elevation: 8,
-    ),
-  );
-}
   void _handleError(String message) {
     _setProcessing(false);
     _showSnackBar(message: 'Erreur: $message', backgroundColor: Colors.red);
@@ -559,10 +547,8 @@ void _showSuccessToast({required String message, required double solde}) {
     controller.scannedDataStream.listen(_handleQRScan);
   }
 
-
-
   Future<void> _handleQRScan(Barcode scanData) async {
-    final l10n = AppLocalizations.of(context)!;
+    final L10n = AppLocalizations.of(context)!;
 
     // Arrêter immédiatement le scanner si un code est détecté
     if (!_canProcessScan(scanData)) return;
@@ -573,9 +559,9 @@ void _showSuccessToast({required String message, required double solde}) {
     try {
       await _processQRCode(scanData.code!);
     } on FormatException catch (e) {
-      _handleScanError(l10n.qrcodeinvalide, e);
+      _handleScanError(L10n.qrcodeinvalide, e);
     } catch (e) {
-      _handleScanError('${l10n.erreurtraitement}: ${e.toString()}', e);
+      _handleScanError(L10n.erreurtraitement + ': ${e.toString()}', e);
     }
   }
 
@@ -583,58 +569,57 @@ void _showSuccessToast({required String message, required double solde}) {
     return scanData.code != null && mounted && !_isProcessing;
   }
 
-Future<void> _processQRCode(String qrCode) async {
-  final clientData = _parseQRCode(qrCode);
-  final currentUser = _getCurrentUser();
-  _validateData(clientData, currentUser);
+  Future<void> _processQRCode(String qrCode) async {
+    final clientData = _parseQRCode(qrCode);
+    final currentUser = _getCurrentUser();
+    _validateData(clientData, currentUser);
 
-  _lastClientId = clientData['user_id'].toString();
-  _lastMagasinId = currentUser.id;
+    _lastClientId = clientData['user_id'].toString();
+    _lastMagasinId = currentUser.id;
 
-  if (widget.mode == ScanMode.balance) {
-    await _cubit.ajouterSoldeClient(
+    if (widget.mode == ScanMode.balance) {
+      await _cubit.ajouterSoldeClient(
+        clientId: _lastClientId!,
+        magasinId: _lastMagasinId!,
+        montant: widget.montant!,
+      );
+      return;
+    }
+
+    // ✅ MODE REWARDS
+    final points = await getIt<CaissierRepository>().getClientPoints(
       clientId: _lastClientId!,
       magasinId: _lastMagasinId!,
-      montant: widget.montant!,
     );
-    return;
-  }
 
-  // ✅ MODE REWARDS
-  final points = await getIt<CaissierRepository>().getClientPoints(
-    clientId: _lastClientId!,
-    magasinId: _lastMagasinId!,
-  );
+    // ✅ JOUER LE SON SANS ATTENDRE
+    _playSuccessSound(); // SUPPRIMER await !
 
-  // ✅ JOUER LE SON SANS ATTENDRE
-  _playSuccessSound(); // SUPPRIMER await !
+    // ✅ Si callback personnalisé fourni
+    if (widget.onScanSuccess != null) {
+      widget.onScanSuccess!({
+        'clientId': _lastClientId!,
+        'magasinId': _lastMagasinId!,
+        'clientPoints': points,
+        'scanMode': 'rewards',
+      });
 
-  // ✅ Si callback personnalisé fourni
-  if (widget.onScanSuccess != null) {
-    widget.onScanSuccess!({
-      'clientId': _lastClientId!,
-      'magasinId': _lastMagasinId!,
-      'clientPoints': points,
-      'scanMode': 'rewards',
-    });
-
-    if (widget.onScanCompleted != null) {
-      widget.onScanCompleted!();
+      if (widget.onScanCompleted != null) {
+        widget.onScanCompleted!();
+      }
+      return;
     }
-    return;
-  }
 
-  // ✅ Comportement par défaut - FERMER IMMÉDIATEMENT
-  if (mounted) {
-    Navigator.pop(context, {
-      'clientId': _lastClientId!,
-      'magasinId': _lastMagasinId!,
-      'clientPoints': points,
-      'scanMode': 'rewards',
-    });
+    // ✅ Comportement par défaut - FERMER IMMÉDIATEMENT
+    if (mounted) {
+      Navigator.pop(context, {
+        'clientId': _lastClientId!,
+        'magasinId': _lastMagasinId!,
+        'clientPoints': points,
+        'scanMode': 'rewards',
+      });
+    }
   }
-}
-
 
   Map<String, dynamic> _parseQRCode(String qrCode) {
     debugPrint('QR Data: $qrCode');
@@ -722,12 +707,11 @@ class CornerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint =
-        Paint()
-          ..color = color
-          ..strokeWidth = borderWidth
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke;
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = borderWidth
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
 
     final path = Path();
 
@@ -764,11 +748,10 @@ class GridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint =
-        Paint()
-          ..color = color
-          ..strokeWidth = 1
-          ..style = PaintingStyle.stroke;
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
 
     const gridSize = 20.0;
 

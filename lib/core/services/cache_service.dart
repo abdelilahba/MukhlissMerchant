@@ -182,11 +182,7 @@ class CacheService<K, V> {
 
   /// Log les stats (utile pour debugging)
   void logStats() {
-    print('📊 Cache Stats:');
-    print('  Size: ${_cache.length}/$maxSize');
-    print('  Hits: $_hits | Misses: $_misses');
-    print('  Hit Rate: ${(hitRate * 100).toStringAsFixed(1)}%');
-    print('  Evictions: $_evictions');
+
   }
 }
 

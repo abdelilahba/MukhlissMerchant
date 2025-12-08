@@ -44,12 +44,10 @@ class SubscriptionService {
         () => _checkAccessFromApi(magasinId),
       );
     } catch (e) {
-      print('❌ Erreur finale vérification accès: $e');
       
       // 2️⃣ Mode offline: utiliser cache même expiré (max 24h)
       final staleCache = await _getStaleCache(magasinId);
       if (staleCache != null) {
-        print('⚠️ Mode offline - Cache utilisé (expiré)');
         return staleCache.copyWith(
           message: 'Mode offline - Vérification dans 1h',
         );
@@ -84,7 +82,6 @@ class SubscriptionService {
         return result;
       } catch (e) {
         retries++;
-        print('⚠️ Tentative $retries/$_maxRetries échouée: $e');
         
         if (retries >= _maxRetries) {
           // Log l'erreur après tous les retries
@@ -122,7 +119,6 @@ class SubscriptionService {
   /// - Le statut change
   Future<void> invalidateCache(String magasinId) async {
     await _cache.invalidate(magasinId);
-    print('🗑️ Cache invalidé pour magasin: $magasinId');
   }
 
   /// Invalide le cache de tous les magasins
@@ -130,7 +126,6 @@ class SubscriptionService {
   /// À appeler en cas de changement global
   Future<void> invalidateAllCache() async {
     await _cache.clear();
-    print('🗑️ Tout le cache invalidé');
   }
 
   /// Log un événement d'accès
@@ -151,7 +146,6 @@ class SubscriptionService {
         'app_version': '1.0.0', // TODO: Récupérer depuis package_info
       });
     } catch (e) {
-      print('⚠️ Erreur log accès: $e');
       // Ne pas bloquer l'app si le log échoue
     }
   }

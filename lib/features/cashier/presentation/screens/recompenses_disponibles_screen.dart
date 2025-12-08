@@ -15,7 +15,7 @@ class RewardSelectionScreen extends StatefulWidget {
   final int clientPoints;
   final VoidCallback? onRewardsCompleted;
   final Function(int pointsRestants)? onRewardClaimed;
-    final Function(bool hasSelectedRewards)? onBackPressed; 
+  final Function(bool hasSelectedRewards)? onBackPressed;
   const RewardSelectionScreen({
     super.key,
     required this.clientId,
@@ -32,15 +32,15 @@ class RewardSelectionScreen extends StatefulWidget {
 
 class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     with TickerProviderStateMixin {
-   bool _hasSelectedRewards = false; 
+  bool _hasSelectedRewards = false;
   final CaissierCubit _cubit = getIt<CaissierCubit>();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   List<Reward> _selectedRewards = [];
-   int _totalRewardsToClaim = 0;
+  int _totalRewardsToClaim = 0;
   int _rewardsClaimedCount = 0;
   int _finalPointsAfterAllClaims = 0;
-  
+
   @override
   void initState() {
     super.initState();
@@ -108,7 +108,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
           } else if (state is CaissierError) {
             return _buildErrorScreen(state.message);
           }
-          
+
           // 3. Par défaut (chargement initial)
           return _buildLoadingScreen();
         },
@@ -117,7 +117,6 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
   }
 
   // Plus besoin de _handleState séparé, tout est dans le listener du BlocConsumer
-
 
   void _confirmMultipleClaims() async {
     final L10n = AppLocalizations.of(context);
@@ -129,162 +128,158 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     final confirm = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder:
-          (_) => Dialog(
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16), // Réduit de 20 à 16
-            ),
-            insetPadding: const EdgeInsets.symmetric(
-              horizontal: 20, // Réduit de 15 à 20
-              vertical: 80, // Augmenté de 60 à 80 pour rendre plus petit
-            ),
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 350), // Réduit de 400 à 350
-              padding: const EdgeInsets.all(16), // Réduit de 20 à 16
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16), // Réduit de 20 à 16
+        ),
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: 20, // Réduit de 15 à 20
+          vertical: 80, // Augmenté de 60 à 80 pour rendre plus petit
+        ),
+        child: Container(
+          constraints:
+              const BoxConstraints(maxWidth: 350), // Réduit de 400 à 350
+          padding: const EdgeInsets.all(16), // Réduit de 20 à 16
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40, // Réduit de 50 à 40
+                height: 40, // Réduit de 50 à 40
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF10B981), Color(0xFF059669)],
+                  ),
+                  borderRadius: BorderRadius.circular(20), // Réduit de 25 à 20
+                ),
+                child: const Icon(
+                  Icons.card_giftcard_rounded,
+                  color: Colors.white,
+                  size: 20, // Réduit de 24 à 20
+                ),
+              ),
+              const SizedBox(height: 8), // Réduit de 12 à 8
+
+              Text(
+                L10n.confirmerechange,
+                style: TextStyle(
+                  fontSize: 14, // Réduit de 16 à 14
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[800],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8), // Reste à 8
+
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: [
+                    ..._selectedRewards.map(
+                      (reward) => Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                reward.name,
+                                style: const TextStyle(fontSize: 12),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Text(
+                              '${reward.requiredPoints} ${L10n.pts}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF6366F1),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Container(height: 1, color: Colors.grey[300]),
+                    const SizedBox(height: 6),
+                    _buildSummaryRow(
+                      L10n.total,
+                      '$totalCost ${L10n.pts}',
+                      const Color(0xFF6366F1),
+                    ),
+                    const SizedBox(height: 4),
+                    _buildSummaryRow(
+                      L10n.newsolde,
+                      '${widget.clientPoints - totalCost} ${L10n.pts}',
+                      const Color(0xFF10B981),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              Row(
                 children: [
-                  Container(
-                    width: 40, // Réduit de 50 à 40
-                    height: 40, // Réduit de 50 à 40
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF10B981), Color(0xFF059669)],
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        side: BorderSide(color: Colors.grey[300]!),
                       ),
-                      borderRadius: BorderRadius.circular(20), // Réduit de 25 à 20
-                    ),
-                    child: const Icon(
-                      Icons.card_giftcard_rounded,
-                      color: Colors.white,
-                      size: 20, // Réduit de 24 à 20
-                    ),
-                  ),
-                  const SizedBox(height: 8), // Réduit de 12 à 8
-
-                  Text(
-                    L10n.confirmerechange,
-                    style: TextStyle(
-                      fontSize: 14, // Réduit de 16 à 14
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8), // Reste à 8
-
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      children: [
-                        ..._selectedRewards.map(
-                          (reward) => Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    reward.name,
-                                    style: const TextStyle(fontSize: 12),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Text(
-                                  '${reward.requiredPoints} ${L10n.pts}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF6366F1),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Container(height: 1, color: Colors.grey[300]),
-                        const SizedBox(height: 6),
-
-                        _buildSummaryRow(
-                          L10n.total,
-                          '$totalCost ${L10n.pts}',
-                          const Color(0xFF6366F1),
-                        ),
-                        const SizedBox(height: 4),
-                        _buildSummaryRow(
-                          L10n.newsolde,
-                          '${widget.clientPoints - totalCost} ${L10n.pts}',
-                          const Color(0xFF10B981),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            side: BorderSide(color: Colors.grey[300]!),
-                          ),
-                          child: Text(
-                            L10n.annuler,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey[700],
-                            ),
-                          ),
+                      child: Text(
+                        L10n.annuler,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () => Navigator.pop(context, true),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6366F1),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Text(
-                            L10n.confirmer,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6366F1),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                    ],
+                      child: Text(
+                        L10n.confirmer,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
+        ),
+      ),
     );
 
     if (confirm == true) {
       _totalRewardsToClaim = _selectedRewards.length;
       _rewardsClaimedCount = 0;
       _finalPointsAfterAllClaims = widget.clientPoints - totalCost;
-      
-      print('🎯 Début de réclamation de $_totalRewardsToClaim récompenses');
-      print('🎯 Points finaux attendus: $_finalPointsAfterAllClaims');
-      
+
       // ✅ AFFICHER UN DIALOGUE DE CHARGEMENT au lieu de l'écran noir
       _showLoadingDialogAndClaim();
     }
@@ -338,7 +333,8 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
                     width: 40,
                     height: 40,
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
                       strokeWidth: 3,
                     ),
                   ),
@@ -379,10 +375,10 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
       if (mounted) {
         Navigator.of(context).pop(); // ⚡ Ferme le dialogue
       }
-      
+
       // 2. Petit délai pour éviter les conflits de navigation
       await Future.delayed(const Duration(milliseconds: 100));
-      
+
       // 3. Fermer l'écran des récompenses
       if (mounted) {
         Navigator.of(context).pop(true); // ⚡ Ferme l'écran
@@ -392,10 +388,9 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
 
   /// ⚡ VERSION ULTRA-RAPIDE : Réclamation en PARALLÈLE de toutes les récompenses
   Future<void> _claimRewardsSequentially() async {
-    final totalCost = _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
+    final totalCost =
+        _selectedRewards.fold(0, (sum, reward) => sum + reward.requiredPoints);
     final expectedFinalPoints = widget.clientPoints - totalCost;
-    
-    print('🚀 Réclamation PARALLÈLE de ${_selectedRewards.length} récompenses');
 
     try {
       // ⚡ RÉCLAMER TOUTES LES RÉCOMPENSES EN PARALLÈLE
@@ -403,99 +398,91 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
         _selectedRewards.map((reward) => _claimSingleReward(reward)),
         eagerError: false,
       );
-     // Compter les succès et calculer les points réellement dépensés
-    int successCount = 0;
-    int pointsSpent = 0;
-    List<String> failedRewards = [];
-    
-    for (int i = 0; i < results.length; i++) {
-      if (results[i] == true) {
-        successCount++;
-        pointsSpent += _selectedRewards[i].requiredPoints;
-      } else {
-        failedRewards.add(_selectedRewards[i].name);
+      // Compter les succès et calculer les points réellement dépensés
+      int successCount = 0;
+      int pointsSpent = 0;
+      List<String> failedRewards = [];
+
+      for (int i = 0; i < results.length; i++) {
+        if (results[i] == true) {
+          successCount++;
+          pointsSpent += _selectedRewards[i].requiredPoints;
+        } else {
+          failedRewards.add(_selectedRewards[i].name);
+        }
       }
-    }
-    
-    print('✅ Récompenses réclamées: $successCount/${_selectedRewards.length}');
-    print('💰 Points dépensés: $pointsSpent');
 
-    // ⚡ CALCUL LOCAL - Plus fiable et plus rapide que l'appel réseau
-    // (évite les problèmes de cache et de latence)
-    final realFinalPoints = widget.clientPoints - pointsSpent;
-    
-    print('🎉 Points finaux calculés: $realFinalPoints');
+      // ⚡ CALCUL LOCAL - Plus fiable et plus rapide que l'appel réseau
+      // (évite les problèmes de cache et de latence)
+      final realFinalPoints = widget.clientPoints - pointsSpent;
 
-    // Message si des échecs
-    if (failedRewards.isNotEmpty && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '$successCount/${_selectedRewards.length} récompenses réclamées',
-            style: const TextStyle(fontSize: 14),
+      // Message si des échecs
+      if (failedRewards.isNotEmpty && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '$successCount/${_selectedRewards.length} récompenses réclamées',
+              style: const TextStyle(fontSize: 14),
+            ),
+            backgroundColor:
+                failedRewards.isEmpty ? Colors.green : Colors.orange,
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 2),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.all(16),
           ),
-          backgroundColor: failedRewards.isEmpty ? Colors.green : Colors.orange,
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
-    }
-
-    // Callback avec les points réels calculés
-    if (widget.onRewardClaimed != null) {
-      widget.onRewardClaimed!(realFinalPoints);
-    }
-      
-  } catch (e) {
-    print('❌ Erreur globale: $e');
-    
-    // Fallback en cas d'erreur
-    if (widget.onRewardClaimed != null) {
-      widget.onRewardClaimed!(expectedFinalPoints);
-    }
-  }
-}
-
-/// ⚡ Réclame UNE SEULE récompense de manière rapide
-/// Retourne true si succès, false si échec
-Future<bool> _claimSingleReward(Reward reward) async {
-  try {
-    // Completer pour attendre la réponse
-    final completer = Completer<bool>();
-    
-    // Écouter la réponse du cubit
-    final subscription = _cubit.stream.listen((state) {
-      if (state is RecompenseReclamee && !completer.isCompleted) {
-        completer.complete(true);
-      } else if (state is CaissierError && !completer.isCompleted) {
-        completer.complete(false);
+        );
       }
-    });
 
-    // Lancer la réclamation
-    _cubit.claimReward(
-      clientId: widget.clientId,
-      magasinId: widget.magasinId,
-      rewardId: reward.id,
-      pointsRequired: reward.requiredPoints,
-    );
-
-    // Attendre la réponse avec timeout de 5 secondes
-    final success = await completer.future.timeout(
-      const Duration(seconds: 5),
-      onTimeout: () => false,
-    );
-    
-    subscription.cancel();
-    return success;
-    
-  } catch (e) {
-    print('❌ Erreur ${reward.name}: $e');
-    return false;
+      // Callback avec les points réels calculés
+      if (widget.onRewardClaimed != null) {
+        widget.onRewardClaimed!(realFinalPoints);
+      }
+    } catch (e) {
+      // Fallback en cas d'erreur
+      if (widget.onRewardClaimed != null) {
+        widget.onRewardClaimed!(expectedFinalPoints);
+      }
+    }
   }
-}
+
+  /// ⚡ Réclame UNE SEULE récompense de manière rapide
+  /// Retourne true si succès, false si échec
+  Future<bool> _claimSingleReward(Reward reward) async {
+    try {
+      // Completer pour attendre la réponse
+      final completer = Completer<bool>();
+
+      // Écouter la réponse du cubit
+      final subscription = _cubit.stream.listen((state) {
+        if (state is RecompenseReclamee && !completer.isCompleted) {
+          completer.complete(true);
+        } else if (state is CaissierError && !completer.isCompleted) {
+          completer.complete(false);
+        }
+      });
+
+      // Lancer la réclamation
+      _cubit.claimReward(
+        clientId: widget.clientId,
+        magasinId: widget.magasinId,
+        rewardId: reward.id,
+        pointsRequired: reward.requiredPoints,
+      );
+
+      // Attendre la réponse avec timeout de 5 secondes
+      final success = await completer.future.timeout(
+        const Duration(seconds: 5),
+        onTimeout: () => false,
+      );
+
+      subscription.cancel();
+      return success;
+    } catch (e) {
+      return false;
+    }
+  }
 
   Widget _buildSummaryRow(String label, String value, Color color) {
     return Row(
@@ -526,10 +513,9 @@ Future<bool> _claimSingleReward(Reward reward) async {
       duration: const Duration(milliseconds: 200),
       child: FloatingActionButton(
         onPressed: canAfford ? () => _confirmMultipleClaims() : null,
-        backgroundColor:
-            canAfford
-                ? const Color.fromARGB(255, 60, 228, 116)
-                : Colors.grey.shade400,
+        backgroundColor: canAfford
+            ? const Color.fromARGB(255, 60, 228, 116)
+            : Colors.grey.shade400,
         elevation: canAfford ? 8 : 2,
         child: const Icon(Icons.check_rounded, color: Colors.white, size: 28),
       ),
@@ -539,10 +525,9 @@ Future<bool> _claimSingleReward(Reward reward) async {
   Widget _buildScaffold(List<Reward> rewards, int clientPoints) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      floatingActionButton:
-          _selectedRewards.isNotEmpty
-              ? _buildExchangeButton(clientPoints)
-              : null,
+      floatingActionButton: _selectedRewards.isNotEmpty
+          ? _buildExchangeButton(clientPoints)
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: SafeArea(
         child: FadeTransition(
@@ -550,10 +535,9 @@ Future<bool> _claimSingleReward(Reward reward) async {
           child: Column(
             children: [
               Expanded(
-                child:
-                    rewards.isEmpty
-                        ? _buildEmptyState()
-                        : _buildRewardsList(rewards, clientPoints),
+                child: rewards.isEmpty
+                    ? _buildEmptyState()
+                    : _buildRewardsList(rewards, clientPoints),
               ),
             ],
           ),
@@ -661,11 +645,10 @@ Future<bool> _claimSingleReward(Reward reward) async {
                   ),
                   const SizedBox(height: 32),
                   ElevatedButton(
-                    onPressed:
-                        () => _cubit.loadClientRewards(
-                          clientId: widget.clientId,
-                          magasinId: widget.magasinId,
-                        ),
+                    onPressed: () => _cubit.loadClientRewards(
+                      clientId: widget.clientId,
+                      magasinId: widget.magasinId,
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6366F1),
                       foregroundColor: Colors.white,
@@ -776,10 +759,9 @@ Future<bool> _claimSingleReward(Reward reward) async {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border:
-            isSelected
-                ? Border.all(color: const Color(0xFF6366F1), width: 2)
-                : null,
+        border: isSelected
+            ? Border.all(color: const Color(0xFF6366F1), width: 2)
+            : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),
@@ -801,27 +783,24 @@ Future<bool> _claimSingleReward(Reward reward) async {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? const Color(0xFF6366F1)
-                            : Colors.transparent,
+                    color: isSelected
+                        ? const Color(0xFF6366F1)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(
-                      color:
-                          canAfford
-                              ? const Color(0xFF6366F1)
-                              : Colors.grey.shade400,
+                      color: canAfford
+                          ? const Color(0xFF6366F1)
+                          : Colors.grey.shade400,
                       width: 2,
                     ),
                   ),
-                  child:
-                      isSelected
-                          ? const Icon(
-                            Icons.check_rounded,
-                            size: 16,
-                            color: Colors.white,
-                          )
-                          : null,
+                  child: isSelected
+                      ? const Icon(
+                          Icons.check_rounded,
+                          size: 16,
+                          color: Colors.white,
+                        )
+                      : null,
                 ),
                 const SizedBox(width: 16),
                 Hero(
@@ -830,17 +809,16 @@ Future<bool> _claimSingleReward(Reward reward) async {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      gradient:
-                          canAfford
-                              ? const LinearGradient(
-                                colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                              )
-                              : LinearGradient(
-                                colors: [
-                                  Colors.grey.shade300,
-                                  Colors.grey.shade400,
-                                ],
-                              ),
+                      gradient: canAfford
+                          ? const LinearGradient(
+                              colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                            )
+                          : LinearGradient(
+                              colors: [
+                                Colors.grey.shade300,
+                                Colors.grey.shade400,
+                              ],
+                            ),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: const Icon(
@@ -851,7 +829,6 @@ Future<bool> _claimSingleReward(Reward reward) async {
                   ),
                 ),
                 const SizedBox(width: 16),
-
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -901,7 +878,6 @@ Future<bool> _claimSingleReward(Reward reward) async {
                   ),
                 ),
                 const SizedBox(width: 16),
-
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -911,20 +887,19 @@ Future<bool> _claimSingleReward(Reward reward) async {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        gradient:
-                            canAfford
-                                ? const LinearGradient(
-                                  colors: [
-                                    Color(0xFF10B981),
-                                    Color(0xFF059669),
-                                  ],
-                                )
-                                : LinearGradient(
-                                  colors: [
-                                    Colors.grey.shade400,
-                                    Colors.grey.shade500,
-                                  ],
-                                ),
+                        gradient: canAfford
+                            ? const LinearGradient(
+                                colors: [
+                                  Color(0xFF10B981),
+                                  Color(0xFF059669),
+                                ],
+                              )
+                            : LinearGradient(
+                                colors: [
+                                  Colors.grey.shade400,
+                                  Colors.grey.shade500,
+                                ],
+                              ),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
@@ -967,27 +942,19 @@ Future<bool> _claimSingleReward(Reward reward) async {
     );
   }
 
- void _toggleRewardSelection(Reward reward) {
+  void _toggleRewardSelection(Reward reward) {
     setState(() {
       if (_selectedRewards.contains(reward)) {
         _selectedRewards.remove(reward);
       } else {
         _selectedRewards.add(reward);
       }
-      _hasSelectedRewards = _selectedRewards.isNotEmpty; // ✅ METTRE À JOUR LE TRACKER
+      _hasSelectedRewards =
+          _selectedRewards.isNotEmpty; // ✅ METTRE À JOUR LE TRACKER
     });
   }
 
   bool _isRewardSelected(Reward reward) {
     return _selectedRewards.contains(reward);
-  }
-    void _handleBackButton() {
-    // ✅ APPELER LE CALLBACK AVEC L'INFORMATION SUR LES SÉLECTIONS
-    if (widget.onBackPressed != null) {
-      widget.onBackPressed!(_hasSelectedRewards);
-    } else {
-      // ✅ FALLBACK : SI PAS DE CALLBACK, FERMER NORMALEMENT
-      Navigator.pop(context);
-    }
   }
 }

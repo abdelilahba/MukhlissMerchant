@@ -7,11 +7,9 @@ class ProfileRemoteDataSource {
   Future<MagasinModel?> getCurrentMagasin() async {
     final user = _client.auth.currentUser;
     if (user == null) {
-      print('Aucun utilisateur connecté');
       return null;
     }
 
-    print('Recherche du magasin pour l\'utilisateur: ${user.id}');
 
     try {
       // Premièrement, trouvez l'ID du magasin associé à cet utilisateur
@@ -22,12 +20,10 @@ class ProfileRemoteDataSource {
           .maybeSingle();
 
       if (magasinResponse == null) {
-        print('Aucun magasin trouvé pour cet utilisateur');
         return null;
       }
 
       final magasinId = magasinResponse['id'] as String;
-      print('ID du magasin trouvé: $magasinId');
 
       // Ensuite, récupérez toutes les données du magasin
       final fullMagasinData = await _client
@@ -36,10 +32,8 @@ class ProfileRemoteDataSource {
           .eq('id', magasinId)
           .single();
 
-      print('Données complètes du magasin: $fullMagasinData');
       return MagasinModel.fromJson(fullMagasinData);
     } catch (e) {
-      print('Erreur lors de la récupération du magasin: $e');
       return null;
     }
   }
@@ -50,7 +44,6 @@ Future<bool> UpdatecurrentMagasin(MagasinModel magasindata) async {
   try {
     final user = _client.auth.currentUser;
     if (user == null) {
-      print('Aucun utilisateur connecté');
       return false;
     }
     // Convertir le MagasinModel en Map<String, dynamic>
@@ -58,7 +51,6 @@ Future<bool> UpdatecurrentMagasin(MagasinModel magasindata) async {
     // Supprimer les champs qui ne doivent pas être mis à jour
     updateData.remove('id'); // L'ID ne doit pas être modifié
     updateData.remove('created_at'); // La date de création ne doit pas être modifiée
-    print('Données à mettre à jour: $updateData');
     final response = await _client
         .from('magasins')
         .update(updateData)
@@ -66,14 +58,11 @@ Future<bool> UpdatecurrentMagasin(MagasinModel magasindata) async {
         .select();
 
     if (response.isNotEmpty) {
-      print('Magasin mis à jour avec succès: $response');
       return true;
     } else {
-      print('Aucune ligne mise à jour');
       return false;
     }
   } catch (e) {
-    print('Erreur lors de la mise à jour du magasin: $e');
     return false;
   }
 }

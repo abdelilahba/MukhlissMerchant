@@ -11,7 +11,6 @@ class  AjouterSoldeClientcode {
     required String magasinId,
     required double montant,
   }) {
-    print('arrived to usecase');
     return repository.ajouterSoldeUniqueColdeAppliquerOffres(
       uniqueCode: uniqueCode,
       magasinId: magasinId,

@@ -115,7 +115,6 @@ class CaissierRepositoryImpl implements CaissierRepository {
     required String magasinId,
     required double montant,
   }) {
-    print('++++++++++++++++++++++ Solde ajouté via code unique +++++++++++++++++++++');
      return remoteDataSource.ajouterSoldeUniqueColdeAppliquerOffres(uniqueCode: uniqueCode, magasinId: magasinId, montant: montant);
   }
 

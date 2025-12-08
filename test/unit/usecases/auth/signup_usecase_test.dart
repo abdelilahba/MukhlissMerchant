@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mukhlissmagasin/features/auth/domain/entities/user.dart';
-import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mukhlissmagasin/features/auth/domain/usecases/signup_usecase.dart';
 
 // Import le mock généré (même mock que login)

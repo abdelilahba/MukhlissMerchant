@@ -270,7 +270,6 @@ class _CacheTestScreenState extends State<CacheTestScreen> {
       final result = await _service.checkAccess(widget.magasinId);
       sw.stop();
       
-      final stats = _service.cacheStats;
       final wasCached = i > 0; // Après le 1er, tous en cache
       
       setState(() {

@@ -853,7 +853,6 @@ Widget build(BuildContext context) {
     final confirmed = await _showModernDeleteDialog(context);
     if (confirmed) {
       try {
-        print('Suppression de l\'offre avec ID: $id');
         await manager.deleteOffer(id);
         
         ScaffoldMessenger.of(context).showSnackBar(

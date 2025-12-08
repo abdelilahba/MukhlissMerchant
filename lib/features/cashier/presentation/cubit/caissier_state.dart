@@ -1,5 +1,6 @@
 // caissier_state.dart
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
+
 import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
@@ -8,16 +9,13 @@ abstract class CaissierState {}
 
 class CaissierInitial extends CaissierState {}
 
-class CaissierLoading extends CaissierState {
-  
-}
+class CaissierLoading extends CaissierState {}
 
 class CaissierError extends CaissierState {
   final String message;
-  
+
   CaissierError({required this.message});
 }
-
 
 class SoldeAjoute extends CaissierState {
   final ClientMagasinEntity clientMagasin;
@@ -55,7 +53,7 @@ class RecompensesChargees extends CaissierState {
 class RecompenseReclamee extends CaissierState {
   final String message;
   final int pointsDeduits;
-  RecompenseReclamee({required this.message,required this.pointsDeduits});
+  RecompenseReclamee({required this.message, required this.pointsDeduits});
 }
 
 class CurrentMagasinLoaded extends CaissierState {
@@ -63,11 +61,8 @@ class CurrentMagasinLoaded extends CaissierState {
   CurrentMagasinLoaded({required this.magasin});
 }
 
-
 class CaissierAuthenticationRequired extends CaissierState {
   final String message;
-  CaissierAuthenticationRequired({
-    this.message = 'Veuillez vous connecter pour continuer'
-  });
+  CaissierAuthenticationRequired(
+      {this.message = 'Veuillez vous connecter pour continuer'});
 }
-

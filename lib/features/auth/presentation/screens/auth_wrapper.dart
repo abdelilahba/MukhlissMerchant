@@ -16,9 +16,8 @@ import 'package:mukhlissmagasin/features/auth/presentation/screens/login_screen.
       builder: (context, state) {
         if(state is AuthInitial){
 
-          print('AuthCubit is in initial state');
         }
-        print('Current Auth State: $state'); 
+
         // Vérification immédiate de l'état d'authentification
         if (state is AuthAuthenticated) {
           // Utilisez Future.delayed pour éviter les problèmes de contexte
