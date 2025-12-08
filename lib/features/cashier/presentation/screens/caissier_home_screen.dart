@@ -1,93 +1,70 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sentry_flutter/sentry_flutter.dart'; // ✅ Import Sentry
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
-import 'package:mukhlissmagasin/core/utils/app_logger.dart';
+import 'package:mukhlissmagasin/core/services/app_logger.dart';
 import 'package:mukhlissmagasin/core/widgets/app_drawer.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
-import 'package:flutter/services.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/recompenses_disponibles_screen.dart';
-
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
-
+import 'package:mukhlissmagasin/features/cashier/presentation/utils/audio_player_helper.dart';
+import 'package:mukhlissmagasin/features/cashier/presentation/widgets/widgets.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
-import 'package:mukhlissmagasin/features/cashier/presentation/widgets/rewards_celebration_sheet.dart';
-
-// AJOUT DE L'IMPORT
 
 class CaissierHomeScreen extends StatefulWidget {
-  const CaissierHomeScreen({Key? key}) : super(key: key);
+  const CaissierHomeScreen({super.key});
 
   @override
   State<CaissierHomeScreen> createState() => _CaissierHomeScreenState();
 }
 
 class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
+  // ═══════════════════════════════════════════════════════════════
+  // CONTROLLERS
+  // ═══════════════════════════════════════════════════════════════
   final _montantController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _codeController = TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // ═══════════════════════════════════════════════════════════════
+  // AUDIO - Utilise AudioPlayerHelper refactorisé
+  // ═══════════════════════════════════════════════════════════════
+  late final AudioPlayerHelper _audioHelper;
+
+  // ═══════════════════════════════════════════════════════════════
+  // STATE
+  // ═══════════════════════════════════════════════════════════════
   bool _isScanning = false;
+  bool _showManualInput = false;
+  bool _showCodeInputInLeft = false;
+  bool _showFelicitationInRight = false;
   bool _showRewardsInRight = false;
+  ScanMode _currentScanMode = ScanMode.balance;
+
   MagasinModel? _currentMagasin;
   String? _selectedClientId;
   String? _selectedMagasinId;
   int _clientPoints = 0;
-  bool _showFelicitationInRight = false;
-  int _felicitationPoints = 0;
-  double? _felicitationSolde;
-  bool _showFelicitationAfterRewards = false;
-  // Mode de scan
-  bool _showManualInput = false;
-  bool _showCodeInputInLeft = false;
-  ScanMode _currentScanMode = ScanMode.balance;
-  final _codeController = TextEditingController();
-  var currentUser = null;
-  final AudioPlayer _audioPlayer = AudioPlayer()
-    ..setReleaseMode(ReleaseMode.stop);
+  dynamic currentUser;
 
   @override
   void initState() {
     super.initState();
-    _initAudioPlayer();
+    _audioHelper = AudioPlayerHelper();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeScreen();
     });
   }
 
-  Future<void> _initAudioPlayer() async {
-    try {
-      await _audioPlayer.setReleaseMode(ReleaseMode.stop);
-      await _audioPlayer.setVolume(1.0);
-      await _audioPlayer.setPlayerMode(PlayerMode.lowLatency);
-      await _audioPlayer.setSource(AssetSource('audio/success.mp3'));
-      AppLogger.debug('✅ Audio player Home initialisé', tag: 'AudioPlayer');
-    } catch (e) {
-      AppLogger.error('❌ Erreur init audio Home: $e',
-          tag: 'AudioPlayer', error: e);
-    }
-  }
-
-  Future<void> _playSuccessSound() async {
-    try {
-      AppLogger.debug('🔊 Home: Lecture du son...', tag: 'AudioPlayer');
-
-      // ✅ JOUER DIRECTEMENT SANS STOP/SEEK
-      unawaited(_audioPlayer.play(
-        AssetSource('audio/success.mp3'),
-        volume: 1.0,
-        mode: PlayerMode.lowLatency,
-      ));
-
-      AppLogger.debug('✅ Home: Son lancé en arrière-plan', tag: 'AudioPlayer');
-    } catch (e) {
-      AppLogger.error('❌ Home: Erreur son: $e', tag: 'AudioPlayer', error: e);
-    }
+  /// Joue le son de succès
+  void _playSuccessSound() {
+    _audioHelper.playSuccess();
   }
 
   Future<void> _initializeScreen() async {
@@ -112,7 +89,8 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
   @override
   void dispose() {
     _montantController.dispose();
-    _audioPlayer.dispose();
+    _codeController.dispose();
+    _audioHelper.dispose();
     super.dispose();
   }
 
@@ -1553,55 +1531,29 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     );
   }
 
+  /// Construit l'état de chargement.
+  ///
+  /// Utilise le widget refactorisé [CaissierLoadingState].
   Widget _buildLoadingState() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 40,
-            height: 40,
-            child: CircularProgressIndicator(
-              strokeWidth: 3,
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
-            ),
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Chargement...',
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF6B7280),
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
+    return const CaissierLoadingState(
+      message: 'Chargement...',
+      size: 40,
     );
   }
 
+  /// Construit le placeholder pendant le chargement d'image.
   Widget _buildImageLoading() {
-    return Container(
-      color: const Color(0xFFF9FAFB),
-      child: const Center(
-        child: SizedBox(
-          width: 32,
-          height: 32,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.5,
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
-          ),
-        ),
-      ),
+    return const ImageLoadingPlaceholder(
+      width: 64,
+      height: 64,
     );
   }
 
+  /// Construit le placeholder en cas d'erreur d'image.
   Widget _buildImageError() {
-    return Container(
-      color: const Color(0xFFF9FAFB),
-      child: const Center(
-        child: Icon(Icons.store_rounded, size: 56, color: Color(0xFF9CA3AF)),
-      ),
+    return const ImageErrorPlaceholder(
+      icon: Icons.store_rounded,
+      iconSize: 56,
     );
   }
 
