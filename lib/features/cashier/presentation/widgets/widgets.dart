@@ -15,4 +15,5 @@ export 'error_states.dart';
 // Business Widgets
 export 'add_balance_section.dart';
 export 'magasin_logo_widget.dart';
+export 'manual_code_input.dart';
 export 'rewards_celebration_sheet.dart';
