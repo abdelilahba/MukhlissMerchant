@@ -26,3 +26,5 @@ export 'reward_selection_states.dart';
 // UI Widgets
 export 'caissier_ui_widgets.dart';
 export 'caissier_toasts.dart';
+export 'caissier_dialogs.dart';
+export 'section_widgets.dart';

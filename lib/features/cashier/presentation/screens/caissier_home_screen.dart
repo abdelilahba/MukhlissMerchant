@@ -127,49 +127,17 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     );
   }
 
+  /// Construit la section du scanner.
+  ///
+  /// Utilise le widget refactorisé [ScannerSectionWidget].
   Widget _buildScannerSection() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // Header simplifié avec uniquement le bouton retour
-          Container(
-            height: 60,
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Container(
-                    child: const Icon(Icons.arrow_back_rounded),
-                  ),
-                  onPressed: () {
-                    // ✅ UTILISER _completeScanReset() au lieu de _stopScanning()
-                    _completeScanReset();
-                    _montantController.clear();
-                  },
-                ),
-              ],
-            ),
-          ),
-
-          // Contenu principal
-          Expanded(
-            child: _showManualInput
-                ? _buildAppLogoSection() // Saisie manuelle
-                : _buildEmbeddedScanner(), // Scanner intégré
-          ),
-        ],
-      ),
+    return ScannerSectionWidget(
+      onBackPressed: () {
+        _completeScanReset();
+        _montantController.clear();
+      },
+      content:
+          _showManualInput ? _buildAppLogoSection() : _buildEmbeddedScanner(),
     );
   }
 
@@ -369,71 +337,31 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     }
   }
 
-  /// 🎉 Affiche le bottom sheet de célébration avec les récompenses disponibles
+  /// 🎉 Affiche le bottom sheet de célébration avec les récompenses disponibles.
+  ///
+  /// Utilise la classe utilitaire [CaissierDialogs].
   Future<void> _showRewardsCelebration({
     required String clientId,
     required String magasinId,
     required int pointsAdded,
     required int totalPoints,
   }) async {
-    try {
-      // Récupérer les récompenses disponibles
-      final availableRewards =
-          await getIt<CaissierRepository>().getAvailableRewards(
-        clientId: clientId,
-        magasinId: magasinId,
-      );
+    final result = await CaissierDialogs.showRewardsCelebration(
+      context,
+      clientId: clientId,
+      magasinId: magasinId,
+      pointsAdded: pointsAdded,
+      totalPoints: totalPoints,
+    );
 
-      if (!mounted) return;
-
-      // AFFICHER LE DIALOGUE CENTRÉ
-      await showDialog(
-        context: context,
-        barrierDismissible: false, // Oblige à cliquer sur un bouton
-        builder: (context) => Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: const EdgeInsets.symmetric(
-            horizontal: 60, // Augmenté de 20 à 60 pour un dialogue plus étroit
-            vertical: 24,
-          ),
-          child: RewardsCelebrationSheet(
-            pointsAdded: pointsAdded,
-            totalPoints: totalPoints,
-            availableRewards: availableRewards,
-            onExchangeRewards: () {
-              // Fermer d'abord le dialogue
-              Navigator.of(context).pop();
-
-              // Afficher les récompenses dans le panneau de droite (comme avant)
-              setState(() {
-                _showRewardsInRight = true;
-                _selectedClientId = clientId;
-                _selectedMagasinId = magasinId;
-                _clientPoints = totalPoints;
-              });
-            },
-            onSaveLater: () {
-              // Juste fermer (déjà géré par le pop du dialog)
-            },
-          ),
-        ),
-      );
-    } catch (e) {
-      AppLogger.error('Erreur lors de la récupération des récompenses: $e',
-          tag: 'Rewards', error: e);
-      // En cas d'erreur, afficher quand même le bottom sheet sans récompenses
-      if (!mounted) return;
-
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) => RewardsCelebrationSheet(
-          pointsAdded: pointsAdded,
-          totalPoints: totalPoints,
-          availableRewards: [],
-        ),
-      );
+    // Gérer le résultat si l'utilisateur choisit d'échanger
+    if (result != null && result['action'] == 'exchange' && mounted) {
+      setState(() {
+        _showRewardsInRight = true;
+        _selectedClientId = result['clientId'];
+        _selectedMagasinId = result['magasinId'];
+        _clientPoints = result['totalPoints'];
+      });
     }
   }
 
