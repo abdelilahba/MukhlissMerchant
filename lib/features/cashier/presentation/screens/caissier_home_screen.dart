@@ -575,53 +575,14 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     );
   }
 
+  /// Construit l'état d'erreur d'authentification.
+  ///
+  /// Utilise le widget refactorisé [AuthenticationErrorState].
   Widget _buildAuthenticationErrorState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.lock_outline_rounded,
-            size: 64,
-            color: Color(0xFFEF4444),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Non authentifié',
-            style: TextStyle(
-              fontSize: 16,
-              color: Color(0xFF6B7280),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              'Veuillez vous connecter pour accéder à cette fonctionnalité',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Color(0xFF9CA3AF)),
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: () {
-              // Navigate to login screen
-              // Navigator.of(context).pushReplacementNamed('/login');
-            },
-            icon: const Icon(Icons.login_rounded),
-            label: const Text('Se connecter'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6366F1),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return AuthenticationErrorState(
+      onLoginPressed: () {
+        Navigator.of(context).pushReplacementNamed('/login');
+      },
     );
   }
 
@@ -983,95 +944,14 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     );
   }
 
+  /// Construit l'état d'erreur de connexion.
+  ///
+  /// Utilise le widget refactorisé [ConnectionErrorState].
   Widget _buildConnectionErrorState() {
-    final l10n = AppLocalizations.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Icône d'erreur de connexion
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFEF2F2),
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFFFECACA), width: 2),
-              ),
-              child: const Icon(
-                Icons.wifi_off_rounded,
-                size: 40,
-                color: Color(0xFFDC2626),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Titre
-            Text(
-              l10n.problemconnexion,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF1F2937),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-
-            // Description détaillée
-            Text(
-              l10n.problemeconnexiondetails,
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xFF6B7280),
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-
-            // Détails techniques (optionnel - peut être caché)
-
-            // Boutons d'action
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Bouton Réessayer
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<CaissierCubit>().getCurrentMagasin();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDC2626),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 2,
-                  ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.refresh_rounded, size: 18),
-                      SizedBox(width: 8),
-                      Text('Réessayer'),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12),
-
-                // Bouton Paramètres
-              ],
-            ),
-          ],
-        ),
-      ),
+    return ConnectionErrorState(
+      onRetry: () {
+        context.read<CaissierCubit>().getCurrentMagasin();
+      },
     );
   }
 
@@ -1345,154 +1225,28 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     );
   }
 
+  /// Construit le logo du magasin.
+  ///
+  /// Utilise le widget refactorisé [MagasinLogoWidget].
   Widget _buildMagasinLogo(MagasinModel magasin) {
-    return Padding(
-      padding: const EdgeInsets.all(20), // ✅ Padding réduit de 24 à 16
-      child: Column(
-        children: [
-          // Logo
-          Expanded(
-            child: ClipRRect(
-              child: magasin.imageUrl.isNotEmpty
-                  ? Image.network(
-                      magasin.imageUrl,
-                      fit: BoxFit.contain,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return _buildImageLoading();
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return _buildImageError();
-                      },
-                    )
-                  : _buildImageError(),
-            ),
-          ),
-          const SizedBox(height: 12), // ✅ Espacement réduit
-          // Nom du magasin
-          SizedBox(
-            height: 22, // ✅ Hauteur légèrement réduite
-            child: Text(
-              magasin.nomEnseigne,
-              style: const TextStyle(
-                fontSize: 16, // ✅ Taille de police réduite
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF1F2937),
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
+    return MagasinLogoWidget(
+      magasin: magasin,
+      size: MagasinLogoSize.medium,
     );
   }
 
+  /// Construit la section d'ajout de solde.
+  ///
+  /// Utilise le widget refactorisé [AddBalanceSection].
   Widget _buildAddBalanceSection(BuildContext context, AppLocalizations l10n) {
-    return Row(
-      children: [
-        // Champ de montant
-        Expanded(
-          child: Container(
-            height: 60,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF9FAFB),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFE5E7EB)),
-            ),
-            child: Row(
-              // ✅ Utiliser Row au lieu de TextField seul
-              children: [
-                // Icône prefix
-                const Padding(
-                  padding: EdgeInsets.only(left: 10, right: 6),
-                  child: Icon(
-                    Icons.attach_money_rounded,
-                    color: Color(0xFF10B981),
-                    size: 22,
-                  ),
-                ),
-                // TextField
-                Expanded(
-                  child: TextField(
-                    controller: _montantController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    textInputAction: TextInputAction.done,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF1F2937),
-                    ),
-                    decoration: InputDecoration(
-                      hintText: '0.00',
-                      hintStyle: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 16,
-                      ),
-                      border: InputBorder.none, // ✅ Pas de bordure
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      contentPadding: EdgeInsets.zero, // ✅ Padding à zéro
-                      isDense: true, // ✅ Maintenant on peut utiliser dense
-                    ),
-                    onSubmitted: (value) {
-                      if (value.isNotEmpty) {
-                        _handleAddBalance(context);
-                      }
-                    },
-                  ),
-                ),
-                // Suffixe DH
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Text(
-                    'DH',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF6B7280),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        // Bouton scanner
-        Container(
-          width: 60,
-          height: 50,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF10B981), Color(0xFF059669)],
-            ),
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF10B981).withOpacity(0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(14),
-              onTap: () => _handleUniversalScan(context),
-              child: const Icon(
-                Icons.qr_code_scanner_rounded,
-                color: Colors.white,
-                size: 24,
-              ),
-            ),
-          ),
-        ),
-      ],
+    return AddBalanceSection(
+      controller: _montantController,
+      onScanPressed: () => _handleUniversalScan(context),
+      onSubmit: (value) {
+        if (value.isNotEmpty) {
+          _handleAddBalance(context);
+        }
+      },
     );
   }
 
