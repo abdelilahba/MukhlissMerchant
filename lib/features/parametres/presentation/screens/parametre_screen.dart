@@ -110,7 +110,7 @@ class _ParametreScreenState extends State<ParametreScreen> with TickerProviderSt
               height: 200,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
           ),
@@ -122,7 +122,7 @@ class _ParametreScreenState extends State<ParametreScreen> with TickerProviderSt
               height: 100,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withValues(alpha: 0.05),
               ),
             ),
           ),
@@ -207,7 +207,7 @@ class _ParametreScreenState extends State<ParametreScreen> with TickerProviderSt
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             spreadRadius: 0,
             blurRadius: 20,
             offset: const Offset(0, 10),
@@ -313,7 +313,7 @@ class _ParametreScreenState extends State<ParametreScreen> with TickerProviderSt
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: 0.08),
                     spreadRadius: 0,
                     blurRadius: 20,
                     offset: const Offset(0, 8),
@@ -369,7 +369,7 @@ class _ParametreScreenState extends State<ParametreScreen> with TickerProviderSt
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: gradient.colors.first.withOpacity(0.3),
+                      color: gradient.colors.first.withValues(alpha: 0.3),
                       spreadRadius: 0,
                       blurRadius: 8,
                       offset: const Offset(0, 4),

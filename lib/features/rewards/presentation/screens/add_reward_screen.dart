@@ -148,7 +148,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Icon(Icons.check_circle, color: Colors.white, size: 20),
@@ -171,7 +171,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                           ? L10n.modiificationonteteenregistre 
                           : L10n.votrerecompenceestdisponible ,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 13,
                       ),
                     ),
@@ -201,7 +201,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Icon(Icons.error_outline, color: Colors.white, size: 20),
@@ -222,7 +222,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                     Text(
                       message,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 13,
                       ),
                       maxLines: 2,
@@ -275,7 +275,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 20,
               offset: const Offset(0, 4),
             ),
@@ -413,7 +413,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.purple.withOpacity(0.3),
+            color: Colors.purple.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -429,7 +429,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
             ),
@@ -441,7 +441,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
+                color: Colors.white.withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
             ),
@@ -453,10 +453,10 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -486,7 +486,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                             ? l10n.ajuusterlesdetails 
                             : l10n.creerecompencesquiincitent,
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                           fontSize: 15,
                           height: 1.4,
                         ),
@@ -512,7 +512,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 25,
             offset: const Offset(0, 10),
           ),
@@ -551,10 +551,10 @@ class _AddRewardScreenState extends State<AddRewardScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: color.withOpacity(0.2),
+          color: color.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -563,7 +563,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -834,7 +834,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               boxShadow: [
                 BoxShadow(
                   color: (_isSubmitting ? Colors.grey : Colors.green)
-                      .withOpacity(0.4),
+                      .withValues(alpha: 0.4),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -875,7 +875,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                         Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Icon(

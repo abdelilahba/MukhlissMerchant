@@ -6,7 +6,7 @@
 import 'dart:async' as _i8;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mukhlissmagasin/features/cashier/domain/entities/Client_entity.dart'
+import 'package:mukhlissmagasin/features/cashier/domain/entities/client_entity.dart'
     as _i6;
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart'
     as _i3;
@@ -43,14 +43,24 @@ import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.
 
 class _FakeCaissierRepository_0 extends _i1.SmartFake
     implements _i2.CaissierRepository {
-  _FakeCaissierRepository_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+  _FakeCaissierRepository_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }
 
 class _FakeClientMagasinEntity_1 extends _i1.SmartFake
     implements _i3.ClientMagasinEntity {
-  _FakeClientMagasinEntity_1(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+  _FakeClientMagasinEntity_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }
 
 class _FakeChargerRecompensesClientResult_2 extends _i1.SmartFake
@@ -58,17 +68,30 @@ class _FakeChargerRecompensesClientResult_2 extends _i1.SmartFake
   _FakeChargerRecompensesClientResult_2(
     Object parent,
     Invocation parentInvocation,
-  ) : super(parent, parentInvocation);
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }
 
 class _FakeMagasinModel_3 extends _i1.SmartFake implements _i5.MagasinModel {
-  _FakeMagasinModel_3(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+  _FakeMagasinModel_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }
 
 class _FakeClient_4 extends _i1.SmartFake implements _i6.Client {
-  _FakeClient_4(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+  _FakeClient_4(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }
 
 /// A class which mocks [AjouterSoldeUseCase].
@@ -81,15 +104,13 @@ class MockAjouterSoldeUseCase extends _i1.Mock
   }
 
   @override
-  _i2.CaissierRepository get repository =>
-      (super.noSuchMethod(
-            Invocation.getter(#repository),
-            returnValue: _FakeCaissierRepository_0(
-              this,
-              Invocation.getter(#repository),
-            ),
-          )
-          as _i2.CaissierRepository);
+  _i2.CaissierRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeCaissierRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.CaissierRepository);
 
   @override
   _i8.Future<_i3.ClientMagasinEntity> execute({
@@ -98,23 +119,29 @@ class MockAjouterSoldeUseCase extends _i1.Mock
     required double? montant,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#execute, [], {
+        Invocation.method(
+          #execute,
+          [],
+          {
+            #clientId: clientId,
+            #magasinId: magasinId,
+            #montant: montant,
+          },
+        ),
+        returnValue: _i8.Future<_i3.ClientMagasinEntity>.value(
+            _FakeClientMagasinEntity_1(
+          this,
+          Invocation.method(
+            #execute,
+            [],
+            {
               #clientId: clientId,
               #magasinId: magasinId,
               #montant: montant,
-            }),
-            returnValue: _i8.Future<_i3.ClientMagasinEntity>.value(
-              _FakeClientMagasinEntity_1(
-                this,
-                Invocation.method(#execute, [], {
-                  #clientId: clientId,
-                  #magasinId: magasinId,
-                  #montant: montant,
-                }),
-              ),
-            ),
-          )
-          as _i8.Future<_i3.ClientMagasinEntity>);
+            },
+          ),
+        )),
+      ) as _i8.Future<_i3.ClientMagasinEntity>);
 }
 
 /// A class which mocks [ChargerRecompensesClientUseCase].
@@ -127,15 +154,13 @@ class MockChargerRecompensesClientUseCase extends _i1.Mock
   }
 
   @override
-  _i2.CaissierRepository get repository =>
-      (super.noSuchMethod(
-            Invocation.getter(#repository),
-            returnValue: _FakeCaissierRepository_0(
-              this,
-              Invocation.getter(#repository),
-            ),
-          )
-          as _i2.CaissierRepository);
+  _i2.CaissierRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeCaissierRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.CaissierRepository);
 
   @override
   _i8.Future<_i4.ChargerRecompensesClientResult> execute({
@@ -143,21 +168,27 @@ class MockChargerRecompensesClientUseCase extends _i1.Mock
     required String? magasinId,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#execute, [], {
+        Invocation.method(
+          #execute,
+          [],
+          {
+            #clientId: clientId,
+            #magasinId: magasinId,
+          },
+        ),
+        returnValue: _i8.Future<_i4.ChargerRecompensesClientResult>.value(
+            _FakeChargerRecompensesClientResult_2(
+          this,
+          Invocation.method(
+            #execute,
+            [],
+            {
               #clientId: clientId,
               #magasinId: magasinId,
-            }),
-            returnValue: _i8.Future<_i4.ChargerRecompensesClientResult>.value(
-              _FakeChargerRecompensesClientResult_2(
-                this,
-                Invocation.method(#execute, [], {
-                  #clientId: clientId,
-                  #magasinId: magasinId,
-                }),
-              ),
-            ),
-          )
-          as _i8.Future<_i4.ChargerRecompensesClientResult>);
+            },
+          ),
+        )),
+      ) as _i8.Future<_i4.ChargerRecompensesClientResult>);
 }
 
 /// A class which mocks [ReclamerRecompenseUseCase].
@@ -170,15 +201,13 @@ class MockReclamerRecompenseUseCase extends _i1.Mock
   }
 
   @override
-  _i2.CaissierRepository get repository =>
-      (super.noSuchMethod(
-            Invocation.getter(#repository),
-            returnValue: _FakeCaissierRepository_0(
-              this,
-              Invocation.getter(#repository),
-            ),
-          )
-          as _i2.CaissierRepository);
+  _i2.CaissierRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeCaissierRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.CaissierRepository);
 
   @override
   _i8.Future<void> execute({
@@ -188,16 +217,19 @@ class MockReclamerRecompenseUseCase extends _i1.Mock
     required int? pointsRequired,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#execute, [], {
-              #clientId: clientId,
-              #magasinId: magasinId,
-              #rewardId: rewardId,
-              #pointsRequired: pointsRequired,
-            }),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
-          )
-          as _i8.Future<void>);
+        Invocation.method(
+          #execute,
+          [],
+          {
+            #clientId: clientId,
+            #magasinId: magasinId,
+            #rewardId: rewardId,
+            #pointsRequired: pointsRequired,
+          },
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
 }
 
 /// A class which mocks [GetCurrentMagazin].
@@ -209,25 +241,28 @@ class MockGetCurrentMagazin extends _i1.Mock implements _i10.GetCurrentMagazin {
   }
 
   @override
-  _i2.CaissierRepository get repository =>
-      (super.noSuchMethod(
-            Invocation.getter(#repository),
-            returnValue: _FakeCaissierRepository_0(
-              this,
-              Invocation.getter(#repository),
-            ),
-          )
-          as _i2.CaissierRepository);
+  _i2.CaissierRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeCaissierRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.CaissierRepository);
 
   @override
-  _i8.Future<_i5.MagasinModel> execute() =>
-      (super.noSuchMethod(
-            Invocation.method(#execute, []),
-            returnValue: _i8.Future<_i5.MagasinModel>.value(
-              _FakeMagasinModel_3(this, Invocation.method(#execute, [])),
-            ),
-          )
-          as _i8.Future<_i5.MagasinModel>);
+  _i8.Future<_i5.MagasinModel> execute() => (super.noSuchMethod(
+        Invocation.method(
+          #execute,
+          [],
+        ),
+        returnValue: _i8.Future<_i5.MagasinModel>.value(_FakeMagasinModel_3(
+          this,
+          Invocation.method(
+            #execute,
+            [],
+          ),
+        )),
+      ) as _i8.Future<_i5.MagasinModel>);
 }
 
 /// A class which mocks [AjouterSoldeClientcode].
@@ -240,15 +275,13 @@ class MockAjouterSoldeClientcode extends _i1.Mock
   }
 
   @override
-  _i2.CaissierRepository get repository =>
-      (super.noSuchMethod(
-            Invocation.getter(#repository),
-            returnValue: _FakeCaissierRepository_0(
-              this,
-              Invocation.getter(#repository),
-            ),
-          )
-          as _i2.CaissierRepository);
+  _i2.CaissierRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeCaissierRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.CaissierRepository);
 
   @override
   _i8.Future<_i3.ClientMagasinEntity> execute({
@@ -257,23 +290,29 @@ class MockAjouterSoldeClientcode extends _i1.Mock
     required double? montant,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#execute, [], {
+        Invocation.method(
+          #execute,
+          [],
+          {
+            #uniqueCode: uniqueCode,
+            #magasinId: magasinId,
+            #montant: montant,
+          },
+        ),
+        returnValue: _i8.Future<_i3.ClientMagasinEntity>.value(
+            _FakeClientMagasinEntity_1(
+          this,
+          Invocation.method(
+            #execute,
+            [],
+            {
               #uniqueCode: uniqueCode,
               #magasinId: magasinId,
               #montant: montant,
-            }),
-            returnValue: _i8.Future<_i3.ClientMagasinEntity>.value(
-              _FakeClientMagasinEntity_1(
-                this,
-                Invocation.method(#execute, [], {
-                  #uniqueCode: uniqueCode,
-                  #magasinId: magasinId,
-                  #montant: montant,
-                }),
-              ),
-            ),
-          )
-          as _i8.Future<_i3.ClientMagasinEntity>);
+            },
+          ),
+        )),
+      ) as _i8.Future<_i3.ClientMagasinEntity>);
 }
 
 /// A class which mocks [GetclientByuniquecode].
@@ -286,26 +325,29 @@ class MockGetclientByuniquecode extends _i1.Mock
   }
 
   @override
-  _i2.CaissierRepository get repository =>
-      (super.noSuchMethod(
-            Invocation.getter(#repository),
-            returnValue: _FakeCaissierRepository_0(
-              this,
-              Invocation.getter(#repository),
-            ),
-          )
-          as _i2.CaissierRepository);
+  _i2.CaissierRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeCaissierRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.CaissierRepository);
 
   @override
   _i8.Future<_i6.Client> execute({required int? uniqueCode}) =>
       (super.noSuchMethod(
-            Invocation.method(#execute, [], {#uniqueCode: uniqueCode}),
-            returnValue: _i8.Future<_i6.Client>.value(
-              _FakeClient_4(
-                this,
-                Invocation.method(#execute, [], {#uniqueCode: uniqueCode}),
-              ),
-            ),
-          )
-          as _i8.Future<_i6.Client>);
+        Invocation.method(
+          #execute,
+          [],
+          {#uniqueCode: uniqueCode},
+        ),
+        returnValue: _i8.Future<_i6.Client>.value(_FakeClient_4(
+          this,
+          Invocation.method(
+            #execute,
+            [],
+            {#uniqueCode: uniqueCode},
+          ),
+        )),
+      ) as _i8.Future<_i6.Client>);
 }

@@ -33,12 +33,20 @@ class MockAuthRepository extends _i1.Mock implements _i2.AuthRepository {
   }
 
   @override
-  _i3.Future<_i4.AppUser?> login(String? email, String? password) =>
+  _i3.Future<_i4.AppUser?> login(
+    String? email,
+    String? password,
+  ) =>
       (super.noSuchMethod(
-            Invocation.method(#login, [email, password]),
-            returnValue: _i3.Future<_i4.AppUser?>.value(),
-          )
-          as _i3.Future<_i4.AppUser?>);
+        Invocation.method(
+          #login,
+          [
+            email,
+            password,
+          ],
+        ),
+        returnValue: _i3.Future<_i4.AppUser?>.value(),
+      ) as _i3.Future<_i4.AppUser?>);
 
   @override
   _i3.Future<_i4.AppUser?> signUp({
@@ -51,25 +59,29 @@ class MockAuthRepository extends _i1.Mock implements _i2.AuthRepository {
     String? siret,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#signUp, [], {
-              #email: email,
-              #password: password,
-              #firstName: firstName,
-              #lastName: lastName,
-              #phone: phone,
-              #address: address,
-              #siret: siret,
-            }),
-            returnValue: _i3.Future<_i4.AppUser?>.value(),
-          )
-          as _i3.Future<_i4.AppUser?>);
+        Invocation.method(
+          #signUp,
+          [],
+          {
+            #email: email,
+            #password: password,
+            #firstName: firstName,
+            #lastName: lastName,
+            #phone: phone,
+            #address: address,
+            #siret: siret,
+          },
+        ),
+        returnValue: _i3.Future<_i4.AppUser?>.value(),
+      ) as _i3.Future<_i4.AppUser?>);
 
   @override
-  _i3.Future<void> logout() =>
-      (super.noSuchMethod(
-            Invocation.method(#logout, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> logout() => (super.noSuchMethod(
+        Invocation.method(
+          #logout,
+          [],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

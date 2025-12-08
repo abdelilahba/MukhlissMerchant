@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
-
 class OfferCard extends StatefulWidget {
   final Offer offer;
   final VoidCallback onEdit;
@@ -19,7 +18,8 @@ class OfferCard extends StatefulWidget {
   State<OfferCard> createState() => _OfferCardState();
 }
 
-class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMixin {
+class _OfferCardState extends State<OfferCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _glowAnimation;
@@ -32,7 +32,7 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.95,
@@ -40,7 +40,7 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
-    
+
     _glowAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -75,7 +75,7 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-   final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -91,17 +91,18 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark 
-                        ? Colors.black.withOpacity(0.4)
-                        : theme.primaryColor.withOpacity(0.1 + (_glowAnimation.value * 0.15)),
+                    color: isDark
+                        ? Colors.black.withValues(alpha: 0.4)
+                        : theme.primaryColor.withValues(
+                            alpha: 0.1 + (_glowAnimation.value * 0.15)),
                     blurRadius: 20 + (_glowAnimation.value * 10),
                     offset: const Offset(0, 8),
                     spreadRadius: _glowAnimation.value * 2,
                   ),
                   BoxShadow(
-                    color: isDark 
-                        ? Colors.white.withOpacity(0.02)
-                        : Colors.white.withOpacity(0.8),
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.02)
+                        : Colors.white.withValues(alpha: 0.8),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -129,11 +130,11 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                     ),
                     border: isDark
                         ? Border.all(
-                            color: Colors.white.withOpacity(0.1),
+                            color: Colors.white.withValues(alpha: 0.1),
                             width: 1,
                           )
                         : Border.all(
-                            color: theme.primaryColor.withOpacity(0.1),
+                            color: theme.primaryColor.withValues(alpha: 0.1),
                             width: 1,
                           ),
                   ),
@@ -149,11 +150,12 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                           height: 80 + (_glowAnimation.value * 20),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: theme.primaryColor.withOpacity(0.05 + (_glowAnimation.value * 0.05)),
+                            color: theme.primaryColor.withValues(
+                                alpha: 0.05 + (_glowAnimation.value * 0.05)),
                           ),
                         ),
                       ),
-                      
+
                       Positioned(
                         left: -20,
                         bottom: -20,
@@ -162,11 +164,11 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                           height: 60,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: theme.primaryColor.withOpacity(0.03),
+                            color: theme.primaryColor.withValues(alpha: 0.03),
                           ),
                         ),
                       ),
-                      
+
                       // Shimmer effect
                       Positioned.fill(
                         child: AnimatedOpacity(
@@ -179,16 +181,16 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  theme.primaryColor.withOpacity(0.1),
+                                  theme.primaryColor.withValues(alpha: 0.1),
                                   Colors.transparent,
-                                  theme.primaryColor.withOpacity(0.05),
+                                  theme.primaryColor.withValues(alpha: 0.05),
                                 ],
                               ),
                             ),
                           ),
                         ),
                       ),
-                      
+
                       // Main content
                       Padding(
                         padding: const EdgeInsets.all(20),
@@ -205,17 +207,19 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                   end: Alignment.bottomRight,
                                   colors: [
                                     theme.primaryColor,
-                                    theme.primaryColor.withOpacity(0.8),
+                                    theme.primaryColor.withValues(alpha: 0.8),
                                   ],
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: theme.primaryColor.withOpacity(0.4),
+                                    color: theme.primaryColor
+                                        .withValues(alpha: 0.4),
                                     blurRadius: 15,
                                     offset: const Offset(0, 5),
                                   ),
                                   BoxShadow(
-                                    color: theme.primaryColor.withOpacity(0.2),
+                                    color: theme.primaryColor
+                                        .withValues(alpha: 0.2),
                                     blurRadius: 25,
                                     offset: const Offset(0, 10),
                                   ),
@@ -231,17 +235,18 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                         center: Alignment.topLeft,
                                         radius: 1.5,
                                         colors: [
-                                          Colors.white.withOpacity(0.3),
+                                          Colors.white.withValues(alpha: 0.3),
                                           Colors.transparent,
                                         ],
                                       ),
                                     ),
                                   ),
-                                  
+
                                   // Points text
                                   Center(
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         FittedBox(
                                           child: Text(
@@ -253,8 +258,8 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                             ),
                                           ),
                                         ),
-                                         Text(
-                                        l10n.pts ,
+                                        Text(
+                                          l10n.pts,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
@@ -267,9 +272,9 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                 ],
                               ),
                             ),
-                            
+
                             const SizedBox(width: 16),
-                            
+
                             // Offer information
                             Expanded(
                               child: Column(
@@ -282,8 +287,8 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                     '${widget.offer.minAmount} DH',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
-                                      color: isDark 
-                                          ? Colors.white 
+                                      color: isDark
+                                          ? Colors.white
                                           : const Color(0xFF1A1A1A),
                                       letterSpacing: -0.5,
                                       height: 1.2,
@@ -291,16 +296,17 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  
+
                                   const SizedBox(height: 8),
-                                  
+
                                   // Points given
                                   Text(
-                                    '${widget.offer.pointsGiven}'+l10n.pointfidelite,
+                                    '${widget.offer.pointsGiven}' +
+                                        l10n.pointfidelite,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      color: isDark 
-                                          ? Colors.white.withOpacity(0.7)
+                                      color: isDark
+                                          ? Colors.white.withValues(alpha: 0.7)
                                           : Colors.grey[600],
                                       letterSpacing: 0.2,
                                     ),
@@ -308,13 +314,13 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                 ],
                               ),
                             ),
-                            
+
                             // Three-dot menu for actions
                             PopupMenuButton<String>(
                               icon: Icon(
                                 Icons.more_vert,
-                                color: isDark 
-                                    ? Colors.white.withOpacity(0.8)
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.8)
                                     : theme.primaryColor,
                               ),
                               itemBuilder: (BuildContext context) => [
@@ -322,9 +328,10 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                   value: 'edit',
                                   child: Row(
                                     children: [
-                                      Icon(Icons.edit, size: 20, color: theme.primaryColor),
+                                      Icon(Icons.edit,
+                                          size: 20, color: theme.primaryColor),
                                       const SizedBox(width: 8),
-                                       Text(l10n.modifier),
+                                      Text(l10n.modifier),
                                     ],
                                   ),
                                 ),
@@ -332,9 +339,10 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                                   value: 'delete',
                                   child: Row(
                                     children: [
-                                      Icon(Icons.delete, size: 20, color: Colors.red),
+                                      Icon(Icons.delete,
+                                          size: 20, color: Colors.red),
                                       const SizedBox(width: 8),
-                                       Text(l10n.supprimer),
+                                      Text(l10n.supprimer),
                                     ],
                                   ),
                                 ),
@@ -354,7 +362,7 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                           ],
                         ),
                       ),
-                      
+
                       // Top accent line
                       Positioned(
                         top: 0,
@@ -367,8 +375,8 @@ class _OfferCardState extends State<OfferCard> with SingleTickerProviderStateMix
                             gradient: LinearGradient(
                               colors: [
                                 Colors.transparent,
-                                theme.primaryColor.withOpacity(0.6),
-                                theme.primaryColor.withOpacity(0.3),
+                                theme.primaryColor.withValues(alpha: 0.6),
+                                theme.primaryColor.withValues(alpha: 0.3),
                                 Colors.transparent,
                               ],
                             ),

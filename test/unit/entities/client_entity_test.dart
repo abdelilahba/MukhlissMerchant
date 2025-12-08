@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mukhlissmagasin/features/cashier/domain/entities/Client_entity.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/entities/client_entity.dart';
 
 /// 🧪 TESTS ENTITÉS - CLIENT
 ///
@@ -179,8 +179,7 @@ void main() {
     // ✅ TEST 9: Adresse longue
     test('accepte adresse longue', () {
       // ARRANGE
-      final longAddress =
-          'Résidence Al Amal, Appartement 45, Immeuble C, '
+      final longAddress = 'Résidence Al Amal, Appartement 45, Immeuble C, '
           'Avenue Mohammed V, Quartier Hassan, Rabat 10000, Maroc';
 
       final client = Client(

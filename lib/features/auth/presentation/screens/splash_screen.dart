@@ -74,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                 ),
               ),
             ),
@@ -86,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 height: 400,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                 ),
               ),
             ),
@@ -137,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         'Votre boutique en ligne',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                           letterSpacing: 1,
                         ),
                       ),
@@ -151,7 +151,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         child: CircularProgressIndicator(
                           strokeWidth: 3,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white.withOpacity(0.8),
+                            Colors.white.withValues(alpha: 0.8),
                           ),
                         ),
                       ),
@@ -172,7 +172,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   'Version 1.0.0',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     fontSize: 12,
                   ),
                 ),

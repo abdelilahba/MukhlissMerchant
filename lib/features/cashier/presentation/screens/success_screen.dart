@@ -44,7 +44,7 @@ class FelicitationScreen extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0xFF10B981).withOpacity(0.3),
+                      color: Color(0xFF10B981).withValues(alpha: 0.3),
                       blurRadius: 16,
                       offset: Offset(0, 4),
                     ),
@@ -73,7 +73,7 @@ class FelicitationScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
+                      color: Colors.black.withValues(alpha: 0.06),
                       blurRadius: 24,
                       offset: Offset(0, 4),
                     ),
@@ -228,7 +228,7 @@ class FelicitationScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
       decoration: BoxDecoration(
-        color: iconBg.withOpacity(0.3),
+        color: iconBg.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(

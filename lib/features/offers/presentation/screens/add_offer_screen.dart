@@ -161,7 +161,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Icon(
@@ -190,7 +190,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                           ? 'Les modifications ont été enregistrées'
                           : 'Votre offre est maintenant active',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 13,
                       ),
                     ),
@@ -219,7 +219,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Icon(
@@ -244,7 +244,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                     Text(
                       message,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 13,
                       ),
                       maxLines: 2,
@@ -300,7 +300,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: 0.08),
                     blurRadius: 25,
                     offset: const Offset(0, 8),
                   ),
@@ -454,7 +454,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
+            color: Colors.blue.withValues(alpha: 0.3),
             blurRadius: 25,
             offset: const Offset(0, 12),
           ),
@@ -470,7 +470,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
             ),
@@ -482,7 +482,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
+                color: Colors.white.withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
             ),
@@ -494,7 +494,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
             ),
@@ -506,10 +506,10 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                 Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(22),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                       width: 1.5,
                     ),
                   ),
@@ -537,7 +537,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                       Text(
                         isEditing ? l10n.ajouterdetails : l10n.credesoffre,
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                           fontSize: 15,
                           height: 1.4,
                         ),
@@ -563,7 +563,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 30,
             offset: const Offset(0, 12),
           ),
@@ -597,16 +597,16 @@ class _AddOfferScreenState extends State<AddOfferScreen>
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: color.withOpacity(0.2), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(icon, color: color, size: 22),
@@ -754,7 +754,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
               boxShadow: [
                 BoxShadow(
                   color: (_isSubmitting ? Colors.grey : Colors.green)
-                      .withOpacity(0.4),
+                      .withValues(alpha: 0.4),
                   blurRadius: 25,
                   offset: const Offset(0, 10),
                 ),
@@ -797,7 +797,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(

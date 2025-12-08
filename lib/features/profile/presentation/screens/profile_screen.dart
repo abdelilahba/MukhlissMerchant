@@ -153,9 +153,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: color.withOpacity(0.3)),
+              border: Border.all(color: color.withValues(alpha: 0.3)),
             ),
             child: Icon(icon, color: color, size: 40),
           ),
@@ -325,7 +325,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
               end: Alignment.bottomRight,
               colors: [
                 Theme.of(context).primaryColor,
-                Theme.of(context).primaryColor.withOpacity(0.8),
+                Theme.of(context).primaryColor.withValues(alpha: 0.8),
               ],
             ),
           ),
@@ -341,7 +341,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
         Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: IconButton(
@@ -354,7 +354,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
           Container(
             margin: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
@@ -402,7 +402,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -434,7 +434,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -461,7 +461,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
         Text(
           userProfile.email ?? 'Email non défini',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
           ),
         ),
       ],
@@ -476,7 +476,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 5),
           ),
@@ -493,7 +493,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -577,7 +577,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 5),
           ),
@@ -593,7 +593,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(

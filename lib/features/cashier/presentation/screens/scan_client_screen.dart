@@ -275,7 +275,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
                       gradient: LinearGradient(
                         colors: [
                           Colors.transparent,
-                          Theme.of(context).primaryColor.withOpacity(0.8),
+                          Theme.of(context).primaryColor.withValues(alpha: 0.8),
                           Colors.transparent,
                         ],
                       ),
@@ -283,7 +283,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
                         BoxShadow(
                           color: Theme.of(
                             context,
-                          ).primaryColor.withOpacity(0.5),
+                          ).primaryColor.withValues(alpha: 0.5),
                           blurRadius: 8,
                           spreadRadius: 2,
                         ),
@@ -473,7 +473,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(

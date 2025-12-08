@@ -34,7 +34,7 @@ class _RewardCardState extends State<RewardCard>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.95,
@@ -42,7 +42,7 @@ class _RewardCardState extends State<RewardCard>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
-    
+
     _glowAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -79,7 +79,7 @@ class _RewardCardState extends State<RewardCard>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
-    
+
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -98,17 +98,18 @@ class _RewardCardState extends State<RewardCard>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark 
-                        ? Colors.black.withOpacity(0.4)
-                        : theme.primaryColor.withOpacity(0.1 + (_glowAnimation.value * 0.15)),
+                    color: isDark
+                        ? Colors.black.withValues(alpha: 0.4)
+                        : theme.primaryColor.withValues(
+                            alpha: 0.1 + (_glowAnimation.value * 0.15)),
                     blurRadius: 20 + (_glowAnimation.value * 10),
                     offset: const Offset(0, 8),
                     spreadRadius: _glowAnimation.value * 2,
                   ),
                   BoxShadow(
-                    color: isDark 
-                        ? Colors.white.withOpacity(0.02)
-                        : Colors.white.withOpacity(0.8),
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.02)
+                        : Colors.white.withValues(alpha: 0.8),
                     blurRadius: 10,
                     offset: const Offset(0, -2),
                   ),
@@ -136,11 +137,11 @@ class _RewardCardState extends State<RewardCard>
                     ),
                     border: isDark
                         ? Border.all(
-                            color: Colors.white.withOpacity(0.1),
+                            color: Colors.white.withValues(alpha: 0.1),
                             width: 1,
                           )
                         : Border.all(
-                            color: theme.primaryColor.withOpacity(0.1),
+                            color: theme.primaryColor.withValues(alpha: 0.1),
                             width: 1,
                           ),
                   ),
@@ -156,11 +157,12 @@ class _RewardCardState extends State<RewardCard>
                           height: 80 + (_glowAnimation.value * 20),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: theme.primaryColor.withOpacity(0.05 + (_glowAnimation.value * 0.05)),
+                            color: theme.primaryColor.withValues(
+                                alpha: 0.05 + (_glowAnimation.value * 0.05)),
                           ),
                         ),
                       ),
-                      
+
                       Positioned(
                         left: -20,
                         bottom: -20,
@@ -169,11 +171,11 @@ class _RewardCardState extends State<RewardCard>
                           height: 60,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: theme.primaryColor.withOpacity(0.03),
+                            color: theme.primaryColor.withValues(alpha: 0.03),
                           ),
                         ),
                       ),
-                      
+
                       // Shimmer effect
                       Positioned.fill(
                         child: AnimatedOpacity(
@@ -186,19 +188,20 @@ class _RewardCardState extends State<RewardCard>
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  theme.primaryColor.withOpacity(0.1),
+                                  theme.primaryColor.withValues(alpha: 0.1),
                                   Colors.transparent,
-                                  theme.primaryColor.withOpacity(0.05),
+                                  theme.primaryColor.withValues(alpha: 0.05),
                                 ],
                               ),
                             ),
                           ),
                         ),
                       ),
-                      
+
                       // Main content
                       Padding(
-                        padding: const EdgeInsets.all(14), // ✅ RÉDUIRE ENCORE LE PADDING
+                        padding: const EdgeInsets.all(
+                            14), // ✅ RÉDUIRE ENCORE LE PADDING
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -213,12 +216,13 @@ class _RewardCardState extends State<RewardCard>
                                   end: Alignment.bottomRight,
                                   colors: [
                                     theme.primaryColor,
-                                    theme.primaryColor.withOpacity(0.8),
+                                    theme.primaryColor.withValues(alpha: 0.8),
                                   ],
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: theme.primaryColor.withOpacity(0.4),
+                                    color: theme.primaryColor
+                                        .withValues(alpha: 0.4),
                                     blurRadius: 15,
                                     offset: const Offset(0, 5),
                                   ),
@@ -235,7 +239,8 @@ class _RewardCardState extends State<RewardCard>
                                         fontSize: 13, // ✅ RÉDUIRE ENCORE
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
-                                        height: 0.9, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
+                                        height:
+                                            0.9, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
                                       ),
                                     ),
                                     Text(
@@ -244,16 +249,17 @@ class _RewardCardState extends State<RewardCard>
                                         fontSize: 9, // ✅ RÉDUIRE ENCORE
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
-                                        height: 0.9, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
+                                        height:
+                                            0.9, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            
+
                             const SizedBox(width: 10), // ✅ RÉDUIRE ENCORE
-                            
+
                             // Reward information - VERSION ULTRA COMPACTE
                             Expanded(
                               child: Column(
@@ -267,29 +273,31 @@ class _RewardCardState extends State<RewardCard>
                                     style: TextStyle(
                                       fontSize: 13, // ✅ RÉDUIRE ENCORE
                                       fontWeight: FontWeight.w700,
-                                      color: isDark 
-                                          ? Colors.white 
+                                      color: isDark
+                                          ? Colors.white
                                           : const Color(0xFF1A1A1A),
                                       letterSpacing: -0.3, // ✅ RÉDUIRE
-                                      height: 1.1, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
+                                      height:
+                                          1.1, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
                                     ),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  
+
                                   const SizedBox(height: 4), // ✅ RÉDUIRE ENCORE
-                                  
+
                                   // Points requirement
                                   Text(
                                     '${l10n.echange} ${widget.reward.requiredPoints} ${l10n.point}',
                                     style: TextStyle(
                                       fontSize: 11, // ✅ RÉDUIRE ENCORE
                                       fontWeight: FontWeight.w500,
-                                      color: isDark 
-                                          ? Colors.white.withOpacity(0.7)
+                                      color: isDark
+                                          ? Colors.white.withValues(alpha: 0.7)
                                           : Colors.grey[600],
                                       letterSpacing: 0.1, // ✅ RÉDUIRE
-                                      height: 1.0, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
+                                      height:
+                                          1.0, // ✅ RÉDUIRE LA HAUTEUR DE LIGNE
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -297,18 +305,19 @@ class _RewardCardState extends State<RewardCard>
                                 ],
                               ),
                             ),
-                            
+
                             // Three-dot menu - VERSION ULTRA COMPACTE
                             SizedBox(
                               width: 24, // ✅ FORCER LA LARGEUR
                               height: 24,
                               child: PopupMenuButton<String>(
-                                padding: EdgeInsets.zero, // ✅ SUPPRIMER LE PADDING
+                                padding:
+                                    EdgeInsets.zero, // ✅ SUPPRIMER LE PADDING
                                 icon: Icon(
                                   Icons.more_vert,
                                   size: 18, // ✅ RÉDUIRE ENCORE
-                                  color: isDark 
-                                      ? Colors.white.withOpacity(0.8)
+                                  color: isDark
+                                      ? Colors.white.withValues(alpha: 0.8)
                                       : theme.primaryColor,
                                 ),
                                 itemBuilder: (BuildContext context) => [
@@ -317,7 +326,9 @@ class _RewardCardState extends State<RewardCard>
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(Icons.edit, size: 16, color: theme.primaryColor),
+                                        Icon(Icons.edit,
+                                            size: 16,
+                                            color: theme.primaryColor),
                                         const SizedBox(width: 4),
                                         Text(
                                           l10n.modifier,
@@ -331,7 +342,8 @@ class _RewardCardState extends State<RewardCard>
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(Icons.delete, size: 16, color: Colors.red),
+                                        Icon(Icons.delete,
+                                            size: 16, color: Colors.red),
                                         const SizedBox(width: 4),
                                         Text(
                                           l10n.supprimer,
@@ -357,7 +369,7 @@ class _RewardCardState extends State<RewardCard>
                           ],
                         ),
                       ),
-                      
+
                       // Top accent line - OPTIONNEL: SUPPRIMER SI NÉCESSAIRE
                       Positioned(
                         top: 0,
@@ -370,8 +382,8 @@ class _RewardCardState extends State<RewardCard>
                             gradient: LinearGradient(
                               colors: [
                                 Colors.transparent,
-                                theme.primaryColor.withOpacity(0.4),
-                                theme.primaryColor.withOpacity(0.2),
+                                theme.primaryColor.withValues(alpha: 0.4),
+                                theme.primaryColor.withValues(alpha: 0.2),
                                 Colors.transparent,
                               ],
                             ),
