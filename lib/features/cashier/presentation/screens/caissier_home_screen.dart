@@ -167,7 +167,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -512,7 +512,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -607,44 +607,15 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
   }
 
   // Ajoutez un état d'erreur
+  /// Construit l'état d'erreur générique.
+  ///
+  /// Utilise le widget refactorisé [GenericErrorState].
   Widget _buildErrorState(String message) {
-    final l10n = AppLocalizations.of(context);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.error_outline_rounded,
-            size: 64,
-            color: Color(0xFFEF4444),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Erreur',
-            style: TextStyle(
-              fontSize: 16,
-              color: Color(0xFF6B7280),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              message,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Color(0xFF9CA3AF)),
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              context.read<CaissierCubit>().getCurrentMagasin();
-            },
-            child: Text(l10n.ressayer),
-          ),
-        ],
-      ),
+    return GenericErrorState(
+      message: message,
+      onRetry: () {
+        context.read<CaissierCubit>().getCurrentMagasin();
+      },
     );
   }
 
@@ -680,7 +651,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -892,7 +863,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -1082,7 +1053,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -1117,22 +1088,6 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     return const CaissierLoadingState(
       message: 'Chargement...',
       size: 40,
-    );
-  }
-
-  /// Construit le placeholder pendant le chargement d'image.
-  Widget _buildImageLoading() {
-    return const ImageLoadingPlaceholder(
-      width: 64,
-      height: 64,
-    );
-  }
-
-  /// Construit le placeholder en cas d'erreur d'image.
-  Widget _buildImageError() {
-    return const ImageErrorPlaceholder(
-      icon: Icons.store_rounded,
-      iconSize: 56,
     );
   }
 
