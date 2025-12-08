@@ -435,7 +435,6 @@ class _AddOfferScreenState extends State<AddOfferScreen>
   }
 
   Widget _buildMotivationalCard() {
-
     final isEditing = widget.offer != null;
     final l10n = AppLocalizations.of(context);
 
@@ -669,10 +668,9 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                 _manager.isactive ? Colors.green.shade50 : Colors.red.shade50,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color:
-                  _manager.isactive
-                      ? Colors.green.shade200
-                      : Colors.red.shade200,
+              color: _manager.isactive
+                  ? Colors.green.shade200
+                  : Colors.red.shade200,
             ),
           ),
           child: SwitchListTile(
@@ -681,10 +679,9 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color:
-                        _manager.isactive
-                            ? Colors.green.shade100
-                            : Colors.red.shade100,
+                    color: _manager.isactive
+                        ? Colors.green.shade100
+                        : Colors.red.shade100,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -692,10 +689,9 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                         ? Icons.check_circle_rounded
                         : Icons.cancel_rounded,
                     size: 18,
-                    color:
-                        _manager.isactive
-                            ? Colors.green.shade600
-                            : Colors.red.shade600,
+                    color: _manager.isactive
+                        ? Colors.green.shade600
+                        : Colors.red.shade600,
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -704,10 +700,9 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
-                    color:
-                        _manager.isactive
-                            ? Colors.green.shade700
-                            : Colors.red.shade700,
+                    color: _manager.isactive
+                        ? Colors.green.shade700
+                        : Colors.red.shade700,
                   ),
                 ),
               ],
@@ -718,7 +713,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                 _manager.isactive = value;
               });
             },
-            activeColor: Colors.green.shade600,
+            activeThumbColor: Colors.green.shade600,
             inactiveTrackColor: Colors.red.shade300,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 20,
@@ -743,10 +738,9 @@ class _AddOfferScreenState extends State<AddOfferScreen>
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors:
-                    _isSubmitting
-                        ? [Colors.grey.shade400, Colors.grey.shade500]
-                        : [Colors.green.shade600, Colors.green.shade400],
+                colors: _isSubmitting
+                    ? [Colors.grey.shade400, Colors.grey.shade500]
+                    : [Colors.green.shade600, Colors.green.shade400],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

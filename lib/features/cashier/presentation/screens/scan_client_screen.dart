@@ -111,13 +111,16 @@ class _ScanClientScreenState extends State<ScanClientScreen>
 // Dans scan_client_screen.dart
   Future<void> _playSuccessSound() async {
     try {
-      // ✅ JOUER DIRECTEMENT SANS ATTENDRE (fire and forget)
+      // Jouer directement sans attendre (fire and forget)
       unawaited(_audioPlayer.play(
         AssetSource('audio/success.mp3'),
         volume: 1.0,
         mode: PlayerMode.lowLatency,
       ));
-    } catch (e) {}
+    } catch (e) {
+      // Ignorer les erreurs audio silencieusement
+      debugPrint('Audio error: $e');
+    }
   }
 
   @override
@@ -380,7 +383,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   }
 
   Widget _buildLoadingOverlay() {
-    final L10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     return Container(
       color: Colors.black54,
       child: Center(
@@ -392,13 +395,13 @@ class _ScanClientScreenState extends State<ScanClientScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              _isBalanceMode ? L10n.ajoutencour : L10n.traitementencouor,
+              _isBalanceMode ? l10n.ajoutencour : l10n.traitementencouor,
               style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
             if (_isBalanceMode) ...[
               const SizedBox(height: 8),
               Text(
-                L10n.redirectionversoffres,
+                l10n.redirectionversoffres,
                 style: const TextStyle(color: Colors.white70, fontSize: 14),
               ),
             ],
@@ -447,10 +450,10 @@ class _ScanClientScreenState extends State<ScanClientScreen>
 
     // ✅ MODE NAVIGATION - FERMER IMMÉDIATEMENT
     if (mounted) {
-      final L10n = AppLocalizations.of(context);
+      final l10n = AppLocalizations.of(context);
       _showSuccessToast(
         message:
-            '${L10n.felicitation} ! ${pointsGagnes.toInt()} ${L10n.pts} gagnés',
+            '${l10n.felicitation} ! ${pointsGagnes.toInt()} ${l10n.pts} gagnés',
         solde: soldeRestant,
       );
     }
@@ -462,7 +465,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   }
 
   void _showSuccessToast({required String message, required double solde}) {
-    final L10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -498,7 +501,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${L10n.solderestant}: ${solde.toStringAsFixed(2)} ${L10n.dh ?? "DH"}',
+                      '${l10n.solderestant}: ${solde.toStringAsFixed(2)} ${l10n.dh}',
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.white70,
@@ -548,7 +551,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   }
 
   Future<void> _handleQRScan(Barcode scanData) async {
-    final L10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     // Arrêter immédiatement le scanner si un code est détecté
     if (!_canProcessScan(scanData)) return;
@@ -559,9 +562,9 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     try {
       await _processQRCode(scanData.code!);
     } on FormatException catch (e) {
-      _handleScanError(L10n.qrcodeinvalide, e);
+      _handleScanError(l10n.qrcodeinvalide, e);
     } catch (e) {
-      _handleScanError(L10n.erreurtraitement + ': ${e.toString()}', e);
+      _handleScanError('${l10n.erreurtraitement}: ${e.toString()}', e);
     }
   }
 

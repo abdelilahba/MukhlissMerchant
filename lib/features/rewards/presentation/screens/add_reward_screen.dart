@@ -5,8 +5,6 @@ import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_cubit
 import 'package:mukhlissmagasin/features/rewards/presentation/managers/reward_manager.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
-
-
 class AddRewardScreen extends StatefulWidget {
   final Reward? reward;
 
@@ -137,7 +135,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   void _showSuccessMessage() {
-    final L10n=AppLocalizations.of(context);
+    final L10n = AppLocalizations.of(context);
     final isEditing = widget.reward != null;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -151,7 +149,8 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                   color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                child: const Icon(Icons.check_circle,
+                    color: Colors.white, size: 20),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -160,16 +159,16 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      isEditing ? L10n.modificationreussi  : L10n.recompencecree,
+                      isEditing ? L10n.modificationreussi : L10n.recompencecree,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      isEditing 
-                          ? L10n.modiificationonteteenregistre 
-                          : L10n.votrerecompenceestdisponible ,
+                      isEditing
+                          ? L10n.modiificationonteteenregistre
+                          : L10n.votrerecompenceestdisponible,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 13,
@@ -191,7 +190,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   void _showErrorSnackbar(String message) {
-    final L10n=AppLocalizations.of(context);
+    final L10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Container(
@@ -204,7 +203,8 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                   color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Icon(Icons.error_outline, color: Colors.white, size: 20),
+                child: const Icon(Icons.error_outline,
+                    color: Colors.white, size: 20),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -212,8 +212,8 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                     Text(
-                    L10n.errerusurvenu  ,
+                    Text(
+                      L10n.errerusurvenu,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -265,7 +265,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   Widget _buildEnhancedAppBar() {
     final isEditing = widget.reward != null;
     final l10n = AppLocalizations.of(context);
-    
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
@@ -300,7 +300,8 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                   ),
                   const Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.purple.shade100, Colors.purple.shade50],
@@ -317,7 +318,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                         ),
                         const SizedBox(width: 6),
                         Text(
-                        l10n.recompences  ,
+                          l10n.recompences,
                           style: TextStyle(
                             color: Colors.purple.shade700,
                             fontSize: 12,
@@ -337,7 +338,9 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          isEditing ? l10n.modifierrecompence : l10n.creerecompence,
+                          isEditing
+                              ? l10n.modifierrecompence
+                              : l10n.creerecompence,
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -346,8 +349,8 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          isEditing 
-                              ? l10n.ajustez 
+                          isEditing
+                              ? l10n.ajustez
                               : l10n.creeunerecompenceattractive,
                           style: TextStyle(
                             fontSize: 14,
@@ -397,7 +400,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   Widget _buildMotivationalCard() {
     final l10n = AppLocalizations.of(context);
     final isEditing = widget.reward != null;
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
@@ -472,7 +475,9 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        isEditing ? l10n.peaufinezrecompence  : l10n.fidelisezclient ,
+                        isEditing
+                            ? l10n.peaufinezrecompence
+                            : l10n.fidelisezclient,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -483,7 +488,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                       const SizedBox(height: 8),
                       Text(
                         isEditing
-                            ? l10n.ajuusterlesdetails 
+                            ? l10n.ajuusterlesdetails
                             : l10n.creerecompencesquiincitent,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.9),
@@ -504,7 +509,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
 
   Widget _buildEnhancedFormCard() {
     final l10n = AppLocalizations.of(context);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
@@ -527,7 +532,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
             children: [
               _buildSectionHeader(
                 icon: Icons.edit_note_rounded,
-                title:l10n.detailsrecompence ,
+                title: l10n.detailsrecompence,
                 color: Colors.blue.shade600,
               ),
               const SizedBox(height: 28),
@@ -588,12 +593,12 @@ class _AddRewardScreenState extends State<AddRewardScreen>
 
   Widget _buildEnhancedRewardNameField() {
     final l10n = AppLocalizations.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-        l10n.descriptionrecompence  ,
+          l10n.descriptionrecompence,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -602,7 +607,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
         ),
         const SizedBox(height: 8),
         Text(
-         l10n.exemple ,
+          l10n.exemple,
           style: TextStyle(
             fontSize: 13,
             color: Colors.grey.shade600,
@@ -622,7 +627,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
-              hintText: l10n.entrerladescription ,
+              hintText: l10n.entrerladescription,
               hintStyle: TextStyle(
                 color: Colors.grey.shade500,
                 fontWeight: FontWeight.normal,
@@ -643,7 +648,8 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 ),
               ),
             ),
-            validator: (value) => value?.isEmpty ?? true ? l10n.descriptionrequise : null,
+            validator: (value) =>
+                value?.isEmpty ?? true ? l10n.descriptionrequise : null,
           ),
         ),
       ],
@@ -652,12 +658,12 @@ class _AddRewardScreenState extends State<AddRewardScreen>
 
   Widget _buildEnhancedPointsField() {
     final l10n = AppLocalizations.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-         l10n.pointrequise ,
+          l10n.pointrequise,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -666,7 +672,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
         ),
         const SizedBox(height: 8),
         Text(
-        l10n.nombrepointnecessaire  ,
+          l10n.nombrepointnecessaire,
           style: TextStyle(
             fontSize: 13,
             color: Colors.grey.shade600,
@@ -718,9 +724,9 @@ class _AddRewardScreenState extends State<AddRewardScreen>
               ),
             ),
             validator: (value) {
-              if (value?.isEmpty ?? true) return l10n.pointrequise ;
-              if (int.tryParse(value!) == null) return l10n.nombreinvaliide ;
-              if (int.parse(value) <= 0) return l10n.doitetresuperieur ;
+              if (value?.isEmpty ?? true) return l10n.pointrequise;
+              if (int.tryParse(value!) == null) return l10n.nombreinvaliide;
+              if (int.parse(value) <= 0) return l10n.doitetresuperieur;
               return null;
             },
           ),
@@ -731,12 +737,12 @@ class _AddRewardScreenState extends State<AddRewardScreen>
 
   Widget _buildEnhancedActiveToggle() {
     final l10n = AppLocalizations.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-        l10n.statusrecompence ,
+          l10n.statusrecompence,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -745,9 +751,9 @@ class _AddRewardScreenState extends State<AddRewardScreen>
         ),
         const SizedBox(height: 8),
         Text(
-          _manager.isActive 
-              ?l10n.cetterecompencedisponible 
-              : l10n.cetterecompenceesttemporairemenrdesactive ,
+          _manager.isActive
+              ? l10n.cetterecompencedisponible
+              : l10n.cetterecompenceesttemporairemenrdesactive,
           style: TextStyle(
             fontSize: 13,
             color: Colors.grey.shade600,
@@ -756,10 +762,13 @@ class _AddRewardScreenState extends State<AddRewardScreen>
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: _manager.isActive ? Colors.green.shade50 : Colors.red.shade50,
+            color:
+                _manager.isActive ? Colors.green.shade50 : Colors.red.shade50,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: _manager.isActive ? Colors.green.shade200 : Colors.red.shade200,
+              color: _manager.isActive
+                  ? Colors.green.shade200
+                  : Colors.red.shade200,
             ),
           ),
           child: SwitchListTile(
@@ -768,26 +777,26 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: _manager.isActive 
-                        ? Colors.green.shade100 
+                    color: _manager.isActive
+                        ? Colors.green.shade100
                         : Colors.red.shade100,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     _manager.isActive ? Icons.check_circle : Icons.cancel,
                     size: 16,
-                    color: _manager.isActive 
-                        ? Colors.green.shade600 
+                    color: _manager.isActive
+                        ? Colors.green.shade600
                         : Colors.red.shade600,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  _manager.isActive ?l10n.active  : l10n.inactif ,
+                  _manager.isActive ? l10n.active : l10n.inactif,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: _manager.isActive 
-                        ? Colors.green.shade700 
+                    color: _manager.isActive
+                        ? Colors.green.shade700
                         : Colors.red.shade700,
                   ),
                 ),
@@ -799,9 +808,10 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 _manager.isActive = value;
               });
             },
-            activeColor: Colors.green.shade600,
+            activeThumbColor: Colors.green.shade600,
             inactiveTrackColor: Colors.red.shade300,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
         ),
       ],
@@ -811,7 +821,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   Widget _buildFloatingSubmitButton() {
     final isEditing = widget.reward != null;
     final l10n = AppLocalizations.of(context);
-    
+
     return AnimatedBuilder(
       animation: Listenable.merge([
         _floatingScaleAnimation,
@@ -864,7 +874,9 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                         ),
                         const SizedBox(width: 16),
                         Text(
-                          isEditing ? l10n.modificationencour  : l10n.creationencours ,
+                          isEditing
+                              ? l10n.modificationencour
+                              : l10n.creationencours,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -879,14 +891,18 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Icon(
-                            isEditing ? Icons.save_rounded : Icons.card_giftcard_rounded,
+                            isEditing
+                                ? Icons.save_rounded
+                                : Icons.card_giftcard_rounded,
                             color: Colors.white,
                             size: 20,
                           ),
                         ),
                         const SizedBox(width: 16),
                         Text(
-                          isEditing ? l10n.enredisterlesmodifiaction  : l10n.creerecompence,
+                          isEditing
+                              ? l10n.enredisterlesmodifiaction
+                              : l10n.creerecompence,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
