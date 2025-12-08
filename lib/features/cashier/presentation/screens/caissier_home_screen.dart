@@ -10,7 +10,6 @@ import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repositor
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
-import 'package:mukhlissmagasin/features/cashier/presentation/screens/recompenses_disponibles_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/utils/audio_player_helper.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/widgets/widgets.dart';
@@ -124,38 +123,6 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
         body: isTablet
             ? _buildTabletSplitLayout(context)
             : _buildMobileLayout(context),
-
-        // ✅ Bouton de test Sentry (à supprimer en production)
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // Test Sentry
-            Sentry.captureMessage('Test Flutter - Monitoring fonctionne! 🎉');
-            Sentry.captureException(
-              Exception('Test exception Flutter'),
-              stackTrace: StackTrace.current,
-            );
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Row(
-                  children: [
-                    Icon(Icons.check_circle, color: Colors.white),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                          'Erreur de test envoyée à Sentry!\nAllez voir sur sentry.io'),
-                    ),
-                  ],
-                ),
-                backgroundColor: Color(0xFF10B981),
-                behavior: SnackBarBehavior.floating,
-                duration: Duration(seconds: 5),
-              ),
-            );
-          },
-          backgroundColor: Colors.red,
-          child: const Icon(Icons.bug_report, color: Colors.white),
-        ),
       ),
     );
   }
