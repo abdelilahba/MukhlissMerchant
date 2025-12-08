@@ -1,252 +1,116 @@
-/// Constantes de l'application centralisées
-///
-/// Ce fichier regroupe toutes les constantes magiques pour:
-/// - Maintenance facile (change une fois, impact partout)
-/// - Lisibilité (noms explicites vs nombres)
-/// - Cohérence (mêmes valeurs partout)
-///
-/// ### Organisation:
-/// - App Info
-/// - Business Rules
-/// - UI Configuration
-/// - Network & API
-/// - Cache & Performance
-/// - Validation Rules
+/// Application-wide constants and configuration values.
+/// 
+/// Centralizes all magic numbers and configuration values for better
+/// maintainability and consistency across the codebase.
+/// 
+/// Usage:
+/// ```dart
+/// import 'package:mukhlissmagasin/core/constants/app_constants.dart';
+/// 
+/// final points = montant * AppConstants.pointsPerMAD;
+/// ```
+library;
+
+/// Business and app configuration constants
 class AppConstants {
-  // Private constructor pour empêcher instantiation
-  AppConstants._();
+  AppConstants._(); // Private constructor
 
-  // ============================================
-  // APP INFO
-  // ============================================
-
-  /// Nom de l'application
+  // ========== APP INFO ==========
+  /// Application name
   static const String appName = 'Mukhliss Merchant';
-
-  /// Version actuelle (sync avec pubspec.yaml)
+  
+  /// Current app version
   static const String appVersion = '1.0.0';
-
+  
   /// Build number
   static const int buildNumber = 1;
 
-  /// Package name
-  static const String packageName = 'com.mukhliss.merchant';
-
-  // ============================================
-  // BUSINESS RULES - LOYALTY SYSTEM
-  // ============================================
-
-  /// Conversion: 10 MAD = 1 point de fidélité
-  /// Exemple: 100 MAD dépensés = 10 points
+  // ========== BUSINESS RULES ==========
+  /// Points earned per MAD spent (10 MAD = 1 point)
   static const double pointsPerMAD = 0.1;
-
-  /// Montant minimum pour une transaction
-  /// En dessous de ce montant, transaction refusée
+  
+  /// Minimum transaction amount in MAD
   static const double minTransactionAmount = 1.0;
-
-  /// Montant maximum par transaction (sécurité)
-  static const double maxTransactionAmount = 10000.0;
-
-  /// Nombre maximum de récompenses par transaction
+  
+  /// Maximum rewards claimable per transaction
   static const int maxRewardsPerTransaction = 5;
+  
+  /// Points rounding mode (floor = toward zero)
+  static const int pointsRoundingMode = 0; // 0 = floor
 
-  /// Points minimum requis pour échanger récompense
-  static const int minPointsForReward = 10;
-
-  /// Durée de validité des points (jours)
-  /// null = illimité
-  static const int? pointsExpirationDays = 365;
-
-  // ============================================
-  // VALIDATION RULES
-  // ============================================
-
-  /// Longueur minimum mot de passe
-  static const int minPasswordLength = 8;
-
-  /// Longueur maximum mot de passe
-  static const int maxPasswordLength = 128;
-
-  /// Longueur code QR unique
-  static const int qrCodeLength = 8;
-
-  /// Pattern email valide (regex)
-  static const String emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-
-  /// Pattern téléphone (Maroc)
-  static const String phonePattern = r'^(\+212|0)([ \-_/]*)(\d[ \-_/]*){9}$';
-
-  // ============================================
-  // CACHE & PERFORMANCE
-  // ============================================
-
-  /// Durée de vie cache par défaut
+  // ========== CACHE SETTINGS ==========
+  /// Cache expiration duration
   static const Duration cacheExpiration = Duration(minutes: 15);
-
-  /// Taille maximum du cache (nombre d'entrées)
+  
+  /// Maximum cache size (number of entries)
   static const int maxCacheSize = 100;
+  
+  /// Subscription check interval
+  static const Duration subscriptionCheckInterval = Duration(hours: 1);
 
-  /// Timeout pour requêtes réseau
-  static const Duration networkTimeout = Duration(seconds: 30);
+  // ========== API TIMEOUTS ==========
+  /// API connection timeout
+  static const Duration apiTimeout = Duration(seconds: 30);
+  
+  /// API receive timeout
+  static const Duration apiReceiveTimeout = Duration(seconds: 60);
 
-  /// Timeout pour requêtes longues (upload)
-  static const Duration longNetworkTimeout = Duration(minutes: 2);
-
-  /// Nombre de retry en cas d'échec réseau
-  static const int maxNetworkRetries = 3;
-
-  /// Délai entre retries (exponential backoff)
-  static const Duration retryDelay = Duration(seconds: 2);
-
-  // ============================================
-  // UI CONFIGURATION
-  // ============================================
-
-  /// Durée animation par défaut
+  // ========== UI SETTINGS ==========
+  /// Default animation duration
   static const Duration animationDuration = Duration(milliseconds: 300);
-
-  /// Durée animation rapide
-  static const Duration fastAnimationDuration = Duration(milliseconds: 150);
-
-  /// Durée animation lente
-  static const Duration slowAnimationDuration = Duration(milliseconds: 500);
-
-  /// Padding par défaut
+  
+  /// Fast animation duration
+  static const Duration animationDurationFast = Duration(milliseconds: 150);
+  
+  /// Slow animation duration
+  static const Duration animationDurationSlow = Duration(milliseconds: 500);
+  
+  /// Default padding value
   static const double defaultPadding = 16.0;
-
-  /// Padding petit
-  static const double smallPadding = 8.0;
-
-  /// Padding large
-  static const double largePadding = 24.0;
-
-  /// Border radius par défaut
+  
+  /// Small padding value
+  static const double paddingSmall = 8.0;
+  
+  /// Large padding value
+  static const double paddingLarge = 24.0;
+  
+  /// Default border radius
   static const double defaultRadius = 8.0;
+  
+  /// Large border radius
+  static const double radiusLarge = 16.0;
+  
+  /// Extra large border radius
+  static const double radiusXLarge = 24.0;
 
-  /// Border radius boutons
-  static const double buttonRadius = 12.0;
+  // ========== QR CODE SETTINGS ==========
+  /// QR code scan delay before processing
+  static const Duration qrScanDelay = Duration(milliseconds: 500);
+  
+  /// QR code prefix for client codes
+  static const String qrCodePrefix = 'MUKHLISS_';
 
-  /// Border radius cards
-  static const double cardRadius = 16.0;
+  // ========== SUPPORTED LOCALES ==========
+  /// Default locale
+  static const String defaultLocale = 'fr';
+  
+  /// Supported locale codes
+  static const List<String> supportedLocales = ['en', 'fr', 'ar'];
+}
 
-  /// Elevation cards
-  static const double cardElevation = 2.0;
-
-  /// Taille icône par défaut
-  static const double defaultIconSize = 24.0;
-
-  /// Taille icône petite
-  static const double smallIconSize = 16.0;
-
-  /// Taille icône grande
-  static const double largeIconSize = 32.0;
-
-  // ============================================
-  // TEXT SIZES
-  // ============================================
-
-  /// Taille texte titre
-  static const double titleTextSize = 24.0;
-
-  /// Taille texte sous-titre
-  static const double subtitleTextSize = 18.0;
-
-  /// Taille texte body
-  static const double bodyTextSize = 16.0;
-
-  /// Taille texte caption
-  static const double captionTextSize = 14.0;
-
-  /// Taille texte petit
-  static const double smallTextSize = 12.0;
-
-  // ============================================
-  // SNACKBAR & DIALOGS
-  // ============================================
-
-  /// Durée affichage snackbar succès
-  static const Duration snackbarSuccessDuration = Duration(seconds: 2);
-
-  /// Durée affichage snackbar erreur
-  static const Duration snackbarErrorDuration = Duration(seconds: 4);
-
-  /// Durée affichage snackbar info
-  static const Duration snackbarInfoDuration = Duration(seconds: 3);
-
-  // ============================================
-  // PAGINATION
-  // ============================================
-
-  /// Nombre d'items par page (liste transactions)
-  static const int itemsPerPage = 20;
-
-  /// Nombre d'items dans recherche
-  static const int searchItemsLimit = 50;
-
-  // ============================================
-  // IMAGE & MEDIA
-  // ============================================
-
-  /// Qualité compression images (0-100)
-  static const int imageQuality = 85;
-
-  /// Taille maximum image upload (bytes)
-  /// 5 MB
-  static const int maxImageSize = 5 * 1024 * 1024;
-
-  /// Format image par défaut
-  static const String imageFormat = 'jpg';
-
-  // ============================================
-  // DATES & TIMES
-  // ============================================
-
-  /// Format date par défaut (dd/MM/yyyy)
-  static const String dateFormat = 'dd/MM/yyyy';
-
-  /// Format date avec heure (dd/MM/yyyy HH:mm)
-  static const String dateTimeFormat = 'dd/MM/yyyy HH:mm';
-
-  /// Format heure (HH:mm)
-  static const String timeFormat = 'HH:mm';
-
-  // ============================================
-  // STORAGE KEYS (SharedPreferences)
-  // ============================================
-
-  /// Clé pour token auth
-  static const String authTokenKey = 'auth_token';
-
-  /// Clé pour user ID
-  static const String userIdKey = 'user_id';
-
-  /// Clé pour langue sélectionnée
-  static const String languageKey = 'selected_language';
-
-  /// Clé pour thème (dark/light)
-  static const String themeKey = 'theme_mode';
-
-  /// Clé pour première ouverture app
-  static const String firstLaunchKey = 'first_launch';
-
-  // ============================================
-  // FEATURE FLAGS
-  // ============================================
-
-  /// Activer notifications push
-  static const bool enablePushNotifications = false;
-
-  /// Activer mode offline
-  static const bool enableOfflineMode = false;
-
-  /// Activer analytics
-  static const bool enableAnalytics = true;
-
-  /// Activer crash reporting (Sentry)
-  static const bool enableCrashReporting = true;
-
-  /// Mode debug (logs verbeux)
-  static bool get isDebugMode {
-    return !const bool.fromEnvironment('dart.vm.product');
-  }
+/// Sentry configuration constants
+class SentryConfig {
+  SentryConfig._();
+  
+  /// Sentry DSN
+  static const String dsn = 'https://c2330142af6d1c0fcf8f2206cc345eb8@o4510465596325888.ingest.de.sentry.io/4510465604976720';
+  
+  /// Traces sample rate (1.0 = 100%)
+  static const double tracesSampleRate = 1.0;
+  
+  /// Current environment
+  static const String environment = 'production';
+  
+  /// Enable debug mode
+  static const bool debugMode = false;
 }

@@ -5,11 +5,11 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
+import 'package:mukhlissmagasin/core/utils/app_logger.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
-import 'package:mukhlissmagasin/features/cashier/presentation/screens/success_screen.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
@@ -109,26 +109,28 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeOut));
   }
 
-// Dans scan_client_screen.dart
-Future<void> _playSuccessSound() async {
-  try {
-    print('🔊 Tentative de lecture du son...');
-    
-    // ✅ JOUER DIRECTEMENT SANS ATTENDRE (fire and forget)
-    unawaited(_audioPlayer.play(
-      AssetSource('audio/success.mp3'),
-      volume: 1.0,
-      mode: PlayerMode.lowLatency,
-    ));
-    
-    print('✅ Son lancé en arrière-plan');
-    
-  } catch (e) {
-    print('❌ Erreur lecture audio: $e');
+  /// Play success sound when scan is successful
+  Future<void> _playSuccessSound() async {
+    try {
+      AppLogger.debug('Playing success sound', tag: 'Scanner');
+      
+      // Play sound without waiting (fire and forget)
+      unawaited(_audioPlayer.play(
+        AssetSource('audio/success.mp3'),
+        volume: 1.0,
+        mode: PlayerMode.lowLatency,
+      ));
+      
+      AppLogger.debug('Sound started in background', tag: 'Scanner');
+    } catch (e, stackTrace) {
+      AppLogger.warning(
+        'Error playing audio',
+        tag: 'Scanner',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +173,6 @@ Future<void> _playSuccessSound() async {
   // }
 
   Widget _buildMainContent() {
-    final L10n = AppLocalizations.of(context);
     return Column(
       children: [
         Expanded(
@@ -561,7 +562,7 @@ void _showSuccessToast({required String message, required double solde}) {
 
 
   Future<void> _handleQRScan(Barcode scanData) async {
-    final L10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
 
     // Arrêter immédiatement le scanner si un code est détecté
     if (!_canProcessScan(scanData)) return;
@@ -572,9 +573,9 @@ void _showSuccessToast({required String message, required double solde}) {
     try {
       await _processQRCode(scanData.code!);
     } on FormatException catch (e) {
-      _handleScanError(L10n.qrcodeinvalide, e);
+      _handleScanError(l10n.qrcodeinvalide, e);
     } catch (e) {
-      _handleScanError(L10n.erreurtraitement + ': ${e.toString()}', e);
+      _handleScanError('${l10n.erreurtraitement}: ${e.toString()}', e);
     }
   }
 
@@ -583,7 +584,6 @@ void _showSuccessToast({required String message, required double solde}) {
   }
 
 Future<void> _processQRCode(String qrCode) async {
-  final L10n = AppLocalizations.of(context)!;
   final clientData = _parseQRCode(qrCode);
   final currentUser = _getCurrentUser();
   _validateData(clientData, currentUser);

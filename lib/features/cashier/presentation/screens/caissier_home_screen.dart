@@ -3,18 +3,16 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sentry_flutter/sentry_flutter.dart'; // ✅ Import Sentry
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
+import 'package:mukhlissmagasin/core/utils/app_logger.dart';
 import 'package:mukhlissmagasin/core/widgets/app_drawer.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
-import 'package:flutter/services.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/recompenses_disponibles_screen.dart';
-
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
-
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/widgets/rewards_celebration_sheet.dart';
@@ -65,15 +63,15 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
       await _audioPlayer.setVolume(1.0);
       await _audioPlayer.setPlayerMode(PlayerMode.lowLatency);
       await _audioPlayer.setSource(AssetSource('audio/success.mp3'));
-      print('✅ Audio player Home initialisé');
+      AppLogger.debug('✅ Audio player Home initialisé', tag: 'AudioPlayer');
     } catch (e) {
-      print('❌ Erreur init audio Home: $e');
+      AppLogger.error('❌ Erreur init audio Home: $e', tag: 'AudioPlayer', error: e);
     }
   }
 
 Future<void> _playSuccessSound() async {
   try {
-    print('🔊 Home: Lecture du son...');
+    AppLogger.debug('🔊 Home: Lecture du son...', tag: 'AudioPlayer');
     
     // ✅ JOUER DIRECTEMENT SANS STOP/SEEK
     unawaited(_audioPlayer.play(
@@ -82,9 +80,9 @@ Future<void> _playSuccessSound() async {
       mode: PlayerMode.lowLatency,
     ));
     
-    print('✅ Home: Son lancé en arrière-plan');
+    AppLogger.debug('✅ Home: Son lancé en arrière-plan', tag: 'AudioPlayer');
   } catch (e) {
-    print('❌ Home: Erreur son: $e');
+    AppLogger.error('❌ Home: Erreur son: $e', tag: 'AudioPlayer', error: e);
   }
 }
 
@@ -114,25 +112,12 @@ Future<void> _playSuccessSound() async {
     super.dispose();
   }
 
-  void _startScanning(ScanMode mode) {
-    setState(() {
-      _isScanning = true;
-      _currentScanMode = mode;
-      _showCodeInputInLeft = false; // S'assurer que le champ code est caché
-    });
-  }
 
-  void _stopScanning() {
-    setState(() {
-      _isScanning = false;
-      _showManualInput = false;
-    });
-  }
 
   // caissier_home_screen.dart
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    AppLocalizations.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
 
@@ -251,7 +236,7 @@ Widget _buildEmbeddedScanner() {
         ? ScanClientScreen.balance(
             double.tryParse(_montantController.text.replaceAll(',', '.')) ?? 0.0,
             onScanSuccess: (data) async { // ✅ Remettre async pour await
-              print('🎉 Scan balance réussi: $data');
+              AppLogger.info('🎉 Scan balance réussi: $data', tag: 'Scanner');
               
               // ✅ JOUER LE SON SANS ATTENDRE
               _playSuccessSound();
@@ -274,7 +259,7 @@ Widget _buildEmbeddedScanner() {
           )
         : ScanClientScreen.rewards(
             onScanSuccess: (data) { // ✅ SUPPRIMER async
-              print('🎉 Scan récompense réussi: $data');
+              AppLogger.info('🎉 Scan récompense réussi: $data', tag: 'Scanner');
 
               // ✅ JOUER LE SON SANS ATTENDRE
               _playSuccessSound(); // SUPPRIMER await
@@ -394,7 +379,7 @@ Future<void> _handleManualCodeSubmit(String code, ScanMode mode) async {
     }
   } else {
     // MODE REWARDS
-    print('=========================appel rewards');
+    AppLogger.debug('=========================appel rewards', tag: 'Rewards');
     try {
       final client = await context
           .read<CaissierCubit>()
@@ -430,76 +415,6 @@ Future<void> _handleManualCodeSubmit(String code, ScanMode mode) async {
     }
   }
 }
-  void _showSuccessToast({
-    required int pointsGagnes,
-    required double soldeRestant,
-  }) {
-    final l10n = AppLocalizations.of(context);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.stars_rounded,
-                  color: Colors.white,
-                  size: 32,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${l10n.felicitation} !',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '$pointsGagnes ${l10n.pts} ${"gagnés"}',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${l10n.solderestant ?? "Solde"}: ${soldeRestant.toStringAsFixed(2)} ${l10n.dh ?? "DH"}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.white70,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: const Color(0xFF10B981),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        margin: const EdgeInsets.all(20),
-        duration: const Duration(seconds: 4),
-        elevation: 12,
-      ),
-    );
-  }
 
   /// 🎉 Affiche le bottom sheet de célébration avec les récompenses disponibles
   Future<void> _showRewardsCelebration({
@@ -550,7 +465,7 @@ Future<void> _handleManualCodeSubmit(String code, ScanMode mode) async {
         ),
       );
     } catch (e) {
-      print('Erreur lors de la récupération des récompenses: $e');
+      AppLogger.error('Erreur lors de la récupération des récompenses: $e', tag: 'Rewards', error: e);
       // En cas d'erreur, afficher quand même le bottom sheet sans récompenses
       if (!mounted) return;
       
@@ -603,7 +518,7 @@ Future<void> _handleManualCodeSubmit(String code, ScanMode mode) async {
 
   // ========== CARTE PRINCIPALE UNIQUE ==========
   Widget _buildMainCard(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    AppLocalizations.of(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -626,7 +541,7 @@ Future<void> _handleManualCodeSubmit(String code, ScanMode mode) async {
           }
           // Optionnel: gérer le succès de l'ajout de solde
           if (state is SoldeCodeUniqueAjoute) {
-            print('✅ Solde ajouté avec succès via code unique');
+            AppLogger.info('✅ Solde ajouté avec succès via code unique', tag: 'Balance');
           }
         },
         // ✅ Ne pas reconstruire si on a déjà le magasin
@@ -918,7 +833,7 @@ Expanded(
       clientPoints: _clientPoints,
       onRewardsCompleted: _handleRewardsCompleted,
       onRewardClaimed: (pointsRestants) {
-        print('🎉 Récompense réclamée ! Points restants: $pointsRestants');
+        AppLogger.info('🎉 Récompense réclamée ! Points restants: $pointsRestants', tag: 'Rewards');
         
         // ✅ UTILISER LES POINTS RESTANTS DIRECTEMENT POUR LE TOAST
         if (mounted) {
@@ -970,7 +885,7 @@ void _handleRewardsCompleted() async {
     _clientPoints = 0;
   });
   
-  print('=========================fermeture rewards,$savedClientId,$savedMagasinId');
+  AppLogger.debug('=========================fermeture rewards,$savedClientId,$savedMagasinId', tag: 'Rewards');
 
   // ✅ AJOUTER UN DÉLAI POUR LAISSER LE TEMPS AUX DÉDUCTIONS DE POINTS D'ÊTRE TRAITÉES
   // Surtout important quand plusieurs récompenses sont échangées
@@ -984,7 +899,7 @@ void _handleRewardsCompleted() async {
         magasinId: savedMagasinId,
       );
       
-      print('=========================totalPointsClient: $totalPointsClient');
+      AppLogger.debug('=========================totalPointsClient: $totalPointsClient', tag: 'Points');
 
       // ✅ ENSUITE, après un court délai pour la transition, afficher le toast AVEC LE TOTAL
       Future.delayed(const Duration(milliseconds: 300), () {
@@ -993,7 +908,7 @@ void _handleRewardsCompleted() async {
         }
       });
     } catch (e) {
-      print('=========================Erreur récupération points: $e');
+      AppLogger.error('=========================Erreur récupération points: $e', tag: 'Points', error: e);
       // En cas d'erreur, afficher le toast avec 0 points
       Future.delayed(const Duration(milliseconds: 300), () {
         if (mounted) {
@@ -1206,64 +1121,6 @@ void _showRewardsSuccessToast(int nouveauTotalPoints) {
   );
 }
 
-Widget _buildUniversalScanButton(BuildContext context, AppLocalizations l10n) {
-  final bool isMontantRempli = _montantController.text.trim().isNotEmpty;
-  final double? montant = double.tryParse(_montantController.text.replaceAll(',', '.'));
-  final bool montantValide = montant != null && montant > 0;
-
-  return Container(
-    height: 50,
-    width: double.infinity,
-    decoration: BoxDecoration(
-      gradient: isMontantRempli && montantValide
-          ? const LinearGradient(colors: [Color(0xFF10B981), Color(0xFF059669)]) // Vert pour ajouter points
-          : const LinearGradient(colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)]), // Violet pour récompenses
-      borderRadius: BorderRadius.circular(14),
-      boxShadow: [
-        BoxShadow(
-          color: (isMontantRempli && montantValide
-                  ? const Color(0xFF10B981)
-                  : const Color(0xFF8B5CF6))
-              .withOpacity(0.3),
-          blurRadius: 12,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: () => _handleUniversalScan(context),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.qr_code_scanner_rounded,
-              color: Colors.white,
-              size: 24,
-            ),
-            const SizedBox(width: 12),
-            Flexible(
-              child: Text(
-                isMontantRempli && montantValide
-                    ? '${'scannerpour'} ${_montantController.text} DH' // Scanner pour X DH
-                    : l10n.scannerrecompenceqr, // Scanner récompense QR
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
 void _handleUniversalScan(BuildContext context) {
   final bool isMontantRempli = _montantController.text.trim().isNotEmpty;
   final double? montant = double.tryParse(_montantController.text.replaceAll(',', '.'));

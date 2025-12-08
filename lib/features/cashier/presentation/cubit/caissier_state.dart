@@ -1,9 +1,5 @@
 // caissier_state.dart
-import 'package:flutter/material.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
-import 'package:mukhlissmagasin/features/cashier/presentation/screens/caissier_home_screen.dart';
-import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
-
 import 'package:mukhlissmagasin/features/offers/domain/entities/offer_entity.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';

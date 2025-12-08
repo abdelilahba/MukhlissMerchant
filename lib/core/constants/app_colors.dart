@@ -1,224 +1,159 @@
 import 'package:flutter/material.dart';
 
-/// Couleurs de l'application centralisées
-///
-/// Définit la palette de couleurs complète pour:
-/// - Consistance visuelle
-/// - Theming facile
-/// - Dark mode support
-/// - Accessibilité
+/// Application color constants.
+/// 
+/// Centralizes all color definitions for consistent theming.
+/// 
+/// Usage:
+/// ```dart
+/// Container(color: AppColors.primary)
+/// Text('Error', style: TextStyle(color: AppColors.error))
+/// ```
 class AppColors {
-  // Private constructor
-  AppColors._();
+  AppColors._(); // Private constructor
 
-  // ============================================
-  // BRAND COLORS (Couleurs Marque)
-  // ============================================
+  // ========== BRAND COLORS ==========
+  /// Primary brand color
+  static const Color primary = Color(0xFF6366F1); // Indigo
+  
+  /// Secondary brand color
+  static const Color secondary = Color(0xFF8B5CF6); // Violet
+  
+  /// Accent/highlight color
+  static const Color accent = Color(0xFF10B981); // Emerald
 
-  /// Couleur principale de la marque
-  static const Color primary = Color(0xFF2196F3); // Bleu
+  // ========== STATUS COLORS ==========
+  /// Success state color
+  static const Color success = Color(0xFF10B981); // Emerald
+  
+  /// Warning state color
+  static const Color warning = Color(0xFFF59E0B); // Amber
+  
+  /// Error/danger state color
+  static const Color error = Color(0xFFEF4444); // Red
+  
+  /// Info state color
+  static const Color info = Color(0xFF3B82F6); // Blue
 
-  /// Couleur principale variant (plus foncé)
-  static const Color primaryDark = Color(0xFF1976D2);
+  // ========== NEUTRAL COLORS ==========
+  /// Background color (light mode)
+  static const Color background = Color(0xFFF8FAFC); // Slate-50
+  
+  /// Surface color (cards, dialogs)
+  static const Color surface = Color(0xFFFFFFFF); // White
+  
+  /// Primary text color
+  static const Color textPrimary = Color(0xFF1E293B); // Slate-800
+  
+  /// Secondary text color
+  static const Color textSecondary = Color(0xFF64748B); // Slate-500
+  
+  /// Disabled text color
+  static const Color textDisabled = Color(0xFF94A3B8); // Slate-400
+  
+  /// Border color
+  static const Color border = Color(0xFFE2E8F0); // Slate-200
+  
+  /// Divider color
+  static const Color divider = Color(0xFFE2E8F0); // Slate-200
 
-  /// Couleur principale variant (plus clair)
-  static const Color primaryLight = Color(0xFF64B5F6);
+  // ========== DARK MODE COLORS ==========
+  /// Background color (dark mode)
+  static const Color backgroundDark = Color(0xFF0F172A); // Slate-900
+  
+  /// Surface color (dark mode)
+  static const Color surfaceDark = Color(0xFF1E293B); // Slate-800
+  
+  /// Primary text color (dark mode)
+  static const Color textPrimaryDark = Color(0xFFF8FAFC); // Slate-50
+  
+  /// Secondary text color (dark mode)
+  static const Color textSecondaryDark = Color(0xFF94A3B8); // Slate-400
 
-  /// Couleur secondaire (accent)
-  static const Color secondary = Color(0xFFFFC107); // Jaune/Or
-
-  /// Couleur secondaire variant
-  static const Color secondaryDark = Color(0xFFFFA000);
-
-  /// Couleur accent pour CTAs
-  static const Color accent = Color(0xFF4CAF50); // Vert
-
-  // ============================================
-  // STATUS COLORS (Couleurs États)
-  // ============================================
-
-  /// Couleur succès
-  static const Color success = Color(0xFF4CAF50); // Vert
-
-  /// Couleur warning/attention
-  static const Color warning = Color(0xFFFFC107); // Orange/Jaune
-
-  /// Couleur erreur
-  static const Color error = Color(0xFFF44336); // Rouge
-
-  /// Couleur information
-  static const Color info = Color(0xFF2196F3); // Bleu
-
-  // ============================================
-  // NEUTRAL COLORS (Couleurs Neutres)
-  // ============================================
-
-  /// Background principal (clair)
-  static const Color background = Color(0xFFF5F5F5);
-
-  /// Surface (cards, dialogs)
-  static const Color surface = Color(0xFFFFFFFF);
-
-  /// Texte principal
-  static const Color textPrimary = Color(0xFF212121);
-
-  /// Texte secondaire (moins important)
-  static const Color textSecondary = Color(0xFF757575);
-
-  /// Texte disabled
-  static const Color textDisabled = Color(0xFFBDBDBD);
-
-  /// Texte hint (placeholders)
-  static const Color textHint = Color(0xFF9E9E9E);
-
-  /// Dividers
-  static const Color divider = Color(0xFFE0E0E0);
-
-  /// Border des inputs
-  static const Color border = Color(0xFFBDBDBD);
-
-  // ============================================
-  // DARK THEME COLORS
-  // ============================================
-
-  /// Background dark theme
-  static const Color backgroundDark = Color(0xFF121212);
-
-  /// Surface dark theme
-  static const Color surfaceDark = Color(0xFF1E1E1E);
-
-  /// Texte principal dark
-  static const Color textPrimaryDark = Color(0xFFFFFFFF);
-
-  /// Texte secondaire dark
-  static const Color textSecondaryDark = Color(0xFFB3B3B3);
-
-  // ============================================
-  // GRADIENTS
-  // ============================================
-
-  /// Gradient primary (pour backgrounds)
+  // ========== GRADIENT COLORS ==========
+  /// Primary gradient
   static const LinearGradient primaryGradient = LinearGradient(
+    colors: [primary, secondary],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [primary,primaryDark],
   );
-
-  /// Gradient success
+  
+  /// Success gradient
   static const LinearGradient successGradient = LinearGradient(
+    colors: [Color(0xFF10B981), Color(0xFF059669)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF4CAF50), Color(0xFF388E3C)],
   );
 
-  /// Gradient accent
-  static const LinearGradient accentGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [accent, Color(0xFF388E3C)],
+  // ========== OPACITY HELPERS ==========
+  /// Get color with opacity (use instead of deprecated withOpacity)
+  static Color withAlpha(Color color, double opacity) {
+    return color.withValues(alpha: opacity);
+  }
+  
+  /// Primary with 10% opacity
+  static Color get primary10 => primary.withValues(alpha: 0.1);
+  
+  /// Primary with 20% opacity
+  static Color get primary20 => primary.withValues(alpha: 0.2);
+  
+  /// Error with 10% opacity
+  static Color get error10 => error.withValues(alpha: 0.1);
+  
+  /// Success with 10% opacity
+  static Color get success10 => success.withValues(alpha: 0.1);
+}
+
+/// Commonly used text styles
+class AppTextStyles {
+  AppTextStyles._();
+
+  /// Heading 1
+  static const TextStyle h1 = TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+    color: AppColors.textPrimary,
   );
 
-  // ============================================
-  // SEMANTIC COLORS (Par Usage)
-  // ============================================
+  /// Heading 2
+  static const TextStyle h2 = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: AppColors.textPrimary,
+  );
 
-  /// Couleur bouton primary
-  static const Color buttonPrimary = primary;
+  /// Heading 3
+  static const TextStyle h3 = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+  );
 
-  /// Couleur bouton secondary
-  static const Color buttonSecondary = secondary;
+  /// Body text
+  static const TextStyle body = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+    color: AppColors.textPrimary,
+  );
 
-  /// Couleur bouton disabled
-  static const Color buttonDisabled = Color(0xFFE0E0E0);
+  /// Small text
+  static const TextStyle small = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+    color: AppColors.textSecondary,
+  );
 
-  /// Couleur texte bouton
-  static const Color buttonText = Colors.white;
+  /// Caption text
+  static const TextStyle caption = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.normal,
+    color: AppColors.textSecondary,
+  );
 
-  /// Couleur lien/link
-  static const Color link = primary;
-
-  /// Couleur icônes
-  static const Color icon = textSecondary;
-
-  /// Couleur icônes actives
-  static const Color iconActive = primary;
-
-  // ============================================
-  // LOYALTY SPECIFIC COLORS
-  // ============================================
-
-  /// Couleur points de fidélité
-  static const Color loyaltyPoints = Color(0xFFFFC107); // Or
-
-  /// Couleur récompenses
-  static const Color reward = Color(0xFFFF6F00); // Orange foncé
-
-  /// Couleur solde
-  static const Color balance = Color(0xFF4CAF50); // Vert
-
-  /// Couleur badge premium
-  static const Color premium = Color(0xFFFFD700); // Or brillant
-
-  // ============================================
-  // TRANSACTION COLORS
-  // ============================================
-
-  /// Couleur transaction crédit (+)
-  static const Color transactionCredit = success;
-
-  /// Couleur transaction débit (-)
-  static const Color transactionDebit = error;
-
-  /// Couleur transaction en attente
-  static const Color transactionPending = warning;
-
-  // ============================================
-  // CHART & DATA VISUALIZATION
-  // ============================================
-
-  static const List<Color> chartColors = [
-    Color(0xFF2196F3), // Bleu
-    Color(0xFFFFC107), // Jaune
-    Color(0xFF4CAF50), // Vert
-    Color(0xFFF44336), // Rouge
-    Color(0xFF9C27B0), // Violet
-    Color(0xFFFF9800), // Orange
-    Color(0xFF00BCD4), // Cyan
-    Color(0xFFCDDC39), // Lime
-  ];
-
-  // ============================================
-  // SHADOWING & TRANSPARENCY
-  // ============================================
-
-  /// Ombre légère
-  static const Color shadowLight = Color(0x0D000000);
-
-  /// Ombre medium
-  static const Color shadowMedium = Color(0x1A000000);
-
-  /// Ombre forte
-  static const Color shadowStrong = Color(0x33000000);
-
-  /// Overlay (pour dialogs)
-  static const Color overlay = Color(0x80000000);
-
-  // ============================================
-  // HELPER METHODS
-  // ============================================
-
-  /// Obtenir couleur avec opacité
-  static Color withOpacity(Color color, double opacity) {
-    return color.withOpacity(opacity);
-  }
-
-  /// Obtenir couleur disabled d'une couleur
-  static Color disabled(Color color) {
-    return color.withOpacity(0.38);
-  }
-
-  /// Obtenir couleur hover d'une couleur
-  static Color hover(Color color) {
-    return color.withOpacity(0.08);
-  }
+  /// Button text
+  static const TextStyle button = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+  );
 }
