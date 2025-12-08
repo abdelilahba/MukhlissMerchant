@@ -1,6 +1,6 @@
 // caissier_cubit.dart
 import 'package:bloc/bloc.dart';
-import 'package:mukhlissmagasin/features/cashier/domain/entities/Client_entity.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/entities/client_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/ajouter_solde.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/ajouter_solde_clientcode.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/usecases/charger_recompenses_usecase.dart';

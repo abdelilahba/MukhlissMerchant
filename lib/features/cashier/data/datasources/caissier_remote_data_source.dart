@@ -1,5 +1,5 @@
 import 'package:mukhlissmagasin/core/services/supabase_service.dart';
-import 'package:mukhlissmagasin/features/cashier/domain/entities/Client_entity.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/entities/client_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
 
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';

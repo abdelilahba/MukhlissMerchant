@@ -23,7 +23,7 @@
 /// - Problème réseau
 library;
 
-import 'package:mukhlissmagasin/features/cashier/domain/entities/Client_entity.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/entities/client_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_repository.dart';
 
 /// Use case pour récupérer un client par code unique.

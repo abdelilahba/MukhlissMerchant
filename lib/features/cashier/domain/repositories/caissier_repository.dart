@@ -1,4 +1,4 @@
-import 'package:mukhlissmagasin/features/cashier/domain/entities/Client_entity.dart';
+import 'package:mukhlissmagasin/features/cashier/domain/entities/client_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart' show MagasinModel;
 
