@@ -651,7 +651,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
   Widget _buildRightSection() {
     // ⚠️ Ordre de priorité corrigé :
     // 1. Scanner en cours (priorité maximale quand on clique sur scan)
-    // 2. Récompenses
+    // 2. Récompenses (si client sélectionné)
     // 3. Félicitation
     // 4. Logo par défaut
 
@@ -659,7 +659,9 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
       return _buildScannerSection();
     }
 
-    if (_selectedClientId != null && _selectedMagasinId != null) {
+    // Afficher rewards si flag activé OU si client sélectionné
+    if (_showRewardsInRight ||
+        (_selectedClientId != null && _selectedMagasinId != null)) {
       return _buildRewardsContainer();
     }
 
