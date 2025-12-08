@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
-
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
+import 'package:mukhlissmagasin/features/cashier/presentation/widgets/widgets.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
@@ -546,182 +546,31 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     );
   }
 
+  /// Construit l'écran de chargement.
+  ///
+  /// Utilise le widget refactorisé [RewardSelectionLoadingState].
   Widget _buildLoadingScreen() {
-    final L10n = AppLocalizations.of(context);
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
-                strokeWidth: 3,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              L10n.chargementdesrecompences,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[700],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return const RewardSelectionLoadingState();
   }
 
+  /// Construit l'écran d'erreur.
+  ///
+  /// Utilise le widget refactorisé [RewardSelectionErrorState].
   Widget _buildErrorScreen(String message) {
-    final L10n = AppLocalizations.of(context);
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
-                    blurRadius: 24,
-                    offset: const Offset(0, 12),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF87171).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    child: const Icon(
-                      Icons.error_outline_rounded,
-                      size: 40,
-                      color: Color(0xFFF87171),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    L10n.oups,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    message,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: () => _cubit.loadClientRewards(
-                      clientId: widget.clientId,
-                      magasinId: widget.magasinId,
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6366F1),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 16,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      L10n.ressayer,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+    return RewardSelectionErrorState(
+      message: message,
+      onRetry: () => _cubit.loadClientRewards(
+        clientId: widget.clientId,
+        magasinId: widget.magasinId,
       ),
     );
   }
 
+  /// Construit l'état vide.
+  ///
+  /// Utilise le widget refactorisé [RewardSelectionEmptyState].
   Widget _buildEmptyState() {
-    final L10n = AppLocalizations.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF1F5F9),
-                borderRadius: BorderRadius.circular(60),
-              ),
-              child: Icon(
-                Icons.card_giftcard_rounded,
-                size: 60,
-                color: Colors.grey[400],
-              ),
-            ),
-            const SizedBox(height: 32),
-            Text(
-              L10n.aucunerecompence,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[800],
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              L10n.revenez,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-                height: 1.5,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return const RewardSelectionEmptyState();
   }
 
   Widget _buildRewardsList(List<Reward> rewards, int clientPoints) {
