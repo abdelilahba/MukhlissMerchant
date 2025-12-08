@@ -1,3 +1,10 @@
+// Load Flutter properties
+val flutterPropertiesFile = rootProject.file("flutter.properties")
+val flutterProperties = java.util.Properties()
+if (flutterPropertiesFile.exists()) {
+    flutterProperties.load(java.io.FileInputStream(flutterPropertiesFile))
+}
+
 allprojects {
     repositories {
         google()
