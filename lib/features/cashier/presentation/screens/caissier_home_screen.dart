@@ -713,70 +713,11 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     }
   }
 
+  /// Affiche un toast de succès pour les récompenses.
+  ///
+  /// Utilise la classe utilitaire [CaissierToasts].
   void _showRewardsSuccessToast(int nouveauTotalPoints) {
-    final l10n = AppLocalizations.of(context);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.card_giftcard_rounded,
-                  color: Colors.white,
-                  size: 32,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      l10n.felicitation,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      l10n.recompenceechange,
-                      style: const TextStyle(fontSize: 14, color: Colors.white),
-                    ),
-                    const SizedBox(height: 4),
-                    // ✅ Afficher le total des points
-                    Text(
-                      '${"Total points"}: $nouveauTotalPoints ${l10n.pts}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: const Color(0xFF10B981),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        margin: const EdgeInsets.all(20),
-        duration: const Duration(seconds: 4),
-        elevation: 12,
-      ),
-    );
+    CaissierToasts.showRewardsSuccess(context, nouveauTotalPoints);
   }
 
   /// Construit l'état d'erreur de connexion.
@@ -908,39 +849,11 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     );
   }
 
+  /// Construit la section logo de l'application.
+  ///
+  /// Utilise le widget refactorisé [AppLogoSection].
   Widget _buildAppLogoSection() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.asset(
-          'assets/images/aps (8).png',
-          fit: BoxFit.fill,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: const Color(0xFFF9FAFB),
-              child: const Center(
-                child: Icon(
-                  Icons.image_not_supported_rounded,
-                  size: 64,
-                  color: Color(0xFF9CA3AF),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
+    return const AppLogoSection();
   }
 
   /// Construit l'état de chargement.

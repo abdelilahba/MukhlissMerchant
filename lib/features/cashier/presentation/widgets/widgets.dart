@@ -22,3 +22,7 @@ export 'rewards_container_widget.dart';
 // Reward Selection Widgets
 export 'reward_selection_card.dart';
 export 'reward_selection_states.dart';
+
+// UI Widgets
+export 'caissier_ui_widgets.dart';
+export 'caissier_toasts.dart';
