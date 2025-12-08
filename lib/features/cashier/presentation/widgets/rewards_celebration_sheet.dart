@@ -21,7 +21,8 @@ class RewardsCelebrationSheet extends StatefulWidget {
   });
 
   @override
-  State<RewardsCelebrationSheet> createState() => _RewardsCelebrationSheetState();
+  State<RewardsCelebrationSheet> createState() =>
+      _RewardsCelebrationSheetState();
 }
 
 class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
@@ -29,25 +30,25 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<Offset> _slideAnimation;
-  
+
   Timer? _autoCloseTimer;
   int _remainingSeconds = 10;
 
   @override
   void initState() {
     super.initState();
-    
+
     // Animations
     _controller = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _scaleAnimation = CurvedAnimation(
       parent: _controller,
       curve: Curves.elasticOut,
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
@@ -55,9 +56,9 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
       parent: _controller,
       curve: Curves.easeOutCubic,
     ));
-    
+
     _controller.forward();
-    
+
     // Auto-fermeture uniquement si des récompenses sont disponibles
     if (widget.availableRewards.isNotEmpty) {
       _startAutoCloseTimer();
@@ -103,7 +104,7 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    
+
     return SlideTransition(
       position: _slideAnimation,
       child: ScaleTransition(
@@ -119,7 +120,7 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -131,16 +132,16 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
               children: [
                 // Célébration des points
                 _buildPointsCelebration(l10n),
-                
+
                 // Récompenses disponibles ou message d'encouragement
                 widget.availableRewards.isNotEmpty
                     ? _buildAvailableRewards(l10n)
                     : _buildEncouragementMessage(l10n),
-                
+
                 // Boutons d'action
                 if (widget.availableRewards.isNotEmpty)
                   _buildActionButtons(l10n),
-                
+
                 // Compteur auto-fermeture - Discret en bas
                 if (_remainingSeconds > 0)
                   Padding(
@@ -182,7 +183,8 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
       decoration: BoxDecoration(
         color: const Color(0xFFECFDF5),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF10B981).withOpacity(0.3)),
+        border:
+            Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -249,7 +251,8 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
       ),
       child: Row(
         children: [
-          const Icon(Icons.card_giftcard_rounded, color: Color(0xFFD97706), size: 24),
+          const Icon(Icons.card_giftcard_rounded,
+              color: Color(0xFFD97706), size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -267,7 +270,7 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
                   widget.availableRewards.first.name,
                   style: TextStyle(
                     fontSize: 12,
-                    color: const Color(0xFFB45309).withOpacity(0.8),
+                    color: const Color(0xFFB45309).withValues(alpha: 0.8),
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -324,9 +327,9 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
               child: const Text('Plus tard', style: TextStyle(fontSize: 14)),
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // Bouton "Voir" compact
           Expanded(
             flex: 2,
