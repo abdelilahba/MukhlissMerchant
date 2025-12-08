@@ -7,8 +7,8 @@ plugins {
 
 android {
     namespace = "com.example.mukhlissmagasin"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 34  // Android 14
+    ndkVersion = "25.1.8937393"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -24,10 +24,10 @@ android {
         applicationId = "com.example.mukhlissmagasin"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        minSdk = 21  // Android 5.0
+        targetSdk = 34  // Android 14
+        versionCode = 1
+        versionName = "0.9.0"
     }
 
     buildTypes {
