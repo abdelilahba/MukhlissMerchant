@@ -1030,198 +1030,21 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     });
   }
 
+  /// Construit la section de saisie manuelle du code.
+  ///
+  /// Utilise le widget refactorisé [ManualCodeInputSection].
   Widget _buildManualCodeInputSection() {
-    final TextEditingController _localCodeController = TextEditingController();
-    final l10n = AppLocalizations.of(context);
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (!_showManualInput) ...[
-            // Bouton pour afficher la saisie manuelle
-            Container(
-              width: double.infinity,
-              height: 50,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE5E7EB)),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: _toggleInputMode,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.keyboard_alt_rounded,
-                        color: Color(0xFF6B7280),
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        l10n.codemanuelle,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.scannefonctionnepas,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[500],
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
-          if (_showManualInput) ...[
-            // Titre avec bouton retour
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_rounded,
-                    size: 20,
-                    color: Color(0xFF6B7280),
-                  ),
-                  onPressed: () {
-                    // ✅ RÉINITIALISATION COMPLÈTE lors du retour
-                    setState(() {
-                      _showManualInput = false;
-                      _localCodeController.clear();
-                      _codeController.clear();
-                    });
-                  },
-                ),
-                Text(
-                  l10n.saisimanuelle,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[700],
-                  ),
-                ),
-              ],
-            ),
-
-            // Champ de saisie du code
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFF9FAFB),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE5E7EB)),
-              ),
-              child: TextField(
-                controller: _localCodeController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF1F2937),
-                ),
-                decoration: InputDecoration(
-                  hintText: l10n.entrezcodeunique,
-                  hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.qr_code_2_rounded,
-                    color: Color(0xFF6B7280),
-                    size: 20,
-                  ),
-                  suffixIcon: IconButton(
-                    icon: const Icon(
-                      Icons.check_circle_rounded,
-                      color: Color(0xFF10B981),
-                      size: 20,
-                    ),
-                    onPressed: () => _handleManualCodeSubmit(
-                      _localCodeController.text,
-                      _currentScanMode,
-                    ),
-                  ),
-                ),
-                onSubmitted: (value) {
-                  _handleManualCodeSubmit(value, _currentScanMode);
-                },
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // Bouton de validation
-            Container(
-              width: double.infinity,
-              height: 50,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF6366F1).withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () => _handleManualCodeSubmit(
-                    _localCodeController.text,
-                    _currentScanMode,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.verified_user_rounded,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        l10n.validercode,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
+    return ManualCodeInputSection(
+      showInput: _showManualInput,
+      scanMode: _currentScanMode,
+      onToggle: _toggleInputMode,
+      onSubmit: _handleManualCodeSubmit,
+      onBack: () {
+        setState(() {
+          _showManualInput = false;
+          _codeController.clear();
+        });
+      },
     );
   }
 
