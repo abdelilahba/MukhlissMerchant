@@ -60,6 +60,7 @@ dependencies:
   collection: ^1.18.0 # ✅ Pour LruMap (limite taille cache)
   sentry_flutter: ^9.8.0
   package_info_plus: ^9.0.0
+  logger: ^2.4.0 # ✅ Pour AppLogger (remplace print)
 
 dev_dependencies:
   flutter_test:

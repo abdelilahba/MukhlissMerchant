@@ -1,28 +1,265 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
+# Configuration analyse statique Dart/Flutter
+# Améliore qualité code et détecte problèmes tôt
 
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
-linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
-  rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+analyzer:
+  # Mode strict
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+  # Erreurs qui empêchent compilation
+  errors:
+    # Print statements (utiliser AppLogger à la place)
+    avoid_print: error
+
+    # Imports inutilisés
+    unused_import: error
+    unused_element: error
+    unused_local_variable: error
+
+    # Code mort
+    dead_code: error
+
+    # Null safety
+    invalid_null_aware_operator: error
+
+    # BuildContext async
+    use_build_context_synchronously: warning
+
+    # Préférences (warnings)
+    prefer_const_constructors: warning
+    prefer_const_literals_to_create_immutables: warning
+    prefer_final_fields: warning
+    prefer_final_locals: warning
+
+  # Exclure fichiers générés
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.mocks.dart"
+    - "**/generated/**"
+    - "build/**"
+    - "ios/**"
+    - "android/**"
+    - "windows/**"
+    - "linux/**"
+    - "macos/**"
+
+linter:
+  rules:
+    # ==========================================
+    # CODE STYLE
+    # ==========================================
+
+    # Toujours déclarer types de retour
+    always_declare_return_types: true
+
+    # Paramètres required en premier
+    always_put_required_parameters_first: true
+
+    # Utiliser package imports (pas relative)
+    always_use_package_imports: true
+
+    # Éviter print (utiliser logger)
+    avoid_print: true
+
+    # Éviter containers inutiles
+    avoid_unnecessary_containers: true
+
+    # Éviter initialisations inutiles
+    avoid_init_to_null: true
+
+    # Préférer const constructors
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_literals_to_create_immutables: true
+
+    # Préférer final
+    prefer_final_fields: true
+    prefer_final_locals: true
+    prefer_final_in_for_each: true
+
+    # Collection
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+    prefer_collection_literals: true
+
+    # Strings
+    prefer_interpolation_to_compose_strings: true
+    prefer_adjacent_string_concatenation: true
+    prefer_single_quotes: true
+
+    # Fonctions
+    prefer_function_declarations_over_variables: true
+
+    # ==========================================
+    # NAMING CONVENTIONS
+    # ==========================================
+
+    # Classes en PascalCase
+    camel_case_types: true
+
+    # Constants en lowerCamelCase
+    constant_identifier_names: true
+
+    # Librairies en snake_case
+    library_names: true
+    library_prefixes: true
+
+    # Fichiers en snake_case
+    file_names: true
+
+    # Package names en snake_case
+    package_names: true
+
+    # ==========================================
+    # DOCUMENTATION
+    # ==========================================
+
+    # Commenter APIs publiques
+    # public_member_api_docs: true  # Activez progressivement
+
+    # Slash pour comments (pas //)
+    slash_for_doc_comments: true
+
+    # ==========================================
+    # BEST PRACTICES
+    # ==========================================
+
+    # Key sur widgets
+    use_key_in_widget_constructors: true
+
+    # Tri child properties last
+    sort_child_properties_last: true
+
+    # Eviter checks null inutiles
+    unnecessary_null_checks: true
+    unnecessary_nullable_for_final_variable_declarations: true
+
+    # Constructeurs
+    sort_constructors_first: true
+
+    # Parenthèses
+    unnecessary_parenthesis: true
+
+    # New keyword inutile
+    unnecessary_new: true
+
+    # Const keyword inutile
+    unnecessary_const: true
+
+    # This inutile
+    unnecessary_this: true
+
+    # ==========================================
+    # ASYNC & FUTURES
+    # ==========================================
+
+    # BuildContext sync check
+    use_build_context_synchronously: true
+
+    # Await futures
+    unawaited_futures: true
+
+    # Avoid async pour void
+    avoid_void_async: true
+
+    # Cancel streams
+    cancel_subscriptions: true
+
+    # Close sinks
+    close_sinks: true
+
+    # ==========================================
+    # ERROR HANDLING
+    # ==========================================
+
+    # Éviter catches vides
+    empty_catches: true
+
+    # Throw objets valides
+    only_throw_errors: true
+
+    # Éviter returning null for void
+    avoid_returning_null_for_void: true
+
+    # ==========================================
+    # PERFORMANCE
+    # ==========================================
+
+    # Eviter type_as (utiliser is)
+    avoid_as: false # Parfois nécessaire
+
+    # Avoid slow async
+    avoid_slow_async_io: true
+
+    # List literals
+    prefer_iterable_whereType: true
+
+    # ==========================================
+    # SECURITY & SAFETY
+    # ==========================================
+
+    # Avoid web content
+    unsafe_html: true
+
+    # ==========================================
+    # FLUTTER SPECIFIC
+    # ==========================================
+
+    # Avoid Platform.is checks
+    avoid_web_libraries_in_flutter: true
+
+    # Sized box for whitespace
+    sized_box_for_whitespace: true
+
+    # Use colored box
+    use_colored_box: true
+
+    # Use decorated box
+    use_decorated_box: true
+
+    # Use full_hex_values_for_flutter_colors
+    use_full_hex_values_for_flutter_colors: true
+
+    # ==========================================
+    # TESTS
+    # ==========================================
+
+    # Avoir des asserts valides
+    valid_regexps: true
+
+    # Test file names
+    # test_types_in_equals: true
+
+    # ==========================================
+    # DESIGN
+    # ==========================================
+
+    # Eviter equals sur fonction
+    avoid_equals_and_hash_code_on_mutable_classes: true
+
+    # Eviter field initializers dans const
+    avoid_field_initializers_in_const_classes: true
+
+    # Implémenter hashCode si implement ==
+    hash_and_equals: true
+
+    # Override == si immutable
+    avoid_implementing_value_types: false
+
+    # ==========================================
+    # PUB
+    # ==========================================
+
+    # Dependency versions
+    depend_on_referenced_packages: true
+
+    # Secure dependencies
+    secure_pubspec_urls: true
+
+    # Sort pub dependencies
+    sort_pub_dependencies: true
