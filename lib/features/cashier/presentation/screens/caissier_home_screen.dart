@@ -12,6 +12,7 @@ import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cub
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/screens/scan_client_screen.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/utils/audio_player_helper.dart';
+import 'package:mukhlissmagasin/features/cashier/presentation/utils/cashier_code_handler.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/widgets/widgets.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
@@ -141,62 +142,40 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     );
   }
 
+
   Widget _buildEmbeddedScanner() {
-    return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        bottomLeft: Radius.circular(20),
-        bottomRight: Radius.circular(20),
-      ),
-      child: _currentScanMode == ScanMode.balance
-          ? ScanClientScreen.balance(
-              double.tryParse(_montantController.text.replaceAll(',', '.')) ??
-                  0.0,
-              onScanSuccess: (data) async {
-                // ✅ Remettre async pour await
-                AppLogger.info('🎉 Scan balance réussi: $data', tag: 'Scanner');
+    return EmbeddedScannerWidget(
+      scanMode: _currentScanMode,
+      montant: double.tryParse(_montantController.text.replaceAll(',', '.')) ?? 0.0,
+      onBalanceSuccess: (data) async {
+        _playSuccessSound();
 
-                // ✅ JOUER LE SON SANS ATTENDRE
-                _playSuccessSound();
+        if (mounted) {
+          await _showRewardsCelebration(
+            clientId: data['clientId'] ?? '',
+            magasinId: data['magasinId'] ?? '',
+            pointsAdded: data['pointsGagnes'] ?? 0,
+            totalPoints: data['pointsGagnes'] ?? 0,
+          );
 
-                if (mounted) {
-                  // ⚡ NOUVEAU : Afficher le bottom sheet de célébration
-                  // On doit récupérer le clientId depuis le scan
-                  // Pour l'instant, on utilise les données disponibles
-                  await _showRewardsCelebration(
-                    clientId: data['clientId'] ??
-                        '', // Le scan devrait retourner le clientId
-                    magasinId: data['magasinId'] ?? '',
-                    pointsAdded: data['pointsGagnes'] ?? 0,
-                    totalPoints: data['pointsGagnes'] ??
-                        0, // Si on a les points totaux, sinon faire une requête
-                  );
+          _completeScanReset();
+          _montantController.clear();
+        }
+      },
+      onRewardsSuccess: (data) {
+        _playSuccessSound();
 
-                  _completeScanReset();
-                  _montantController.clear();
-                }
-              },
-            )
-          : ScanClientScreen.rewards(
-              onScanSuccess: (data) {
-                // ✅ SUPPRIMER async
-                AppLogger.info('🎉 Scan récompense réussi: $data',
-                    tag: 'Scanner');
+        if (mounted) {
+          _completeScanReset();
 
-                // ✅ JOUER LE SON SANS ATTENDRE
-                _playSuccessSound(); // SUPPRIMER await
-
-                if (mounted) {
-                  _completeScanReset();
-
-                  setState(() {
-                    _showRewardsInRight = true;
-                    _selectedClientId = data['clientId'];
-                    _selectedMagasinId = data['magasinId'];
-                    _clientPoints = data['clientPoints'];
-                  });
-                }
-              },
-            ),
+          setState(() {
+            _showRewardsInRight = true;
+            _selectedClientId = data['clientId'];
+            _selectedMagasinId = data['magasinId'];
+            _clientPoints = data['clientPoints'];
+          });
+        }
+      },
     );
   }
 
@@ -210,130 +189,62 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     });
   }
 
+  /// Traite la soumission d'un code manuel.
+  ///
+  /// Utilise [CashierCodeHandler] pour la logique métier.
   Future<void> _handleManualCodeSubmit(String code, ScanMode mode) async {
-    final l10n = AppLocalizations.of(context);
+    final handler = CashierCodeHandler(context);
+    
+    // Traiter le code selon le mode
+    final result = await handler.processCode(
+      code: code,
+      mode: mode,
+      montant: double.tryParse(_montantController.text.replaceAll(',', '.')) ?? 0,
+    );
 
-    if (code.isEmpty) {
-      _showErrorSnackBar(context, 'Veuillez saisir un code');
+    if (!mounted) return;
+
+    if (!result.success) {
+      _showErrorSnackBar(context, result.errorMessage ?? 'Erreur inconnue');
       return;
     }
 
-    final uniqueCode = int.tryParse(code);
-    if (uniqueCode == null) {
-      _showErrorSnackBar(
-        context,
-        'Code invalide. Veuillez saisir un code numérique.',
-      );
-      return;
-    }
+    // Jouer le son de succès
+    _playSuccessSound();
 
-    final currentUser = getIt<AuthRepository>().getCurrentUser();
-
+    // Traiter selon le mode
     if (mode == ScanMode.balance) {
-      final montantTxt = _montantController.text.replaceAll(',', '.');
-      final montant = double.tryParse(montantTxt);
+      // Mode ajout de solde : afficher célébration
+      await _showRewardsCelebration(
+        clientId: result.clientId!,
+        magasinId: result.magasinId!,
+        pointsAdded: result.pointsAdded!,
+        totalPoints: result.totalPoints!,
+      );
 
-      if (montant == null || montant <= 0) {
-        _showErrorSnackBar(context, l10n.veuillez);
-        return;
-      }
-
-      try {
-        if (currentUser == null) {
-          _showErrorSnackBar(context, 'Aucun magasin connecté');
-          return;
-        }
-        final client = await context
-            .read<CaissierCubit>()
-            .getClientByUniqueCode(uniqueCode);
-
-        // Récupérer les points AVANT l'ajout
-        final pointsAvant = await getIt<CaissierRepository>().getClientPoints(
-          clientId: client.id,
-          magasinId: currentUser.id,
-        );
-
-        // Ajouter le solde via code unique
-        await context.read<CaissierCubit>().ajouterSoldeViaCodeUnique(
-              uniqueCode: uniqueCode,
-              magasinId: currentUser.id,
-              montant: montant,
-            );
-
-        // Récupérer les points APRÈS l'ajout
-        final totalPointsClient =
-            await getIt<CaissierRepository>().getClientPoints(
-          clientId: client.id,
-          magasinId: currentUser.id,
-        );
-
-        // Calculer les points ajoutés
-        final pointsAjoutes = totalPointsClient - pointsAvant;
-
-        // ✅ JOUER LE SON SANS ATTENDRE
-        _playSuccessSound(); // SUPPRIMER await
-
-        // ⚡ NOUVEAU : Afficher le bottom sheet de célébration avec les récompenses
-        await _showRewardsCelebration(
-          clientId: client.id,
-          magasinId: currentUser.id,
-          pointsAdded: pointsAjoutes,
-          totalPoints: totalPointsClient,
-        );
-
-        // ✅ RÉINITIALISATION COMPLÈTE SANS DÉLAI
-        if (mounted) {
-          setState(() {
-            _isScanning = false;
-            _showManualInput = false;
-            _showCodeInputInLeft = false;
-            _codeController.clear();
-            _montantController.clear();
-
-            // Ne plus afficher la félicitation dans le panneau de droite
-            // car le bottom sheet s'en occupe déjà
-            _showFelicitationInRight = false;
-          });
-        }
-      } catch (e) {
-        _showErrorSnackBar(context, 'Erreur: $e');
+      // Réinitialisation
+      if (mounted) {
+        setState(() {
+          _isScanning = false;
+          _showManualInput = false;
+          _showCodeInputInLeft = false;
+          _codeController.clear();
+          _montantController.clear();
+          _showFelicitationInRight = false;
+        });
       }
     } else {
-      // MODE REWARDS
-      AppLogger.debug('=========================appel rewards', tag: 'Rewards');
-      try {
-        final client = await context
-            .read<CaissierCubit>()
-            .getClientByUniqueCode(uniqueCode);
-
-        if (!mounted) return;
-
-        // Récupérer les points du client
-        final points = await getIt<CaissierRepository>().getClientPoints(
-          clientId: client.id,
-          magasinId: currentUser!.id,
-        );
-
-        // ✅ JOUER LE SON SANS ATTENDRE
-        _playSuccessSound(); // SUPPRIMER await
-
-        if (mounted) {
-          setState(() {
-            _isScanning = false;
-            _showManualInput = false;
-            _showCodeInputInLeft = false;
-            _codeController.clear();
-
-            _showRewardsInRight = true;
-            _selectedClientId = client.id;
-            _selectedMagasinId = currentUser.id;
-            _clientPoints = points;
-          });
-        }
-      } catch (e) {
-        if (!mounted) return;
-        _showErrorSnackBar(context, 'Erreur: $e');
-      }
+      // Mode récompenses : afficher le panneau des récompenses
+      setState(() {
+        _isScanning = false;
+        _showManualInput = false;
+        _showCodeInputInLeft = false;
+        _codeController.clear();
+        _showRewardsInRight = true;
+        _selectedClientId = result.clientId;
+        _selectedMagasinId = result.magasinId;
+        _clientPoints = result.totalPoints ?? 0;
+      });
     }
   }
 
