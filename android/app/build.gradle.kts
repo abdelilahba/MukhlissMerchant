@@ -5,10 +5,20 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Load keystore properties
+import java.util.Properties
+import java.io.FileInputStream
+
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
 android {
-    namespace = "com.example.mukhlissmagasin"
-    compileSdk = 35  // Android 15 - Required by androidx.activity 1.10+
-    ndkVersion = "25.1.8937393"
+    namespace = "com.mukhliss.merchant"
+    compileSdk = 36  // Android 14+ (Required by plugins)
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -20,21 +30,44 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.mukhlissmagasin"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        applicationId = "com.mukhliss.merchant"
         minSdk = flutter.minSdkVersion  // Android 5.0
         targetSdk = 35  // Android 15
         versionCode = 1
-        versionName = "0.9.0"
+        versionName = "1.0.0"
+        
+        // Enable multidex for large apps
+        multiDexEnabled = true
+    }
+
+    signingConfigs {
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+            }
+        }
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Use release signing config
+            signingConfig = if (keystorePropertiesFile.exists()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
+            
+            // Disable minification for now (can enable later)
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
+        
+        debug {
             signingConfig = signingConfigs.getByName("debug")
+            isDebuggable = true
         }
     }
 }
