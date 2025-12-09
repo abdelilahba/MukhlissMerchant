@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
    
-    final L10n=AppLocalizations.of(context);
+    final l10n=AppLocalizations.of(context);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                      fontWeight: FontWeight.bold,
                       letterSpacing: 0.5,
                        ),
-                     child: Text(L10n.welcome),
+                     child: Text(l10n.welcome),
                      ),
                       const SizedBox(height: 8),
                       AnimatedDefaultTextStyle(
@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(
                           color:  Colors.grey.shade600,
                         ),
-                        child:  Text(L10n.connecterpourcontinuer),
+                        child:  Text(l10n.connecterpourcontinuer),
                       ),
                     ],
                   ),
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color:  Colors.black ,
                                 ),
                                 decoration: InputDecoration(
-                                  labelText:L10n.email,
+                                  labelText:l10n.email,
                                   labelStyle: TextStyle(
                                     color:  Colors.grey.shade400 ,
                                   ),
@@ -167,10 +167,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return  L10n.veuillezsaisiremail;
+                                    return  l10n.veuillezsaisiremail;
                                   }
                                   if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                    return L10n.formatinvalid;
+                                    return l10n.formatinvalid;
                                   }
                                   return null;
                                 },
@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                      
                                 ),
                                 decoration: InputDecoration(
-                                  labelText: L10n.motpasse,
+                                  labelText: l10n.motpasse,
                                   labelStyle: TextStyle(
                                     color:  Colors.grey.shade400 
                                   ),
@@ -230,10 +230,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return L10n.veuillezsaisirpassword;
+                                    return l10n.veuillezsaisirpassword;
                                   }
                                   if (value.length < 6) {
-                                    return L10n.motpassecotenir ;
+                                    return l10n.motpassecotenir ;
                                   }
                                   return null;
                                 },
@@ -323,7 +323,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     ),
                                                     const SizedBox(width: 12),
                                                      Text(
-                                                     L10n.connexion ,
+                                                     l10n.connexion ,
                                                       style: TextStyle(
                                                         fontSize: 16,
                                                         fontWeight: FontWeight.w600,
@@ -333,7 +333,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   ],
                                                 )
                                               : Text(
-                                                L10n.seconnecter ,
+                                                l10n.seconnecter ,
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w600,

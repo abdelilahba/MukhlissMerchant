@@ -10,13 +10,13 @@ class ProfileRemoteDataSource {
       return null;
     }
 
-
     try {
       // Premièrement, trouvez l'ID du magasin associé à cet utilisateur
       final magasinResponse = await _client
           .from('magasins')
           .select('id')
-          .eq('id', user.id)  // Supposant qu'il y a une colonne user_id dans magasins
+          .eq('id',
+              user.id) // Supposant qu'il y a une colonne user_id dans magasins
           .maybeSingle();
 
       if (magasinResponse == null) {
@@ -26,11 +26,8 @@ class ProfileRemoteDataSource {
       final magasinId = magasinResponse['id'] as String;
 
       // Ensuite, récupérez toutes les données du magasin
-      final fullMagasinData = await _client
-          .from('magasins')
-          .select()
-          .eq('id', magasinId)
-          .single();
+      final fullMagasinData =
+          await _client.from('magasins').select().eq('id', magasinId).single();
 
       return MagasinModel.fromJson(fullMagasinData);
     } catch (e) {
@@ -38,33 +35,33 @@ class ProfileRemoteDataSource {
     }
   }
 
-  // update current user 
- 
-Future<bool> UpdatecurrentMagasin(MagasinModel magasindata) async {
-  try {
-    final user = _client.auth.currentUser;
-    if (user == null) {
-      return false;
-    }
-    // Convertir le MagasinModel en Map<String, dynamic>
-    final Map<String, dynamic> updateData = magasindata.toJson();  
-    // Supprimer les champs qui ne doivent pas être mis à jour
-    updateData.remove('id'); // L'ID ne doit pas être modifié
-    updateData.remove('created_at'); // La date de création ne doit pas être modifiée
-    final response = await _client
-        .from('magasins')
-        .update(updateData)
-        .eq('id', user.id)
-        .select();
+  // update current user
 
-    if (response.isNotEmpty) {
-      return true;
-    } else {
+  Future<bool> updateCurrentMagasin(MagasinModel magasindata) async {
+    try {
+      final user = _client.auth.currentUser;
+      if (user == null) {
+        return false;
+      }
+      // Convertir le MagasinModel en Map<String, dynamic>
+      final Map<String, dynamic> updateData = magasindata.toJson();
+      // Supprimer les champs qui ne doivent pas être mis à jour
+      updateData.remove('id'); // L'ID ne doit pas être modifié
+      updateData.remove(
+          'created_at'); // La date de création ne doit pas être modifiée
+      final response = await _client
+          .from('magasins')
+          .update(updateData)
+          .eq('id', user.id)
+          .select();
+
+      if (response.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
       return false;
     }
-  } catch (e) {
-    return false;
   }
-}
-
 }

@@ -9,7 +9,7 @@ import 'package:mukhlissmagasin/features/offers/presentation/widgets/widgets.dar
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
 class OffersScreen extends StatefulWidget {
-  const OffersScreen({Key? key}) : super(key: key);
+  const OffersScreen({super.key});
 
   @override
   State<OffersScreen> createState() => _OffersScreenState();
@@ -228,16 +228,20 @@ class _OffersScreenState extends State<OffersScreen>
         }
 
         // Filtre par prix
-        if (_minPriceFilter != null && offer.minAmount < _minPriceFilter!)
+        if (_minPriceFilter != null && offer.minAmount < _minPriceFilter!) {
           return false;
-        if (_maxPriceFilter != null && offer.minAmount > _maxPriceFilter!)
+        }
+        if (_maxPriceFilter != null && offer.minAmount > _maxPriceFilter!) {
           return false;
+        }
 
         // Filtre par points
-        if (_minPointsFilter != null && offer.pointsGiven < _minPointsFilter!)
+        if (_minPointsFilter != null && offer.pointsGiven < _minPointsFilter!) {
           return false;
-        if (_maxPointsFilter != null && offer.pointsGiven > _maxPointsFilter!)
+        }
+        if (_maxPointsFilter != null && offer.pointsGiven > _maxPointsFilter!) {
           return false;
+        }
 
         return true;
       }).toList();

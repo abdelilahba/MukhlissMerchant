@@ -135,7 +135,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   void _showSuccessMessage() {
-    final L10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     final isEditing = widget.reward != null;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -159,7 +159,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      isEditing ? L10n.modificationreussi : L10n.recompencecree,
+                      isEditing ? l10n.modificationreussi : l10n.recompencecree,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -167,8 +167,8 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                     ),
                     Text(
                       isEditing
-                          ? L10n.modiificationonteteenregistre
-                          : L10n.votrerecompenceestdisponible,
+                          ? l10n.modiificationonteteenregistre
+                          : l10n.votrerecompenceestdisponible,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 13,
@@ -190,7 +190,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   }
 
   void _showErrorSnackbar(String message) {
-    final L10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Container(
@@ -213,7 +213,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      L10n.errerusurvenu,
+                      l10n.errerusurvenu,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,

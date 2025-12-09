@@ -22,7 +22,7 @@ class FelicitationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final L10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -201,7 +201,7 @@ class FelicitationScreen extends StatelessWidget {
                     }
                   },
                   child: Text(
-                    L10n.terminer,
+                    l10n.terminer,
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.grey.shade600,

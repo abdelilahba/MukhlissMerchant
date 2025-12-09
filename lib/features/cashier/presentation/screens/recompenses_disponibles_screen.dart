@@ -119,7 +119,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
   // Plus besoin de _handleState séparé, tout est dans le listener du BlocConsumer
 
   void _confirmMultipleClaims() async {
-    final L10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     final totalCost = _selectedRewards.fold(
       0,
       (sum, reward) => sum + reward.requiredPoints,
@@ -162,7 +162,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
               const SizedBox(height: 8), // Réduit de 12 à 8
 
               Text(
-                L10n.confirmerechange,
+                l10n.confirmerechange,
                 style: TextStyle(
                   fontSize: 14, // Réduit de 16 à 14
                   fontWeight: FontWeight.bold,
@@ -194,7 +194,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
                               ),
                             ),
                             Text(
-                              '${reward.requiredPoints} ${L10n.pts}',
+                              '${reward.requiredPoints} ${l10n.pts}',
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -209,14 +209,14 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
                     Container(height: 1, color: Colors.grey[300]),
                     const SizedBox(height: 6),
                     _buildSummaryRow(
-                      L10n.total,
-                      '$totalCost ${L10n.pts}',
+                      l10n.total,
+                      '$totalCost ${l10n.pts}',
                       const Color(0xFF6366F1),
                     ),
                     const SizedBox(height: 4),
                     _buildSummaryRow(
-                      L10n.newsolde,
-                      '${widget.clientPoints - totalCost} ${L10n.pts}',
+                      l10n.newsolde,
+                      '${widget.clientPoints - totalCost} ${l10n.pts}',
                       const Color(0xFF10B981),
                     ),
                   ],
@@ -237,7 +237,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
                         side: BorderSide(color: Colors.grey[300]!),
                       ),
                       child: Text(
-                        L10n.annuler,
+                        l10n.annuler,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -259,7 +259,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
                         ),
                       ),
                       child: Text(
-                        L10n.confirmer,
+                        l10n.confirmer,
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -600,7 +600,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     int index,
     int clientPoints,
   ) {
-    final L10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     final isSelected = _isRewardSelected(reward);
     final canAfford = clientPoints >= reward.requiredPoints;
 
@@ -693,7 +693,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        L10n.descriptionnondisponible,
+                        l10n.descriptionnondisponible,
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[600],
@@ -714,7 +714,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            '${L10n.ilvousmanque} ${reward.requiredPoints - clientPoints} ${L10n.pts}',
+                            '${l10n.ilvousmanque} ${reward.requiredPoints - clientPoints} ${l10n.pts}',
                             style: const TextStyle(
                               fontSize: 11,
                               color: Color(0xFFF87171),
@@ -752,7 +752,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
-                        '${reward.requiredPoints}${L10n.pts}',
+                        '${reward.requiredPoints}${l10n.pts}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -772,7 +772,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          L10n.disponible,
+                          l10n.disponible,
                           style: const TextStyle(
                             fontSize: 10,
                             color: Color(0xFF059669),

@@ -149,7 +149,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   }
 
   // PreferredSizeWidget _buildAppBar() {
-  //   final L10n = AppLocalizations.of(context)!;
+  //   final l10n = AppLocalizations.of(context)!;
   //   return AppBar(
 
   //     elevation: 0,
@@ -157,7 +157,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   //       IconButton(
   //         icon: const Icon(Icons.flip_camera_ios),
   //         onPressed: _flipCamera,
-  //         tooltip: L10n.chnangercamera,
+  //         tooltip: l10n.chnangercamera,
   //       ),
   //     ],
   //   );
@@ -201,8 +201,8 @@ class _ScanClientScreenState extends State<ScanClientScreen>
         //       const SizedBox(height: 8),
         //       Text(
         //         _isBalanceMode
-        //             ? L10n.scannerpourajoutersolde
-        //             : L10n.scannerpourvoiroffre,
+        //             ? l10n.scannerpourajoutersolde
+        //             : l10n.scannerpourvoiroffre,
         //         style: const TextStyle(fontSize: 16, color: Colors.grey),
         //         textAlign: TextAlign.center,
         //       ),
@@ -211,7 +211,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
         //       if (_isBalanceMode) ...[
         //         const SizedBox(height: 12),
         //         Text(
-        //           L10n.vousserezrederigervers,
+        //           l10n.vousserezrederigervers,
         //           style: TextStyle(
         //             fontSize: 12,
         //             color: Colors.grey.shade600,

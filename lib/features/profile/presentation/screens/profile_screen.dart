@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
 
   Future<void> _pickImage() async {
     if (!_isEditMode) return;
-    final L10n=AppLocalizations.of(context);
+    final l10n=AppLocalizations.of(context);
     final result = await showModalBottomSheet<ImageSource?>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -108,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
             ),
             const SizedBox(height: 20),
             Text(
-             L10n.changerimage ,
+             l10n.changerimage ,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -119,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
               children: [
                 _buildImageSourceOption(
                   Icons.photo_library_rounded,
-                  L10n.galerie,
+                  l10n.galerie,
                   Colors.blue,
                   () => Navigator.pop(context, ImageSource.gallery),
                 ),
@@ -570,7 +570,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
   }
 
   Widget _buildPasswordCard() {
-    final L10n=AppLocalizations.of(context);
+    final l10n=AppLocalizations.of(context);
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -604,7 +604,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 ),
                 const SizedBox(width: 16),
                 Text(
-                L10n.securite ,
+                l10n.securite ,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -614,13 +614,13 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
             const SizedBox(height: 24),
             _buildModernPasswordField(
               controller: _passwordController,
-              label:L10n.nouveaumotpasse ,
-              hint: L10n.laisserviede,
+              label:l10n.nouveaumotpasse ,
+              hint: l10n.laisserviede,
             ),
             const SizedBox(height: 16),
             _buildModernPasswordField(
               controller: _confirmPasswordController,
-              label: L10n.confirmer,
+              label: l10n.confirmer,
             ),
           ],
         ),

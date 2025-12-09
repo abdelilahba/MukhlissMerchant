@@ -8,15 +8,16 @@ import 'package:mukhlissmagasin/features/profile/domain/usescases/update_user_us
 
 abstract class ProfileState extends Equatable {
   const ProfileState();
-   @override
+  @override
   List<Object> get props => [];
 }
 
 class ProfileInitial extends ProfileState {}
+
 class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
-  final MagasinModel profile ;
+  final MagasinModel profile;
   const ProfileLoaded(this.profile);
   @override
   List<Object> get props => [profile];
@@ -24,16 +25,16 @@ class ProfileLoaded extends ProfileState {
 
 class ProfileError extends ProfileState {
   final String message;
-  
+
   const ProfileError(this.message);
-  
+
   @override
   List<Object> get props => [message];
 }
+
 class ProfileUpdated extends ProfileState {
- 
   const ProfileUpdated();
-  
+
   @override
   List<Object> get props => [];
 }
@@ -41,26 +42,17 @@ class ProfileUpdated extends ProfileState {
 class UpdateProfileError extends ProfileState {
   final String errorMessage;
   const UpdateProfileError(this.errorMessage);
-  
+
   @override
   List<Object> get props => [errorMessage];
 }
 
 class ProfileCubit extends Cubit<ProfileState> {
-
   final UpdateUserUsecase updateprofileusecase;
   final GetUserUsecase getusercase;
-  ProfileCubit(this.updateprofileusecase,this.getusercase):super(ProfileInitial());
+  ProfileCubit(this.updateprofileusecase, this.getusercase)
+      : super(ProfileInitial());
 
-  Future<void> LoasdProfile()async {
-    emit(ProfileLoading());
-    try{
-      final profile =await getusercase.execute();
-      emit(ProfileLoaded(profile));
-    }catch (e){
-      emit(ProfileError(e.toString()));
-    }
-  }
   Future<void> loadProfile() async {
     emit(ProfileLoading());
     try {
@@ -71,13 +63,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  // update user 
- Future<void> updateUser(MagasinModel updatedProfile) async {
+  // update user
+  Future<void> updateUser(MagasinModel updatedProfile) async {
     emit(ProfileUpdated());
     try {
       await updateprofileusecase.execute(updatedProfile);
       emit(ProfileUpdated());
-      
+
       // Recharge le profil après mise à jour
       await loadProfile();
     } catch (e) {
@@ -89,8 +81,3 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 }
-
-
-
-
-
