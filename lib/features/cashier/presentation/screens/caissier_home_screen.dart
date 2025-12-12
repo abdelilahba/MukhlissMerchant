@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+
 import 'package:mukhlissmagasin/core/di/injection_container.dart';
 import 'package:mukhlissmagasin/core/services/app_logger.dart';
 import 'package:mukhlissmagasin/core/widgets/app_drawer.dart';
@@ -110,7 +110,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
 
           // Rediriger vers la page de connexion après un court délai
           Future.delayed(const Duration(milliseconds: 500), () {
-            if (mounted) {
+            if (mounted && context.mounted) {
               Navigator.of(context).pushReplacementNamed('/login');
             }
           });

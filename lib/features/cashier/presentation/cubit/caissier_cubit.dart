@@ -14,9 +14,9 @@ class CaissierCubit extends Cubit<CaissierState> {
   final AjouterSoldeUseCase ajouterSolde;
   final ChargerRecompensesClientUseCase chargerRecompensesClient;
   final ReclamerRecompenseUseCase reclamerRecompense;
-  final GetCurrentMagazin getCurrentMagazin;
-  final AjouterSoldeClientcode ajouterSoldeClientcode;
-  final GetclientByuniquecode getclientByuniquecode;
+  final GetCurrentMagasinUseCase getCurrentMagazin;
+  final AjouterSoldeParCodeUseCase ajouterSoldeClientcode;
+  final GetClientByUniqueCodeUseCase getclientByuniquecode;
 
   CaissierCubit({
     required this.ajouterSolde,

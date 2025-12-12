@@ -142,11 +142,11 @@ getIt.registerLazySingleton<CaissierRepository>(
 getIt.registerLazySingleton(() => AjouterSoldeUseCase(repository: getIt()));
 getIt.registerLazySingleton(() => ChargerRecompensesClientUseCase(repository: getIt() ));
 getIt.registerLazySingleton(() => ReclamerRecompenseUseCase(repository: getIt()));
-getIt.registerLazySingleton(() => GetCurrentMagazin(repository: getIt()) );
+getIt.registerLazySingleton(() => GetCurrentMagasinUseCase(repository: getIt()) );
 // New Use Case for Unique Code
-getIt.registerLazySingleton(() => AjouterSoldeClientcode(repository: getIt()) );
- getIt.registerLazySingleton<GetclientByuniquecode>(
-    () => GetclientByuniquecode(repository:getIt()),
+getIt.registerLazySingleton(() => AjouterSoldeParCodeUseCase(repository: getIt()) );
+ getIt.registerLazySingleton<GetClientByUniqueCodeUseCase>(
+    () => GetClientByUniqueCodeUseCase(repository:getIt()),
   );
 // Caissier Cubit
 getIt.registerFactory(() => CaissierCubit(

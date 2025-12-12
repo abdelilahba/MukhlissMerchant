@@ -97,13 +97,14 @@ class _SubscriptionGuardState extends State<SubscriptionGuard> {
           // Fermeture automatique après 10 secondes
           if (countdown == 0) {
             Future.delayed(Duration.zero, () {
+              if (!context.mounted) return;
               Navigator.of(context).pop();
               SystemNavigator.pop(); // Ferme l'application
             });
           }
 
-          return WillPopScope(
-            onWillPop: () async => false,
+          return PopScope(
+            canPop: false,
             child: AlertDialog(
               title: Row(
                 children: [

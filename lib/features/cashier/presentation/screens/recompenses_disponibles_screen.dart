@@ -32,14 +32,10 @@ class RewardSelectionScreen extends StatefulWidget {
 
 class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     with TickerProviderStateMixin {
-  bool _hasSelectedRewards = false;
   final CaissierCubit _cubit = getIt<CaissierCubit>();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  List<Reward> _selectedRewards = [];
-  int _totalRewardsToClaim = 0;
-  int _rewardsClaimedCount = 0;
-  int _finalPointsAfterAllClaims = 0;
+  final List<Reward> _selectedRewards = [];
 
   @override
   void initState() {
@@ -276,9 +272,6 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
     );
 
     if (confirm == true) {
-      _totalRewardsToClaim = _selectedRewards.length;
-      _rewardsClaimedCount = 0;
-      _finalPointsAfterAllClaims = widget.clientPoints - totalCost;
 
       // ✅ AFFICHER UN DIALOGUE DE CHARGEMENT au lieu de l'écran noir
       _showLoadingDialogAndClaim();
@@ -798,8 +791,7 @@ class _RewardSelectionScreenState extends State<RewardSelectionScreen>
       } else {
         _selectedRewards.add(reward);
       }
-      _hasSelectedRewards =
-          _selectedRewards.isNotEmpty; // ✅ METTRE À JOUR LE TRACKER
+// ✅ METTRE À JOUR LE TRACKER
     });
   }
 
