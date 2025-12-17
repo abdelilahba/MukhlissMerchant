@@ -808,7 +808,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 _manager.isActive = value;
               });
             },
-            activeThumbColor: Colors.green.shade600,
+            activeTrackColor: Colors.green.shade600,
             inactiveTrackColor: Colors.red.shade300,
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
