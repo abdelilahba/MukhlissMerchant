@@ -318,7 +318,8 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
               onPressed: () {
                 _cancelAutoClose();
                 widget.onSaveLater?.call();
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                Navigator.of(context).pop({'action': 'save'});
               },
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -331,29 +332,36 @@ class _RewardsCelebrationSheetState extends State<RewardsCelebrationSheet>
           const SizedBox(width: 12),
 
           // Bouton "Voir" compact
-          Expanded(
-            flex: 2,
-            child: ElevatedButton(
-              onPressed: () {
-                _cancelAutoClose();
-                widget.onExchangeRewards?.call();
-                // Navigator.pop retiré : géré dans le callback parent
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF10B981),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'VOIR CADEAUX',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
+        // Dans rewards_celebration_sheet.dart
+
+Expanded(
+  flex: 2,
+  child: ElevatedButton(
+    onPressed: () {
+      _cancelAutoClose();
+      // ✅ Fermer d'abord le dialogue avec les données
+      Navigator.of(context).pop({
+        'action': 'exchange',
+        // Les autres données seront passées par le parent
+      });
+      // ✅ Le callback sera appelé après dans le parent
+      widget.onExchangeRewards?.call();
+    },
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF10B981),
+      foregroundColor: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    ),
+    child: const Text(
+      'VOIR CADEAUX',
+      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+    ),
+  ),
+),
         ],
       ),
     );

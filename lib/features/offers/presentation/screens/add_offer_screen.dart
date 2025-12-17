@@ -713,7 +713,7 @@ class _AddOfferScreenState extends State<AddOfferScreen>
                 _manager.isactive = value;
               });
             },
-            activeThumbColor: Colors.green.shade600,
+            activeTrackColor: Colors.green.shade600,
             inactiveTrackColor: Colors.red.shade300,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 20,
