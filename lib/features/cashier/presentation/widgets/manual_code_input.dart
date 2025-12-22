@@ -185,7 +185,7 @@ class _ManualCodeInputSectionState extends State<ManualCodeInputSection> {
           color: Color(0xFF1F2937),
         ),
         decoration: InputDecoration(
-          hintText: '00000000',
+          hintText: '000000',
           hintStyle: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w500,
@@ -234,8 +234,17 @@ class _ManualCodeInputSectionState extends State<ManualCodeInputSection> {
           borderRadius: BorderRadius.circular(12),
           onTap: () {
             final code = _codeController.text;
-            if (code.length == 8) {
+            if (code.length == 6) {
               widget.onSubmit(code, widget.scanMode);
+            }
+            else {
+              // Optionally show an error message if the code is invalid
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("ghhrehyf"),
+                  backgroundColor: Colors.redAccent,
+                ),
+              );
             }
           },
           child: Row(

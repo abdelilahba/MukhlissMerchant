@@ -97,7 +97,7 @@ class AppLogger {
     final prefix = tag != null ? '[$tag]' : '';
 
     if (kDebugMode) {
-      debugPrint('$_red❌ ERROR $prefix: $message$_reset');
+      debugPrint('$_red❌ ERROR  $prefix: $message$_reset');
       if (error != null) {
         debugPrint('$_red   Exception: $error$_reset');
       }
