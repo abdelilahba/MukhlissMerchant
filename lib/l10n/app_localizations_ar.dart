@@ -641,5 +641,8 @@ class AppLocalizationsAr extends AppLocalizations {
       'يتعذّر الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت ثم إعادة المحاولة.';
 
   @override
-  String get recompenceechange => 'Récompense(s) échangée(s) avec succès';
+  String get recompenceechange => 'تم استبدال المكافأة (المكافآت) بنجاح';
+
+  @override
+  String get codeinvalide => 'رمز غير صالح';
 }

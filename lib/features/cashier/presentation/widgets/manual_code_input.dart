@@ -241,7 +241,7 @@ class _ManualCodeInputSectionState extends State<ManualCodeInputSection> {
               // Optionally show an error message if the code is invalid
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("ghhrehyf"),
+                  content: Text("{l10n.codeinvalide}"),
                   backgroundColor: Colors.redAccent,
                 ),
               );

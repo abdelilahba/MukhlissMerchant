@@ -1339,8 +1339,14 @@ abstract class AppLocalizations {
   /// No description provided for @recompenceechange.
   ///
   /// In en, this message translates to:
-  /// **'تم استبدال المكافأة (المكافآت) بنجاح'**
+  /// **'The reward(s) have been successfully redeemed'**
   String get recompenceechange;
+
+  /// No description provided for @codeinvalide.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid code'**
+  String get codeinvalide;
 }
 
 class _AppLocalizationsDelegate

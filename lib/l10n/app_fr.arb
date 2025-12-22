@@ -206,5 +206,6 @@
 "problemconnexion":"Problème de Connexion",
 "problemeconnexiondetails":"Impossible de se connecter au serveur. Vérifiez votre connexion internet et réessayez.",
 "ressayer":"Réessayer",
-"recompenceechange":"Récompense(s) échangée(s) avec succès"
+"recompenceechange":"Récompense(s) échangée(s) avec succès",
+"codeinvalide":"Code invalide"
 } 
