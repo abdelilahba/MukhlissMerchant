@@ -2,7 +2,7 @@ import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 import 'package:mukhlissmagasin/core/services/cache_service.dart';
 
 /// ⚡ Service de Subscription avec Cache Intelligent
-/// 
+///
 /// Features:
 /// - ✅ Cache 15 min pour réduire les appels API
 /// - ✅ Mode offline gracieux (24h max)
@@ -11,27 +11,27 @@ import 'package:mukhlissmagasin/core/services/cache_service.dart';
 /// - ✅ Invalidation intelligente
 class SubscriptionService {
   final supabase = SupabaseService.client;
-  
+
   /// Cache des résultats d'accès
   /// TTL: 15 minutes (balance entre fraîcheur et performance)
   late final CacheService<String, AccessResult> _cache;
-  
+
   /// Configuration du retry
   static const int _maxRetries = 3;
   static const Duration _initialRetryDelay = Duration(seconds: 2);
-  
+
   SubscriptionService() {
     _cache = CacheService<String, AccessResult>(
       maxSize: 500, // Peut cacher 500 magasins
-      defaultTtl: const Duration(minutes: 15),
+      defaultTtl: const Duration(minutes: 5),
     );
-    
-    // Cleanup périodique (toutes les heures)
+
+    // Cleanup périodique (toutes les minutes)
     _schedulePeriodicCleanup();
   }
 
   /// ⚡ Vérifie l'accès avec cache intelligent
-  /// 
+  ///
   /// Flow:
   /// 1. Vérifie le cache (< 15 min)
   /// 2. Si pas en cache → Appel API avec retry
@@ -44,7 +44,6 @@ class SubscriptionService {
         () => _checkAccessFromApi(magasinId),
       );
     } catch (e) {
-      
       // 2️⃣ Mode offline: utiliser cache même expiré (max 24h)
       final staleCache = await _getStaleCache(magasinId);
       if (staleCache != null) {
@@ -52,7 +51,7 @@ class SubscriptionService {
           message: 'Mode offline - Vérification dans 1h',
         );
       }
-      
+
       // 3️⃣ Dernière option: erreur
       return AccessResult.error();
     }
@@ -62,27 +61,26 @@ class SubscriptionService {
   Future<AccessResult> _checkAccessFromApi(String magasinId) async {
     int retries = 0;
     Duration delay = _initialRetryDelay;
-    
+
     while (retries < _maxRetries) {
       try {
         // Appel de la fonction SQL
-        final response = await supabase
-            .rpc('check_app_access', params: {'p_magasin_id': magasinId})
-            .single();
+        final response = await supabase.rpc('check_app_access',
+            params: {'p_magasin_id': magasinId}).single();
 
         final result = AccessResult.fromJson(response);
-        
+
         // Log l'événement d'accès
         await _logAccess(
           magasinId: magasinId,
           eventType: result.canAccess ? 'access_granted' : 'access_denied',
           denialReason: result.canAccess ? null : result.message,
         );
-        
+
         return result;
       } catch (e) {
         retries++;
-        
+
         if (retries >= _maxRetries) {
           // Log l'erreur après tous les retries
           await _logAccess(
@@ -90,16 +88,16 @@ class SubscriptionService {
             eventType: 'access_error',
             denialReason: e.toString(),
           );
-          
+
           rethrow;
         }
-        
+
         // Attendre avant de réessayer (backoff exponentiel: 2s, 4s, 8s)
         await Future.delayed(delay);
         delay *= 2;
       }
     }
-    
+
     throw Exception('Max retries atteint');
   }
 
@@ -112,7 +110,7 @@ class SubscriptionService {
   }
 
   /// Invalide le cache d'un magasin spécifique
-  /// 
+  ///
   /// À appeler quand:
   /// - L'abonnement est modifié
   /// - L'abonnement est renouvelé
@@ -122,7 +120,7 @@ class SubscriptionService {
   }
 
   /// Invalide le cache de tous les magasins
-  /// 
+  ///
   /// À appeler en cas de changement global
   Future<void> invalidateAllCache() async {
     await _cache.clear();
@@ -136,7 +134,7 @@ class SubscriptionService {
   }) async {
     try {
       final user = supabase.auth.currentUser;
-      
+
       await supabase.from('app_access_logs').insert({
         'magasin_id': magasinId,
         'event_type': eventType,
@@ -160,8 +158,8 @@ class SubscriptionService {
 
   /// Nettoyage périodique du cache
   void _schedulePeriodicCleanup() {
-    // Cleanup toutes les heures
-    Stream.periodic(const Duration(hours: 1)).listen((_) {
+    // Cleanup toutes les 5 minutes
+    Stream.periodic(const Duration(minutes: 5)).listen((_) {
       _cache.cleanup();
       _cache.logStats(); // Log pour monitoring
     });
@@ -208,7 +206,8 @@ class AccessResult {
     return AccessResult(
       canAccess: false,
       status: 'error',
-      message: 'Erreur de connexion. Vérifiez votre connexion internet et réessayez.',
+      message:
+          'Erreur de connexion. Vérifiez votre connexion internet et réessayez.',
     );
   }
 

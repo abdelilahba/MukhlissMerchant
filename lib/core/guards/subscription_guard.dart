@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mukhlissmagasin/core/config/app_config.dart';
 import 'package:mukhlissmagasin/core/services/subscription_service.dart';
 import 'package:mukhlissmagasin/core/services/periodic_subscription_checker.dart';
 
@@ -22,7 +23,7 @@ class SubscriptionGuard extends StatefulWidget {
 class _SubscriptionGuardState extends State<SubscriptionGuard> {
   final _subscriptionService = SubscriptionService();
   final _periodicChecker = PeriodicSubscriptionChecker();
-  
+
   bool _isChecking = true;
   AccessResult? _accessResult;
 
@@ -41,9 +42,9 @@ class _SubscriptionGuardState extends State<SubscriptionGuard> {
 
   Future<void> _checkAccess() async {
     setState(() => _isChecking = true);
-    
+
     final result = await _subscriptionService.checkAccess(widget.magasinId);
-    
+
     if (mounted) {
       setState(() {
         _accessResult = result;
@@ -56,13 +57,14 @@ class _SubscriptionGuardState extends State<SubscriptionGuard> {
   void _startPeriodicChecks() {
     _periodicChecker.startPeriodicCheck(
       magasinId: widget.magasinId,
-      interval: const Duration(seconds: 30), // Vérifie toutes les 30 secondes (30 min en prod)
+      interval: AppConfig
+          .subscriptionCheckInterval, // Vérifie chaque minute (configurable)
       onAccessChanged: (result) {
         // Si l'abonnement expire pendant l'utilisation
         if (!result.canAccess && mounted) {
           // ✅ ARRÊTER les vérifications pour éviter les popups multiples
           _periodicChecker.stop();
-          
+
           // Afficher la popup une seule fois
           _showExpirationDialog(result);
         }
@@ -73,7 +75,7 @@ class _SubscriptionGuardState extends State<SubscriptionGuard> {
   /// ✅ AMÉLIO 1: Affiche popup avec fermeture automatique
   void _showExpirationDialog(AccessResult result) {
     int countdown = 10; // Compte à rebours de 10 secondes
-    
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -274,9 +276,9 @@ class _AccessDeniedScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Titre
                   Text(
                     result.blockTitle,
@@ -287,9 +289,9 @@ class _AccessDeniedScreen extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Message
                   Text(
                     result.message,
@@ -300,7 +302,7 @@ class _AccessDeniedScreen extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   // Date d'expiration si disponible
                   if (result.expiresOn != null) ...[
                     const SizedBox(height: 24),
@@ -333,14 +335,14 @@ class _AccessDeniedScreen extends StatelessWidget {
                       ),
                     ),
                   ],
-                  
+
                   const SizedBox(height: 48),
-                  
+
                   // Informations de contact
                   _buildContactInfo(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Bouton réessayer
                   if (result.status == 'error')
                     ElevatedButton.icon(
@@ -412,8 +414,18 @@ class _AccessDeniedScreen extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     const months = [
-      'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-      'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+      'Janvier',
+      'Février',
+      'Mars',
+      'Avril',
+      'Mai',
+      'Juin',
+      'Juillet',
+      'Août',
+      'Septembre',
+      'Octobre',
+      'Novembre',
+      'Décembre'
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }

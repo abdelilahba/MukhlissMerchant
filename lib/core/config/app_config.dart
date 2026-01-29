@@ -103,7 +103,7 @@ class AppConfig {
   // ═══════════════════════════════════════════════════════════════
 
   /// Intervalle de vérification abonnement
-  static const Duration subscriptionCheckInterval = Duration(hours: 1);
+  static const Duration subscriptionCheckInterval = Duration(minutes: 5);
 
   /// Jours avant expiration pour avertissement
   static const int subscriptionWarningDays = 7;
