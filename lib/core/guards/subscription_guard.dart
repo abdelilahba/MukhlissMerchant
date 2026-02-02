@@ -4,23 +4,22 @@ import 'package:mukhlissmagasin/core/config/app_config.dart';
 import 'package:mukhlissmagasin/core/services/subscription_service.dart';
 import 'package:mukhlissmagasin/core/services/periodic_subscription_checker.dart';
 
-/// Widget qui protège l'accès à l'app
-/// Vérifie l'abonnement au démarrage ET périodiquement
-class SubscriptionGuard extends StatefulWidget {
+/// 🎨 DESIGN MODERNE - Interface élégante et professionnelle
+class SubscriptionGuardModern extends StatefulWidget {
   final Widget child;
   final String magasinId;
 
-  const SubscriptionGuard({
+  const SubscriptionGuardModern({
     super.key,
     required this.child,
     required this.magasinId,
   });
 
   @override
-  State<SubscriptionGuard> createState() => _SubscriptionGuardState();
+  State<SubscriptionGuardModern> createState() => _SubscriptionGuardModernState();
 }
 
-class _SubscriptionGuardState extends State<SubscriptionGuard> {
+class _SubscriptionGuardModernState extends State<SubscriptionGuardModern> {
   final _subscriptionService = SubscriptionService();
   final _periodicChecker = PeriodicSubscriptionChecker();
 
@@ -31,7 +30,6 @@ class _SubscriptionGuardState extends State<SubscriptionGuard> {
   void initState() {
     super.initState();
     _checkAccess();
-    _startPeriodicChecks();
   }
 
   @override
@@ -42,9 +40,7 @@ class _SubscriptionGuardState extends State<SubscriptionGuard> {
 
   Future<void> _checkAccess() async {
     setState(() => _isChecking = true);
-
     final result = await _subscriptionService.checkAccess(widget.magasinId);
-
     if (mounted) {
       setState(() {
         _accessResult = result;
@@ -53,182 +49,94 @@ class _SubscriptionGuardState extends State<SubscriptionGuard> {
     }
   }
 
-  /// ✅ NOUVEAU : Démarre les vérifications périodiques
-  void _startPeriodicChecks() {
-    _periodicChecker.startPeriodicCheck(
-      magasinId: widget.magasinId,
-      interval: AppConfig
-          .subscriptionCheckInterval, // Vérifie chaque minute (configurable)
-      onAccessChanged: (result) {
-        // Si l'abonnement expire pendant l'utilisation
-        if (!result.canAccess && mounted) {
-          // ✅ ARRÊTER les vérifications pour éviter les popups multiples
-          _periodicChecker.stop();
-
-          // Afficher la popup une seule fois
-          _showExpirationDialog(result);
-        }
-      },
-    );
-  }
-
-  /// ✅ AMÉLIO 1: Affiche popup avec fermeture automatique
-  void _showExpirationDialog(AccessResult result) {
-    int countdown = 10; // Compte à rebours de 10 secondes
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) {
-          // Démarrer le compte à rebours
-          Future.delayed(const Duration(seconds: 1), () {
-            if (countdown > 0 && context.mounted) {
-              setState(() => countdown--);
-              // Appel récursif toutes les secondes
-              if (countdown > 0) {
-                Future.delayed(const Duration(seconds: 1), () {
-                  if (context.mounted) {
-                    setState(() => countdown--);
-                  }
-                });
-              }
-            }
-          });
-
-          // Fermeture automatique après 10 secondes
-          if (countdown == 0) {
-            Future.delayed(Duration.zero, () {
-              if (!context.mounted) return;
-              Navigator.of(context).pop();
-              SystemNavigator.pop(); // Ferme l'application
-            });
-          }
-
-          return PopScope(
-            canPop: false,
-            child: AlertDialog(
-              title: Row(
-                children: [
-                  Icon(Icons.warning_amber, color: Colors.red[700], size: 32),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Text(
-                      'Abonnement Expiré',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                ],
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    result.message,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'L\'application va se fermer dans $countdown secondes...',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.blue[50],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Contactez-nous pour renouveler :',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        SizedBox(height: 4),
-                        Text('📞 +212 XXX XXX XXX'),
-                        Text('📧 support@mukhliss.ma'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    SystemNavigator.pop(); // Ferme l'application immédiatement
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Fermer maintenant'),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    // Écran de chargement
     if (_isChecking) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 24),
-              Text(
-                'Vérification de l\'abonnement...',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+      return _buildLoadingScreen();
     }
 
-    // Accès refusé
     if (_accessResult?.canAccess != true) {
-      return _AccessDeniedScreen(
+      return _ModernAccessDeniedScreen(
         result: _accessResult!,
         onRetry: _checkAccess,
       );
     }
 
-    // Accès OK mais avertissement
-    if (_accessResult!.shouldShowWarning) {
-      return _WarningWrapper(
-        result: _accessResult!,
-        child: widget.child,
-      );
-    }
-
-    // Accès OK
     return widget.child;
+  }
+
+  Widget _buildLoadingScreen() {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Animation de chargement avec gradient
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.blue.shade600,
+                    Colors.purple.shade600,
+                  ],
+                ),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blue.withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    valueColor: AlwaysStoppedAnimation(Colors.white.withOpacity(0.8)),
+                    backgroundColor: Colors.white.withOpacity(0.2),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            Text(
+              'VÉRIFICATION DE L\'ABONNEMENT',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey.shade700,
+                letterSpacing: 1.2,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Veuillez patienter...',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey.shade500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
-/// Écran affiché quand l'accès est refusé
-class _AccessDeniedScreen extends StatelessWidget {
+/// 🎨 Écran moderne d'accès refusé
+class _ModernAccessDeniedScreen extends StatelessWidget {
   final AccessResult result;
   final VoidCallback onRetry;
 
-  const _AccessDeniedScreen({
+  const _ModernAccessDeniedScreen({
     required this.result,
     required this.onRetry,
   });
@@ -236,255 +144,635 @@ class _AccessDeniedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.red[50]!, Colors.white],
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(32.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Icône animée
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 800),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    builder: (context, value, child) {
-                      return Transform.scale(
-                        scale: value,
-                        child: child,
-                      );
-                    },
-                    child: Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.red[100],
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          result.blockIcon,
-                          style: const TextStyle(fontSize: 60),
-                        ),
-                      ),
+      backgroundColor: Colors.grey.shade50,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Illustration
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.red.shade100,
+                        Colors.orange.shade100,
+                      ],
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.lock_clock_rounded,
+                      size: 80,
+                      color: Colors.red.shade600,
                     ),
                   ),
+                ),
 
-                  const SizedBox(height: 32),
+                const SizedBox(height: 20),
 
-                  // Titre
-                  Text(
-                    result.blockTitle,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                    textAlign: TextAlign.center,
+                // Titre
+                Text(
+                  result.blockTitle.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    foreground: Paint()
+                      ..shader = LinearGradient(
+                        colors: [
+                          Colors.red.shade600,
+                          Colors.orange.shade600,
+                        ],
+                      ).createShader(const Rect.fromLTWH(0, 0, 200, 70)),
+                    letterSpacing: 1.5,
                   ),
+                  textAlign: TextAlign.center,
+                ),
 
-                  const SizedBox(height: 16),
+                const SizedBox(height: 15),
 
-                  // Message
-                  Text(
-                    result.message,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[700],
-                      height: 1.5,
-                    ),
-                    textAlign: TextAlign.center,
+                // Sous-titre
+                Text(
+                  'Accès temporairement suspendu',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500,
                   ),
+                ),
 
-                  // Date d'expiration si disponible
-                  if (result.expiresOn != null) ...[
-                    const SizedBox(height: 24),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.orange[50],
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.orange[200]!),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Date d\'expiration',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            _formatDate(result.expiresOn!),
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange,
-                            ),
-                          ),
+              
+
+          
+
+                // Date d'expiration
+                if (result.expiresOn != null) ...[
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.blue.shade50,
+                          Colors.purple.shade50,
                         ],
                       ),
-                    ),
-                  ],
-
-                  const SizedBox(height: 48),
-
-                  // Informations de contact
-                  _buildContactInfo(),
-
-                  const SizedBox(height: 24),
-
-                  // Bouton réessayer
-                  if (result.status == 'error')
-                    ElevatedButton.icon(
-                      onPressed: onRetry,
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('Réessayer'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 16,
-                        ),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Colors.blue.shade100,
                       ),
                     ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade600,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.calendar_today_rounded,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'DATE D\'EXPIRATION',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.blue.shade700,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                _formatDate(result.expiresOn!),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.grey.shade900,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
-              ),
+
+                const SizedBox(height: 10),
+
+                // Design Option 1: Cartes de contact modernes
+                ModernContactCards(),
+
+                const SizedBox(height: 15),
+
+         
+                if (result.status == 'error')
+                  Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: onRetry,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue.shade600,
+                            padding: const EdgeInsets.symmetric(vertical: 18),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 5,
+                            shadowColor: Colors.blue.withOpacity(0.3),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.refresh_rounded, color: Colors.white),
+                              SizedBox(width: 10),
+                              Text(
+                                'RÉESSAYER LA CONNEXION',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                const SizedBox(height: 30),
+              ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildContactInfo() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.blue[50],
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          const Icon(Icons.phone, color: Colors.blue, size: 32),
-          const SizedBox(height: 12),
-          const Text(
-            'Contactez-nous pour renouveler',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '📞 +212 XXX XXX XXX',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.blue[700],
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '📧 support@mukhliss.ma',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
-          ),
-        ],
       ),
     );
   }
 
   String _formatDate(DateTime date) {
-    const months = [
-      'Janvier',
-      'Février',
-      'Mars',
-      'Avril',
-      'Mai',
-      'Juin',
-      'Juillet',
-      'Août',
-      'Septembre',
-      'Octobre',
-      'Novembre',
-      'Décembre'
-    ];
-    return '${date.day} ${months[date.month - 1]} ${date.year}';
+    return '${date.day}/${date.month.toString().padLeft(2, '0')}/${date.year} à ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
   }
 }
 
-/// Wrapper qui affiche un avertissement si l'abonnement expire bientôt
-class _WarningWrapper extends StatelessWidget {
-  final AccessResult result;
-  final Widget child;
+/// 🎨 OPTION 1: Cartes de contact modernes avec icônes
+class ModernContactCards extends StatelessWidget {
+  ModernContactCards({super.key});
 
-  const _WarningWrapper({
-    required this.result,
-    required this.child,
-  });
+  final List<ContactMethod> contactMethods = [
+    ContactMethod(
+      icon: Icons.phone_in_talk_rounded,
+      title: 'Appelez-nous',
+      subtitle: 'Réponse immédiate',
+      contact: '+212 666-570303',
+      color: Colors.green.shade600,
+    
+    ),
+
+    ContactMethod(
+      icon: Icons.email_rounded,
+      title: 'Email',
+      subtitle: 'Réponse sous 24h',
+      contact: 'mukhlissfidelite@gmail.com',
+      color: Colors.blue.shade600,
+     
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        child,
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: Material(
-            color: Colors.orange,
-            child: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+        border: Border.all(
+          color: Colors.grey.shade200,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          // En-tête
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.blue.shade600,
+                      Colors.purple.shade600,
+                    ],
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.support_agent_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.warning_amber_rounded,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Abonnement expire dans ${result.daysRemaining} jour${result.daysRemaining! > 1 ? 's' : ''}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    Text(
+                      'CONTACTEZ-NOUS',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.grey.shade900,
+                        letterSpacing: 0.5,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        _showRenewalDialog(context);
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
+                    const SizedBox(height: 4),
+                    Text(
+                      'Plusieurs façons de nous joindre',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
                       ),
-                      child: const Text('Renouveler'),
                     ),
                   ],
                 ),
               ),
+            ],
+          ),
+
+          const SizedBox(height: 10),
+
+          // Cartes de contact
+          Column(
+            children: contactMethods
+                .map((method) => _buildContactCard(method, context))
+                .toList(),
+          ),
+
+          const SizedBox(height: 5),
+
+          // Indicateur de disponibilité
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.green.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.green.shade100),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade500,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  'Support disponible 24h/24, 7j/7',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.green.shade700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactCard(ContactMethod method, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 5),
+      child: InkWell(
+        onTap: () => _handleContact(method, context),
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: Colors.grey.shade200, width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Icône avec background
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      method.color.withOpacity(0.1),
+                      method.color.withOpacity(0.2),
+                    ],
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Icon(
+                    method.icon,
+                    color: method.color,
+                    size: 24,
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 10),
+
+              // Informations
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      method.title,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      method.subtitle,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      method.contact,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: method.color,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(width: 15),
+
+      
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _handleContact(ContactMethod method, BuildContext context) {
+    // TODO: Implémenter les actions de contact
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Ouverture de ${method.title}...'),
+        backgroundColor: method.color,
+      ),
+    );
+  }
+}
+
+/// 🎨 OPTION 2: Design avec boutons d'action rapides
+class ContactActionButtons extends StatelessWidget {
+  const ContactActionButtons({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.blue.shade600,
+            Colors.purple.shade600,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            'CONTACT RAPIDE',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+              letterSpacing: 1.2,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Cliquez pour nous contacter directement',
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.white.withOpacity(0.9),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 25),
+
+          // Boutons d'action
+          Row(
+            children: [
+              Expanded(
+                child: _buildActionButton(
+                  icon: Icons.phone_rounded,
+                  label: 'Appeler',
+                  color: Colors.green.shade400,
+                  onTap: () => _makePhoneCall(context),
+                ),
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: _buildActionButton(
+                  icon: Icons.phone,
+                  label: 'WhatsApp',
+                  color: Colors.green.shade300,
+                  onTap: () => _openWhatsApp(context),
+                ),
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: _buildActionButton(
+                  icon: Icons.email_rounded,
+                  label: 'Email',
+                  color: Colors.blue.shade300,
+                  onTap: () => _sendEmail(context),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+
+          // Détails des contacts
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Colors.white.withOpacity(0.2)),
+            ),
+            child: Column(
+              children: [
+                _buildContactDetail(
+                  Icons.phone_rounded,
+                  '+212 666-570303',
+                ),
+                const SizedBox(height: 12),
+                _buildContactDetail(
+                  Icons.email_rounded,
+                  'mukhlissfidelite@gmail.com',
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 15),
+
+          // Indicateur de disponibilité
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.access_time_rounded,
+                color: Colors.white.withOpacity(0.8),
+                size: 16,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Support 24/7 • Réponse rapide',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white.withOpacity(0.3)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 30,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContactDetail(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 18,
+          color: Colors.white.withOpacity(0.8),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
             ),
           ),
         ),
@@ -492,40 +780,529 @@ class _WarningWrapper extends StatelessWidget {
     );
   }
 
-  void _showRenewalDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Renouveler l\'abonnement'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Votre abonnement expire le ${_formatDate(result.expiresOn!)}.',
-              style: const TextStyle(fontSize: 16),
+  void _makePhoneCall(BuildContext context) {
+    // TODO: Implémenter l'appel
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Appel du support...'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  void _openWhatsApp(BuildContext context) {
+    // TODO: Implémenter WhatsApp
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Ouverture de WhatsApp...'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  void _sendEmail(BuildContext context) {
+    // TODO: Implémenter l'email
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Ouverture de l\'application email...'),
+        backgroundColor: Colors.blue,
+      ),
+    );
+  }
+}
+
+/// 🎨 OPTION 3: Design minimaliste élégant
+class ElegantContactDesign extends StatelessWidget {
+  const ElegantContactDesign({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.shade300, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // En-tête
+          Container(
+            padding: const EdgeInsets.all(25),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
             ),
-            const SizedBox(height: 16),
-            const Text(
-              'Contactez votre fournisseur pour renouveler :',
-              style: TextStyle(fontWeight: FontWeight.w600),
+            child: Center(
+              child: Column(
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade600,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.contact_support_rounded,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    'SUPPORT CLIENT',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.grey.shade900,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    'Contactez-nous pour renouveler votre abonnement',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 8),
-            const Text('📞 +212 XXX XXX XXX'),
-            const Text('📧 support@mukhliss.ma'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Fermer'),
+          ),
+
+          // Liste des contacts
+          Padding(
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              children: [
+                _buildElegantContactItem(
+                  icon: Icons.phone_iphone_rounded,
+                  title: 'Support Téléphonique',
+                  value: '+212 666-570303',
+                  color: Colors.green.shade600,
+                ),
+                const SizedBox(height: 20),
+                _buildElegantContactItem(
+                  icon: Icons.phone,
+                  title: 'WhatsApp Business',
+                  value: '+212 666-570303',
+                  color: Colors.green.shade500,
+                ),
+                const SizedBox(height: 20),
+                _buildElegantContactItem(
+                  icon: Icons.email_rounded,
+                  title: 'Email de Support',
+                  value: 'mukhlissfidelite@gmail.com',
+                  color: Colors.blue.shade600,
+                ),
+              ],
+            ),
+          ),
+
+          // Pied de page
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              border: Border(
+                top: BorderSide(color: Colors.orange.shade100),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.access_time_filled_rounded,
+                  color: Colors.orange.shade600,
+                  size: 20,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Disponibilité',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.orange.shade700,
+                        ),
+                      ),
+                      Text(
+                        '24 heures / 7 jours',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.orange.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade100,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    'RAPIDE',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.orange.shade700,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+  Widget _buildElegantContactItem({
+    required IconData icon,
+    required String title,
+    required String value,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+              border: Border.all(color: color.withOpacity(0.2), width: 2),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: color,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            Icons.arrow_forward_ios_rounded,
+            color: Colors.grey.shade400,
+            size: 18,
+          ),
+        ],
+      ),
+    );
   }
+}
+
+/// 🎨 OPTION 4: Design avec icônes circulaires
+class CircularContactDesign extends StatelessWidget {
+  const CircularContactDesign({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(30),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.blue.shade50,
+            Colors.purple.shade50,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(25),
+        border: Border.all(color: Colors.grey.shade200, width: 2),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'CHOISISSEZ UN MODE DE CONTACT',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w900,
+              color: Colors.grey.shade900,
+              letterSpacing: 0.8,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Cliquez sur une icône pour nous contacter',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 30),
+
+          // Icônes circulaires
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildCircularContactIcon(
+                icon: Icons.phone_rounded,
+                label: 'Appel',
+                color: Colors.green.shade600,
+                value: '+212 666-570303',
+                context: context,
+              ),
+              _buildCircularContactIcon(
+                icon: Icons.phone,
+                label: 'WhatsApp',
+                color: Colors.green.shade500,
+                value: '+212 666-570303',
+                context: context,
+              ),
+              _buildCircularContactIcon(
+                icon: Icons.email_rounded,
+                label: 'Email',
+                color: Colors.blue.shade600,
+                value: 'mukhlissfidelite@gmail.com',
+                context: context,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 30),
+
+          // Coordonnées détaillées
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                _buildDetailRow(
+                  Icons.phone_rounded,
+                  'Téléphone',
+                  '+212 666-570303',
+                  Colors.green.shade600,
+                ),
+                const SizedBox(height: 15),
+                _buildDetailRow(
+                  Icons.email_rounded,
+                  'Email',
+                  'mukhlissfidelite@gmail.com',
+                  Colors.blue.shade600,
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Badge de disponibilité
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade600,
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.verified_rounded,
+                  color: Colors.white,
+                  size: 16,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'SUPPORT ACTIF 24/7',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCircularContactIcon({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required String value,
+    required BuildContext context,
+  }) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Contact via $label...'),
+                backgroundColor: color,
+              ),
+            );
+          },
+          borderRadius: BorderRadius.circular(50),
+          child: Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(0.2),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+              border: Border.all(color: color.withOpacity(0.3), width: 2),
+            ),
+            child: Center(
+              child: Icon(
+                icon,
+                color: color,
+                size: 30,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: Colors.grey.shade800,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailRow(
+      IconData icon, String title, String value, Color color) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 20,
+          ),
+        ),
+        const SizedBox(width: 15),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// 🎨 Classe d'assistance pour les méthodes de contact
+class ContactMethod {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final String contact;
+  final Color color;
+
+
+  ContactMethod({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.contact,
+    required this.color,
+
+  });
 }

@@ -159,7 +159,7 @@ class _AppHome extends StatelessWidget {
         // ═══════════════════════════════════════════════════
         // SUCCESS → PROTECTED HOME
         // ═══════════════════════════════════════════════════
-        return SubscriptionGuard(
+        return SubscriptionGuardModern(
           magasinId: snapshot.data!,
           child: const CaissierHomeScreen(),
         );
