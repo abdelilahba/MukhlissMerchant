@@ -663,4 +663,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get recompenceechange => 'Récompense(s) échangée(s) avec succès';
+
+  @override
+  String get codeinvalide => 'Code invalide';
 }
