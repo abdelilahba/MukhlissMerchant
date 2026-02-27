@@ -44,34 +44,46 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Logo animé avec effet de profondeur
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 500),
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.blue.shade600,
-                          Colors.indigo.shade400,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.blue.shade200.withValues(alpha: 0.5),
-                          blurRadius: 25,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.store_mall_directory_rounded,
-                      size: 70,
-                      color: Colors.white,
-                    ),
-                  ),
+             AnimatedContainer(
+  duration: const Duration(milliseconds: 500),
+  width: 150,
+  height: 150,
+  decoration: BoxDecoration(
+    gradient: LinearGradient(
+      colors: [
+        Colors.blue.shade600,
+        Colors.indigo.shade400,
+      ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    shape: BoxShape.circle,
+    boxShadow: [
+      BoxShadow(
+        color: Colors.blue.shade200.withValues(alpha: 0.5),
+        blurRadius: 25,
+        offset: const Offset(0, 10),
+      ),
+    ],
+  ),
+  child: ClipOval(
+    child: Image.asset(
+      'assets/images/mukhlis1.png', // Chemin de votre logo
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        // Fallback en cas d'erreur de chargement
+        return Container(
+          color: Colors.white,
+          child: const Icon(
+            Icons.store_mall_directory_rounded,
+            size: 70,
+            color: Colors.blue,
+          ),
+        );
+      },
+    ),
+  ),
+),
                   const SizedBox(height: 32),
                   
                   // Titres avec animation subtile
