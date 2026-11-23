@@ -22,6 +22,7 @@ RETURNS TABLE (
     magasin_id UUID,
     solde NUMERIC,
     cumulpoint NUMERIC,
+    points_added NUMERIC,
     created_at TIMESTAMPTZ
 )
 LANGUAGE plpgsql
@@ -69,9 +70,9 @@ BEGIN
         VALUES (p_client_id, p_magasin_id, p_montant, v_points_to_add);
     END IF;
 
-    -- 4. Retourner l'enregistrement à jour
+    -- 4. Retourner l'enregistrement à jour avec les points ajoutés sur cette transaction
     RETURN QUERY
-    SELECT cm.id, cm.client_id, cm.magasin_id, cm.solde, cm.cumulpoint, cm.created_at
+    SELECT cm.id, cm.client_id, cm.magasin_id, cm.solde, cm.cumulpoint, v_points_to_add AS points_added, cm.created_at
     FROM clientmagasin cm
     WHERE cm.client_id = p_client_id 
       AND cm.magasin_id = p_magasin_id;

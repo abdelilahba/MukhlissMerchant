@@ -518,6 +518,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
             await getIt<CaissierRepository>().getClientPoints(
           clientId: savedClientId,
           magasinId: savedMagasinId,
+          forceRefresh: true,
         );
 
         AppLogger.debug(

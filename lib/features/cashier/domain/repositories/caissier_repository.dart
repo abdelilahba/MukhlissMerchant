@@ -12,16 +12,19 @@ abstract class CaissierRepository {
   Future<double> getClientSolde({
     required String clientId,
     required String magasinId,
+    bool forceRefresh = false,
   });
 
   Future<int> getClientPoints({
     required String clientId,
     required String magasinId,
+    bool forceRefresh = false,
   });
 
   Future<List<Reward>> getAvailableRewards({
     required String clientId,
     required String magasinId,
+    bool forceRefresh = false,
   });
 
 

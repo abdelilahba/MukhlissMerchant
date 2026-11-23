@@ -75,6 +75,7 @@ class MockCaissierRepository extends _i1.Mock
   _i6.Future<double> getClientSolde({
     required String? clientId,
     required String? magasinId,
+    bool? forceRefresh = false,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -83,6 +84,7 @@ class MockCaissierRepository extends _i1.Mock
           {
             #clientId: clientId,
             #magasinId: magasinId,
+            #forceRefresh: forceRefresh,
           },
         ),
         returnValue: _i6.Future<double>.value(0.0),
@@ -92,6 +94,7 @@ class MockCaissierRepository extends _i1.Mock
   _i6.Future<int> getClientPoints({
     required String? clientId,
     required String? magasinId,
+    bool? forceRefresh = false,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -100,6 +103,7 @@ class MockCaissierRepository extends _i1.Mock
           {
             #clientId: clientId,
             #magasinId: magasinId,
+            #forceRefresh: forceRefresh,
           },
         ),
         returnValue: _i6.Future<int>.value(0),
@@ -109,6 +113,7 @@ class MockCaissierRepository extends _i1.Mock
   _i6.Future<List<_i7.Reward>> getAvailableRewards({
     required String? clientId,
     required String? magasinId,
+    bool? forceRefresh = false,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -117,6 +122,7 @@ class MockCaissierRepository extends _i1.Mock
           {
             #clientId: clientId,
             #magasinId: magasinId,
+            #forceRefresh: forceRefresh,
           },
         ),
         returnValue: _i6.Future<List<_i7.Reward>>.value(<_i7.Reward>[]),

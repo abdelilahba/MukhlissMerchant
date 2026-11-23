@@ -69,16 +69,19 @@ class ChargerRecompensesClientUseCase {
   Future<ChargerRecompensesClientResult> execute({
     required String clientId,
     required String magasinId,
+    bool forceRefresh = false,
   }) async {
     // Exécution parallèle pour performance
     final results = await Future.wait([
       repository.getAvailableRewards(
         clientId: clientId,
         magasinId: magasinId,
+        forceRefresh: forceRefresh,
       ),
       repository.getClientPoints(
         clientId: clientId,
         magasinId: magasinId,
+        forceRefresh: forceRefresh,
       ),
     ]);
 

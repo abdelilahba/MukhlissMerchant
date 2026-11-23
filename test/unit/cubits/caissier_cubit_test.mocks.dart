@@ -166,6 +166,7 @@ class MockChargerRecompensesClientUseCase extends _i1.Mock
   _i8.Future<_i4.ChargerRecompensesClientResult> execute({
     required String? clientId,
     required String? magasinId,
+    bool? forceRefresh = false,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -174,6 +175,7 @@ class MockChargerRecompensesClientUseCase extends _i1.Mock
           {
             #clientId: clientId,
             #magasinId: magasinId,
+            #forceRefresh: forceRefresh,
           },
         ),
         returnValue: _i8.Future<_i4.ChargerRecompensesClientResult>.value(
@@ -185,6 +187,7 @@ class MockChargerRecompensesClientUseCase extends _i1.Mock
             {
               #clientId: clientId,
               #magasinId: magasinId,
+              #forceRefresh: forceRefresh,
             },
           ),
         )),

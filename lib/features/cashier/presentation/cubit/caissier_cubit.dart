@@ -68,12 +68,14 @@ class CaissierCubit extends Cubit<CaissierState> {
   Future<void> loadClientRewards({
     required String clientId,
     required String magasinId,
+    bool forceRefresh = false,
   }) async {
     emit(CaissierLoading());
     try {
       final result = await chargerRecompensesClient.execute(
         clientId: clientId,
         magasinId: magasinId,
+        forceRefresh: forceRefresh,
       );
       emit(
         RecompensesChargees(
@@ -98,10 +100,11 @@ class CaissierCubit extends Cubit<CaissierState> {
     // emit(CaissierLoading());
     
     try {
-      // ✅ 1. Récupérer d'abord les points actuels du client
+      // ✅ 1. Récupérer d'abord les points actuels du client (toujours frais avant échange)
       final result = await chargerRecompensesClient.execute(
         clientId: clientId,
         magasinId: magasinId,
+        forceRefresh: true,
       );
       final pointsAvantEchange = result.clientPoints;
 

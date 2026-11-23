@@ -108,10 +108,11 @@ class CashierCodeHandler {
           .read<CaissierCubit>()
           .getClientByUniqueCode(uniqueCode);
 
-      // Points AVANT l'ajout
+      // Points AVANT l'ajout (toujours frais)
       final pointsAvant = await getIt<CaissierRepository>().getClientPoints(
         clientId: client.id,
         magasinId: currentUser.id,
+        forceRefresh: true,
       );
 
       if (!context.mounted) {
@@ -125,10 +126,11 @@ class CashierCodeHandler {
             montant: montant,
           );
 
-      // Points APRÈS l'ajout
+      // Points APRÈS l'ajout (toujours frais)
       final totalPoints = await getIt<CaissierRepository>().getClientPoints(
         clientId: client.id,
         magasinId: currentUser.id,
+        forceRefresh: true,
       );
 
       final pointsAdded = totalPoints - pointsAvant;
@@ -181,6 +183,7 @@ class CashierCodeHandler {
       final points = await getIt<CaissierRepository>().getClientPoints(
         clientId: client.id,
         magasinId: currentUser.id,
+        forceRefresh: true,
       );
 
       AppLogger.info(

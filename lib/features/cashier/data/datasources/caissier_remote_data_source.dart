@@ -32,11 +32,11 @@ class CaissierRemoteDataSource {
   // Limites de taille pour éviter memory leaks
   static const int _maxCacheSize = 5000;
   
-  // Configuration du cache
-  static const Duration _soldeCacheTTL = Duration(minutes: 5);
-  static const Duration _pointsCacheTTL = Duration(minutes: 5);
-  static const Duration _rewardsCacheTTL = Duration(minutes: 15);
-  static const Duration _clientMagasinCacheTTL = Duration(minutes: 2);
+  // Configuration du cache optimisée
+  static const Duration _soldeCacheTTL = Duration(seconds: 30);
+  static const Duration _pointsCacheTTL = Duration(seconds: 30);
+  static const Duration _rewardsCacheTTL = Duration(minutes: 5);
+  static const Duration _clientMagasinCacheTTL = Duration(seconds: 30);
 
   /// ✅ Nettoie le cache si trop grand
   void _cleanupCacheIfNeeded(Map cache) {
@@ -295,9 +295,9 @@ Future<Client> getClientByCodeUnique({
       }
 
       final result = ClientMagasinEntity.fromJson(response);
-      // Invalider les autres caches car les données ont changé
-
-      _invalidateClientCache(clientId, magasinId);
+      
+      // ✅ Mettre à jour immédiatement le cache avec les données fraîches de Supabase
+      _updateClientCache(clientId, magasinId, result);
 
       return result;
     } catch (e) {
@@ -313,10 +313,8 @@ Future<Client> getClientByCodeUnique({
     required double montant,
     bool useCache = true,
   }) async {
-    final cacheKey = _getClientMagasinKey(clientId, magasinId);
-    
     try {
-      // Toujours exécuter la fonction car elle modifie les données
+      // Toujours exécuter la fonction car elle modifie les données sur le serveur
       final response = await supabase
           .rpc(
             'apply_offers_auto',
@@ -334,17 +332,8 @@ Future<Client> getClientByCodeUnique({
 
       final result = ClientMagasinEntity.fromJson(response);
 
-      // Mettre en cache le résultat
-      if (useCache) {
-        _clientMagasinCache[cacheKey] = CacheEntry(
-          data: result,
-          timestamp: DateTime.now(),
-          ttl: _clientMagasinCacheTTL,
-        );
-      }
-
-      // Invalider les autres caches car les données ont changé
-      _invalidateClientCache(clientId, magasinId);
+      // ✅ Mettre à jour immédiatement le cache avec les données fraîches de Supabase
+      _updateClientCache(clientId, magasinId, result);
 
       return result;
     } catch (e) {
@@ -352,6 +341,28 @@ Future<Client> getClientByCodeUnique({
         'Erreur lors de l\'ajout du solde et application des offres: ${e.toString()}',
       );
     }
+  }
+
+  /// ✅ Met à jour immédiatement le cache pour un client donné avec les données fraîches du serveur
+  void _updateClientCache(String clientId, String magasinId, ClientMagasinEntity data) {
+    final now = DateTime.now();
+    _clientMagasinCache[_getClientMagasinKey(clientId, magasinId)] = CacheEntry(
+      data: data,
+      timestamp: now,
+      ttl: _clientMagasinCacheTTL,
+    );
+    _soldeCache[_getSoldeKey(clientId, magasinId)] = CacheEntry(
+      data: data.solde,
+      timestamp: now,
+      ttl: _soldeCacheTTL,
+    );
+    _pointsCache[_getPointsKey(clientId, magasinId)] = CacheEntry(
+      data: data.cumulePoint.toInt(),
+      timestamp: now,
+      ttl: _pointsCacheTTL,
+    );
+    // Invalider les récompenses disponibles car les points ont changé
+    _rewardsCache.remove(_getRewardsKey(clientId, magasinId));
   }
 
   // Méthode pour invalider tous les caches d'un client

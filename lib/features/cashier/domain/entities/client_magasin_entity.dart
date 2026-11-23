@@ -33,16 +33,23 @@ class ClientMagasinEntity {
   /// Solde total dépensé (en MAD)
   final double solde;
 
+  /// Points gagnés sur la transaction courante
+  final double pointsAdded;
+
   /// Crée une instance de [ClientMagasinEntity].
   const ClientMagasinEntity({
     required this.clientId,
     required this.magasinId,
     required this.cumulePoint,
     required this.solde,
+    this.pointsAdded = 0.0,
   });
 
   /// Points en entier (arrondi inférieur).
   int get pointsAsInt => cumulePoint.floor();
+
+  /// Points gagnés sur la transaction en entier.
+  int get pointsAddedAsInt => pointsAdded.floor();
 
   /// Solde formaté avec devise.
   String get formattedSolde => '${solde.toStringAsFixed(2)} DH';
@@ -59,10 +66,11 @@ class ClientMagasinEntity {
   /// Crée un [ClientMagasinEntity] depuis un JSON.
   factory ClientMagasinEntity.fromJson(Map<String, dynamic> json) {
     return ClientMagasinEntity(
-      clientId: json['client_id'] ?? '',
-      magasinId: json['magasin_id'] ?? '',
+      clientId: json['client_id']?.toString() ?? '',
+      magasinId: json['magasin_id']?.toString() ?? '',
       cumulePoint: (json['cumulpoint'] ?? 0).toDouble(),
       solde: (json['solde'] ?? 0).toDouble(),
+      pointsAdded: (json['points_added'] ?? 0).toDouble(),
     );
   }
 
@@ -72,6 +80,7 @@ class ClientMagasinEntity {
         'magasin_id': magasinId,
         'cumulpoint': cumulePoint,
         'solde': solde,
+        'points_added': pointsAdded,
       };
 
   /// Crée une copie avec des valeurs modifiées.
@@ -80,18 +89,23 @@ class ClientMagasinEntity {
     String? magasinId,
     double? cumulePoint,
     double? solde,
+    double? pointsAdded,
   }) {
     return ClientMagasinEntity(
       clientId: clientId ?? this.clientId,
       magasinId: magasinId ?? this.magasinId,
       cumulePoint: cumulePoint ?? this.cumulePoint,
       solde: solde ?? this.solde,
+      pointsAdded: pointsAdded ?? this.pointsAdded,
     );
   }
 
   /// Crée une nouvelle entité avec des points ajoutés.
   ClientMagasinEntity withAddedPoints(double points) {
-    return copyWith(cumulePoint: cumulePoint + points);
+    return copyWith(
+      cumulePoint: cumulePoint + points,
+      pointsAdded: points,
+    );
   }
 
   /// Crée une nouvelle entité avec du solde ajouté.
@@ -118,5 +132,5 @@ class ClientMagasinEntity {
 
   @override
   String toString() =>
-      'ClientMagasin(client: $clientId, magasin: $magasinId, points: $cumulePoint, solde: $solde)';
+      'ClientMagasin(client: $clientId, magasin: $magasinId, points: $cumulePoint, solde: $solde, pointsAdded: $pointsAdded)';
 }

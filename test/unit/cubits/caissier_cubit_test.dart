@@ -334,6 +334,7 @@ void main() {
         when(mockChargerRecompenses.execute(
           clientId: anyNamed('clientId'),
           magasinId: anyNamed('magasinId'),
+          forceRefresh: anyNamed('forceRefresh'),
         )).thenAnswer((_) async => ChargerRecompensesClientResult(
               rewards: [],
               clientPoints: pointsAvant,
@@ -376,6 +377,7 @@ void main() {
         when(mockChargerRecompenses.execute(
           clientId: anyNamed('clientId'),
           magasinId: anyNamed('magasinId'),
+          forceRefresh: anyNamed('forceRefresh'),
         )).thenAnswer((_) async => ChargerRecompensesClientResult(
               rewards: [],
               clientPoints: 5, // Seulement 5 points

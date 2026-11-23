@@ -25,10 +25,12 @@ class CaissierRepositoryImpl implements CaissierRepository {
   Future<double> getClientSolde({
     required String clientId,
     required String magasinId,
+    bool forceRefresh = false,
   }) async {
     return await remoteDataSource.getClientSolde(
       clientId: clientId,
       magasinId: magasinId,
+      forceRefresh: forceRefresh,
     );
   }
 
@@ -36,10 +38,12 @@ class CaissierRepositoryImpl implements CaissierRepository {
   Future<int> getClientPoints({
     required String clientId,
     required String magasinId,
+    bool forceRefresh = false,
   }) async {
     return await remoteDataSource.getClientPoints(
       clientId: clientId,
       magasinId: magasinId,
+      forceRefresh: forceRefresh,
     );
   }
 
@@ -47,10 +51,12 @@ class CaissierRepositoryImpl implements CaissierRepository {
   Future<List<Reward>> getAvailableRewards({
     required String clientId,
     required String magasinId,
+    bool forceRefresh = false,
   }) async {
     return await remoteDataSource.getAvailableRewards(
       clientId: clientId,
       magasinId: magasinId,
+      forceRefresh: forceRefresh,
     );
   }
 

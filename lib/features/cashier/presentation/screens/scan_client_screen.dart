@@ -413,7 +413,8 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   void _handleStateChanges(BuildContext context, CaissierState state) {
     switch (state) {
       case SoldeAjoute():
-        final pointsGagnes = state.clientMagasin.cumulePoint;
+        // ✅ Utiliser les points réellement gagnés lors de cette transaction
+        final pointsGagnes = state.clientMagasin.pointsAdded;
         final soldeRestant = state.clientMagasin.solde;
         _handleBalanceAdded(pointsGagnes, soldeRestant);
         break;
@@ -450,9 +451,12 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     // ✅ MODE NAVIGATION - FERMER IMMÉDIATEMENT
     if (mounted) {
       final l10n = AppLocalizations.of(context);
+      final pts = pointsGagnes.toInt();
+      final msg = pts > 0
+          ? '${l10n.felicitation} ! $pts ${l10n.pts} gagnés'
+          : 'Solde ajouté avec succès (0 pt gagné)';
       _showSuccessToast(
-        message:
-            '${l10n.felicitation} ! ${pointsGagnes.toInt()} ${l10n.pts} gagnés',
+        message: msg,
         solde: soldeRestant,
       );
     }
@@ -613,10 +617,11 @@ class _ScanClientScreenState extends State<ScanClientScreen>
       return;
     }
 
-    // ✅ MODE REWARDS
+    // ✅ MODE REWARDS - Toujours forcer la fraîcheur des points lors d'un scan en direct
     final points = await getIt<CaissierRepository>().getClientPoints(
       clientId: clientId,
       magasinId: magasinId,
+      forceRefresh: true,
     );
 
     // ✅ JOUER LE SON SANS ATTENDRE
