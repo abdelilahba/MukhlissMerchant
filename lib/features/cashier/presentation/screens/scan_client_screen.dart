@@ -702,7 +702,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
       );
     }
 
-    // 🔒 Sécurité Anti-capture d'écran : Vérification de l'expiration du QR code
+    // 🔒 Vérification informative du timestamp (ne bloque pas le scan pour éviter les faux positifs dus aux décalages d'horloge entre appareils)
     final dynamic rawTimestamp = clientData['timestamp'];
     if (rawTimestamp != null) {
       final int? timestampMs = rawTimestamp is int
@@ -711,17 +711,9 @@ class _ScanClientScreenState extends State<ScanClientScreen>
       if (timestampMs != null && timestampMs > 0) {
         final qrTime = DateTime.fromMillisecondsSinceEpoch(timestampMs);
         final difference = DateTime.now().difference(qrTime).abs();
-
-        // Tolérance étendue : 30 minutes pour online (évite les décalages d'horloge entre téléphone et tablette), 24h pour offline/cached
-        final bool isOffline =
-            clientData['is_offline'] == true || clientData['is_cached'] == true;
-        final maxDuration = isOffline
-            ? const Duration(hours: 24)
-            : const Duration(minutes: 30);
-
-        if (difference > maxDuration) {
-          throw const FormatException(
-            'QR code expiré. Demandez au client d\'ouvrir son application.',
+        if (difference > const Duration(hours: 48)) {
+          debugPrint(
+            'QR code ancien (>48h) détecté: ${difference.inHours}h d\'écart',
           );
         }
       }
