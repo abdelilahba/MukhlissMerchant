@@ -301,8 +301,7 @@ class _OfferCardState extends State<OfferCard>
 
                                   // Points given
                                   Text(
-                                    '${widget.offer.pointsGiven}' +
-                                        l10n.pointfidelite,
+                                    '${widget.offer.pointsGiven}${l10n.pointfidelite}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: isDark

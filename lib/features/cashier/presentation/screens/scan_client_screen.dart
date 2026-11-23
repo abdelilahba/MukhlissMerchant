@@ -562,9 +562,16 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     try {
       await _processQRCode(scanData.code!);
     } on FormatException catch (e) {
-      _handleScanError(l10n.qrcodeinvalide, e);
+      final msg = (e.message.isNotEmpty && e.message != 'FormatException')
+          ? e.message
+          : l10n.qrcodeinvalide;
+      _handleScanError(msg, e);
     } catch (e) {
-      _handleScanError('${l10n.erreurtraitement}: ${e.toString()}', e);
+      String msg = e.toString();
+      if (msg.startsWith('Exception: ')) {
+        msg = msg.substring(11);
+      }
+      _handleScanError(msg, e);
     }
   }
 
@@ -573,17 +580,29 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   }
 
   Future<void> _processQRCode(String qrCode) async {
-    final clientData = _parseQRCode(qrCode);
+    final clientData = await _parseQRCode(qrCode);
     final currentUser = _getCurrentUser();
     _validateData(clientData, currentUser);
 
-    _lastClientId = clientData['user_id'].toString();
-    _lastMagasinId = currentUser.id;
+    String clientId = clientData['user_id']?.toString() ?? '';
+
+    // Si le QR code contenait un code unique numérique au lieu d'un user_id direct
+    if (clientId.isEmpty && clientData['unique_code'] != null) {
+      final client = await getIt<CaissierRepository>().getClientByCodeUnique(
+        uniqueCode: clientData['unique_code'] as int,
+      );
+      clientId = client.id;
+    }
+
+    final String magasinId = currentUser.id.toString();
+
+    _lastClientId = clientId;
+    _lastMagasinId = magasinId;
 
     if (widget.mode == ScanMode.balance) {
       await _cubit.ajouterSoldeClient(
-        clientId: _lastClientId!,
-        magasinId: _lastMagasinId!,
+        clientId: clientId,
+        magasinId: magasinId,
         montant: widget.montant!,
       );
       return;
@@ -591,8 +610,8 @@ class _ScanClientScreenState extends State<ScanClientScreen>
 
     // ✅ MODE REWARDS
     final points = await getIt<CaissierRepository>().getClientPoints(
-      clientId: _lastClientId!,
-      magasinId: _lastMagasinId!,
+      clientId: clientId,
+      magasinId: magasinId,
     );
 
     // ✅ JOUER LE SON SANS ATTENDRE
@@ -601,8 +620,8 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     // ✅ Si callback personnalisé fourni
     if (widget.onScanSuccess != null) {
       widget.onScanSuccess!({
-        'clientId': _lastClientId!,
-        'magasinId': _lastMagasinId!,
+        'clientId': clientId,
+        'magasinId': magasinId,
         'clientPoints': points,
         'scanMode': 'rewards',
       });
@@ -616,17 +635,53 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     // ✅ Comportement par défaut - FERMER IMMÉDIATEMENT
     if (mounted) {
       Navigator.pop(context, {
-        'clientId': _lastClientId!,
-        'magasinId': _lastMagasinId!,
+        'clientId': clientId,
+        'magasinId': magasinId,
         'clientPoints': points,
         'scanMode': 'rewards',
       });
     }
   }
 
-  Map<String, dynamic> _parseQRCode(String qrCode) {
-    debugPrint('QR Data: $qrCode');
-    return jsonDecode(qrCode) as Map<String, dynamic>;
+  Future<Map<String, dynamic>> _parseQRCode(String qrCode) async {
+    final trimmed = qrCode.trim();
+    debugPrint('QR Data: $trimmed');
+
+    // 1. Cas UUID brut
+    final uuidRegex = RegExp(
+      r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
+    );
+    if (uuidRegex.hasMatch(trimmed)) {
+      return {'user_id': trimmed};
+    }
+
+    // 2. Cas code unique numérique brut (ex: 244908)
+    final numericCode = int.tryParse(trimmed);
+    if (numericCode != null && trimmed.length >= 4 && trimmed.length <= 10) {
+      return {'unique_code': numericCode, 'user_id': ''};
+    }
+
+    // 3. Cas JSON (format standard Mukhliss v1.0 ou v2.0)
+    try {
+      final rawDecoded = jsonDecode(trimmed);
+      if (rawDecoded is Map) {
+        final decoded = Map<String, dynamic>.from(rawDecoded);
+        final userId = decoded['user_id'] ?? decoded['id'];
+        if (userId != null && userId.toString().trim().isNotEmpty) {
+          decoded['user_id'] = userId.toString().trim();
+          return decoded;
+        }
+      }
+      throw const FormatException(
+        'Ce n\'est pas un QR code Mukhliss. Demandez au client d\'ouvrir l\'application Mukhliss.',
+      );
+    } on FormatException {
+      rethrow;
+    } catch (e) {
+      throw const FormatException(
+        'QR code invalide. Demandez au client d\'ouvrir l\'application Mukhliss et de montrer son QR code.',
+      );
+    }
   }
 
   dynamic _getCurrentUser() {
@@ -640,10 +695,28 @@ class _ScanClientScreenState extends State<ScanClientScreen>
       throw Exception('Aucun magasin connecté');
     }
     final userId = clientData['user_id'];
-    if (userId == null || userId.toString().isEmpty) {
+    final uniqueCode = clientData['unique_code'];
+    if ((userId == null || userId.toString().isEmpty) && uniqueCode == null) {
       throw const FormatException(
-        'Le QR code ne contient pas de user_id valide',
+        'Le QR code ne contient pas d\'identifiant client valide',
       );
+    }
+
+    // 🔒 Vérification informative du timestamp (ne bloque pas le scan pour éviter les faux positifs dus aux décalages d'horloge entre appareils)
+    final dynamic rawTimestamp = clientData['timestamp'];
+    if (rawTimestamp != null) {
+      final int? timestampMs = rawTimestamp is int
+          ? rawTimestamp
+          : int.tryParse(rawTimestamp.toString());
+      if (timestampMs != null && timestampMs > 0) {
+        final qrTime = DateTime.fromMillisecondsSinceEpoch(timestampMs);
+        final difference = DateTime.now().difference(qrTime).abs();
+        if (difference > const Duration(hours: 48)) {
+          debugPrint(
+            'QR code ancien (>48h) détecté: ${difference.inHours}h d\'écart',
+          );
+        }
+      }
     }
   }
 

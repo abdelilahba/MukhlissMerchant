@@ -12,23 +12,24 @@ class UpdateShopRewardUsecase {
   });
 
   Future<void> execute({
-    required String id, // Add required id parameter
+    required String id,
     required String title,
     required String description,
     required int requiredPoints,
-    String? imagePath,
-   required bool isActive
+    required bool isActive,
+    String? imageUrl, // NEW
   }) async {
     final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('Utilisateur non authentifié');
     if (requiredPoints <= 0) throw ArgumentError('Les points doivent être > 0');
 
     final reward = Reward(
-      id: id, // Use the existing reward ID
+      id: id,
       name: title,
       requiredPoints: requiredPoints,
+      imageUrl: imageUrl, // NEW
       shopId: currentUser.id,
-     isActive: isActive
+      isActive: isActive,
     );
 
     await repository.updateReward(reward);

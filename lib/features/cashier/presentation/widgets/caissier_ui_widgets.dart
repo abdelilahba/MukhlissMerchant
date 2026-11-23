@@ -10,9 +10,7 @@ class AppLogoSection extends StatelessWidget {
   /// Crée une section logo.
   const AppLogoSection({
     super.key,
-
-    this.imagePath = 'assets/images/lastpicture.jpeg',
-
+    this.imagePath = 'assets/images/lastone1.jpeg',
   });
 
   @override
@@ -40,7 +38,7 @@ class AppLogoSection extends StatelessWidget {
               child: const Center(
                 child: Icon(
                   Icons.image_not_supported_rounded,
-                  size: 64,
+                  size: 70,
                   color: Color(0xFF9CA3AF),
                 ),
               ),

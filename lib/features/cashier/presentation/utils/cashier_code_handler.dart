@@ -90,6 +90,11 @@ class CashierCodeHandler {
     if (montant <= 0) {
       return CodeProcessResult.error(l10n.veuillez);
     }
+    if (montant > 5000) {
+      return CodeProcessResult.error(
+        'Montant maximum autorisé dépassé (max 5 000 DH par transaction)',
+      );
+    }
 
     // Récupérer l'utilisateur courant
     final currentUser = getIt<AuthRepository>().getCurrentUser();
@@ -108,6 +113,10 @@ class CashierCodeHandler {
         clientId: client.id,
         magasinId: currentUser.id,
       );
+
+      if (!context.mounted) {
+        return CodeProcessResult.error('Opération annulée (écran fermé)');
+      }
 
       // Ajouter le solde
       await context.read<CaissierCubit>().ajouterSoldeViaCodeUnique(
@@ -137,7 +146,11 @@ class CashierCodeHandler {
       );
     } catch (e) {
       AppLogger.error('Erreur processBalanceCode: $e', tag: 'CashierCodeHandler');
-      return CodeProcessResult.error('Erreur: $e');
+      String msg = e.toString();
+      if (msg.startsWith('Exception: ')) {
+        msg = msg.substring(11);
+      }
+      return CodeProcessResult.error(msg);
     }
   }
 
@@ -182,7 +195,11 @@ class CashierCodeHandler {
       );
     } catch (e) {
       AppLogger.error('Erreur processRewardsCode: $e', tag: 'CashierCodeHandler');
-      return CodeProcessResult.error('Erreur: $e');
+      String msg = e.toString();
+      if (msg.startsWith('Exception: ')) {
+        msg = msg.substring(11);
+      }
+      return CodeProcessResult.error(msg);
     }
   }
 

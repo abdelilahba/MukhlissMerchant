@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_cubit.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/managers/reward_manager.dart';
+import 'package:mukhlissmagasin/features/rewards/data/datasources/reward_remote_data_source.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
 class AddRewardScreen extends StatefulWidget {
@@ -26,6 +27,9 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   late Animation<double> _scaleAnimation;
   late Animation<double> _floatingScaleAnimation;
   bool _isSubmitting = false;
+  List<PresetImage> _presetImages = [];
+  bool _isLoadingImages = true;
+  String? _selectedImageUrl;
 
   @override
   void initState() {
@@ -33,6 +37,7 @@ class _AddRewardScreenState extends State<AddRewardScreen>
     _manager = RewardManager(context.read<RewardCubit>());
     _initializeAnimations();
     _populateFieldsForEditing();
+    _loadPresetImages();
   }
 
   void _initializeAnimations() {
@@ -94,6 +99,25 @@ class _AddRewardScreenState extends State<AddRewardScreen>
       _manager.titleController.text = widget.reward!.name;
       _manager.pointsController.text = widget.reward!.requiredPoints.toString();
       _manager.isActive = widget.reward!.isActive;
+      _selectedImageUrl = widget.reward!.imageUrl;
+      _manager.setSelectedImageUrl(widget.reward!.imageUrl);
+    }
+  }
+
+  /// Charge les images prédéfinies pour la catégorie du magasin
+  Future<void> _loadPresetImages() async {
+    try {
+      final images = await _manager.loadPresetImages();
+      if (mounted) {
+        setState(() {
+          _presetImages = images;
+          _isLoadingImages = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoadingImages = false);
+      }
     }
   }
 
@@ -109,6 +133,9 @@ class _AddRewardScreenState extends State<AddRewardScreen>
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // Passer l'image sélectionnée au manager
+    _manager.setSelectedImageUrl(_selectedImageUrl);
+
     setState(() => _isSubmitting = true);
     _submitAnimationController.forward();
 
@@ -122,7 +149,9 @@ class _AddRewardScreenState extends State<AddRewardScreen>
       if (mounted) {
         _showSuccessMessage();
         await Future.delayed(const Duration(milliseconds: 2000));
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
       }
     } catch (e) {
       if (mounted) _showErrorSnackbar(e.toString());
@@ -536,6 +565,9 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 color: Colors.blue.shade600,
               ),
               const SizedBox(height: 28),
+              // NEW: Grille de sélection d'images
+              _buildImagePickerSection(),
+              const SizedBox(height: 24),
               _buildEnhancedRewardNameField(),
               const SizedBox(height: 24),
               _buildEnhancedPointsField(),
@@ -814,6 +846,271 @@ class _AddRewardScreenState extends State<AddRewardScreen>
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
         ),
+      ],
+    );
+  }
+
+  /// Grille de sélection d'images prédéfinies par catégorie
+  Widget _buildImagePickerSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Image de la récompense',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade800,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Choisissez une image pour rendre votre récompense plus attractive',
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey.shade600,
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // Grille d'images
+        if (_isLoadingImages)
+          Container(
+            height: 120,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    color: Colors.purple.shade400,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Chargement des images...',
+                  style: TextStyle(
+                    color: Colors.grey.shade500,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          )
+        else if (_presetImages.isEmpty)
+          Container(
+            height: 80,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.image_not_supported_outlined,
+                    color: Colors.grey.shade400, size: 24),
+                const SizedBox(width: 12),
+                Text(
+                  'Aucune image disponible',
+                  style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+                ),
+              ],
+            ),
+          )
+        else
+          SizedBox(
+            height: 130,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              itemCount: _presetImages.length,
+              itemBuilder: (context, index) {
+                final preset = _presetImages[index];
+                final isSelected = _selectedImageUrl == preset.imageUrl;
+
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (_selectedImageUrl == preset.imageUrl) {
+                        // Désélectionner si on re-tap
+                        _selectedImageUrl = null;
+                      } else {
+                        _selectedImageUrl = preset.imageUrl;
+                      }
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOut,
+                    width: 130,
+                    margin: EdgeInsets.only(
+                      right: 12,
+                      top: isSelected ? 0 : 4,
+                      bottom: isSelected ? 4 : 0,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(
+                        color: isSelected
+                            ? Colors.purple.shade500
+                            : Colors.grey.shade200,
+                        width: isSelected ? 3 : 1.5,
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: Colors.purple.withValues(alpha: 0.25),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ]
+                          : [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.06),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          // Image
+                          Image.network(
+                            preset.imageUrl,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                color: Colors.grey.shade100,
+                                child: Center(
+                                  child: SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.purple.shade300,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey.shade100,
+                                child: Icon(
+                                  Icons.broken_image_outlined,
+                                  color: Colors.grey.shade400,
+                                  size: 32,
+                                ),
+                              );
+                            },
+                          ),
+
+                          // Label en bas
+                          if (preset.label != null)
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 6),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                    colors: [
+                                      Colors.black.withValues(alpha: 0.7),
+                                      Colors.transparent,
+                                    ],
+                                  ),
+                                ),
+                                child: Text(
+                                  preset.label!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+
+                          // Coche de sélection
+                          if (isSelected)
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.purple.shade500,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          Colors.purple.withValues(alpha: 0.4),
+                                      blurRadius: 6,
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  Icons.check_rounded,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
+        // Bouton pour désélectionner
+        if (_selectedImageUrl != null) ...[
+          const SizedBox(height: 12),
+          GestureDetector(
+            onTap: () => setState(() => _selectedImageUrl = null),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.red.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.red.shade200),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.close_rounded,
+                      color: Colors.red.shade400, size: 16),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Retirer l\'image',
+                    style: TextStyle(
+                      color: Colors.red.shade600,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }

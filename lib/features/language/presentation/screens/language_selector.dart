@@ -5,6 +5,7 @@ import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 
 
 class LanguageSelector extends StatelessWidget {
+  const LanguageSelector({super.key});
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -179,7 +180,7 @@ class LanguageSelector extends StatelessWidget {
                 ),
               ),
             );
-          }).toList(),
+          }),
           
           const SizedBox(height: 8),
         ],
@@ -190,6 +191,7 @@ class LanguageSelector extends StatelessWidget {
 
 // Version alternative avec un design plus compact
 class CompactLanguageSelector extends StatelessWidget {
+  const CompactLanguageSelector({super.key});
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<LanguageCubit>();

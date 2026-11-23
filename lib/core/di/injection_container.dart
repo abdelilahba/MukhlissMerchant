@@ -125,6 +125,7 @@ Future<void> initDependencies() async {
     addRewardUseCase: getIt(),
     updateRewardUseCase: getIt(),
     deleteRewardUseCase: getIt(),
+    repository: getIt(), // NEW: pour les preset images
   ));
 getIt.registerLazySingleton<CaissierRemoteDataSource>(
   () => CaissierRemoteDataSource(),

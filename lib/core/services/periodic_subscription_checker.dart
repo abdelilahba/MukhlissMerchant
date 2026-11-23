@@ -42,8 +42,8 @@ class PeriodicSubscriptionChecker {
   Future<AccessResult> _checkAccess() async {
     final result = await _subscriptionService.checkAccess(_currentMagasinId!);
     
-    // Si l'accès a changé (devient bloqué), notifier
-    if (!result.canAccess && onAccessChanged != null) {
+    // Notifier le listener du changement d'accès
+    if (onAccessChanged != null) {
       onAccessChanged!(result);
     }
 

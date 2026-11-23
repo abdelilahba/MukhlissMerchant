@@ -607,7 +607,7 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
     );
   }
 
-  void _handleUniversalScan(BuildContext context) {
+  Future<void> _handleUniversalScan(BuildContext context) async {
     final bool isMontantRempli = _montantController.text.trim().isNotEmpty;
     final double? montant =
         double.tryParse(_montantController.text.replaceAll(',', '.'));
@@ -617,6 +617,21 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
       // Montant invalide
       _showErrorSnackBar(context, 'Veuillez saisir un montant valide');
       return;
+    }
+
+    if (isMontantRempli && montantValide) {
+      if (montant > 5000) {
+        _showErrorSnackBar(
+          context,
+          'Montant maximum autorisé dépassé (max 5 000 DH par transaction)',
+        );
+        return;
+      }
+
+      if (montant >= 1000) {
+        final confirm = await _showHighAmountConfirmation(context, montant);
+        if (!confirm || !context.mounted) return;
+      }
     }
 
     // ✅ Réinitialisation COMPLÈTE avant de lancer le scan
@@ -716,6 +731,19 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
       return;
     }
 
+    if (montant > 5000) {
+      _showErrorSnackBar(
+        context,
+        'Montant maximum autorisé dépassé (max 5 000 DH par transaction)',
+      );
+      return;
+    }
+
+    if (montant >= 1000) {
+      final confirm = await _showHighAmountConfirmation(context, montant);
+      if (!confirm || !context.mounted) return;
+    }
+
     // ✅ Réinitialisation COMPLÈTE incluant la félicitation
     if (mounted) {
       setState(() {
@@ -752,6 +780,58 @@ class _CaissierHomeScreenState extends State<CaissierHomeScreen> {
         _codeController.clear();
       });
     }
+  }
+
+  /// Boîte de dialogue de confirmation pour les montants élevés (>= 1 000 DH)
+  Future<bool> _showHighAmountConfirmation(
+    BuildContext context,
+    double montant,
+  ) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Color(0xFFF59E0B), size: 28),
+            SizedBox(width: 10),
+            Text(
+              'Montant élevé',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+          ],
+        ),
+        content: Text(
+          'Vous avez saisi un montant de ${montant.toStringAsFixed(2)} DH.\n\nConfirmez-vous ce montant pour l\'attribution des points ?',
+          style: const TextStyle(fontSize: 15, color: Color(0xFF374151)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text(
+              'Corriger',
+              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF10B981),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: const Text(
+              'Confirmer',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
   }
 
   // ========== SNACKBARS ==========

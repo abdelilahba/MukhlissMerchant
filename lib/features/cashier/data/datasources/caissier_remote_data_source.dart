@@ -112,9 +112,19 @@ Future<Client> getClientByCodeUnique({
           .from('clients')
           .select()
           .eq('code_unique', uniqueCode)
-          .single();
+          .maybeSingle();
+
+      if (response == null) {
+        throw Exception(
+          'Code invalide. Aucun client trouvé avec le code $uniqueCode. Vérifiez le code et réessayez.',
+        );
+      }
+
       return Client.fromJson(response);
     } catch (e) {
+      if (e.toString().contains('Code invalide')) {
+        rethrow;
+      }
       throw Exception(
         'Erreur lors de la récupération du client par code unique: ${e.toString()}',
       );
@@ -269,8 +279,8 @@ Future<Client> getClientByCodeUnique({
     try {
       final client = await getClientByCodeUnique(uniqueCode: uniqueCode);
       final clientId = client.id;
-      final result = await supabase
-         .rpc(
+      final response = await supabase
+          .rpc(
             'apply_offers_auto',
             params: {
               'p_client_id': clientId,
@@ -278,8 +288,13 @@ Future<Client> getClientByCodeUnique({
               'p_montant': montant,
             },
           )
-        .single()
-        .then(ClientMagasinEntity.fromJson);
+          .maybeSingle();
+
+      if (response == null) {
+        throw Exception('Impossible d\'appliquer les offres : aucune donnée retournée');
+      }
+
+      final result = ClientMagasinEntity.fromJson(response);
       // Invalider les autres caches car les données ont changé
 
       _invalidateClientCache(clientId, magasinId);
@@ -302,7 +317,7 @@ Future<Client> getClientByCodeUnique({
     
     try {
       // Toujours exécuter la fonction car elle modifie les données
-      final result = await supabase
+      final response = await supabase
           .rpc(
             'apply_offers_auto',
             params: {
@@ -311,8 +326,13 @@ Future<Client> getClientByCodeUnique({
               'p_montant': montant,
             },
           )
-          .single()
-          .then(ClientMagasinEntity.fromJson);
+          .maybeSingle();
+
+      if (response == null) {
+        throw Exception('Impossible d\'appliquer les offres : aucune donnée retournée');
+      }
+
+      final result = ClientMagasinEntity.fromJson(response);
 
       // Mettre en cache le résultat
       if (useCache) {
@@ -386,9 +406,13 @@ Future<MagasinModel> currentMagazin() async {
   final response = await supabase
       .from('magasins')
       .select()
-      .eq('id', user.id)  // Supposons que vous avez une colonne user_id
-      .single();
+      .eq('id', user.id)
+      .maybeSingle();
   
+  if (response == null) {
+    throw Exception('Aucun magasin trouvé pour l\'utilisateur connecté (${user.id})');
+  }
+
   return MagasinModel.fromJson(response);
 }
 

@@ -15,31 +15,47 @@ class RewardRepositoryImpl implements RewardRepository {
 
   @override
   Future<List<Reward>> getShopRewards() async {
-    final currentUser =  authRepository.getCurrentUser();
+    final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('Utilisateur non connecté');
     return await remoteDataSource.getRewardsByStore(currentUser.id);
   }
 
   @override
   Future<void> addReward(Reward reward) async {
-    final currentUser =  authRepository.getCurrentUser();
+    final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('Utilisateur non connecté');
-    
+
     final rewardWithShopId = reward.copyWith(shopId: currentUser.id);
-    await remoteDataSource.addReward(rewardWithShopId,);
+    await remoteDataSource.addReward(rewardWithShopId);
   }
 
   @override
   Future<void> updateReward(Reward reward) async {
-    final currentUser =  authRepository.getCurrentUser();
+    final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('Utilisateur non connecté');
-    
+
     final rewardWithShopId = reward.copyWith(shopId: currentUser.id);
     await remoteDataSource.updateReward(rewardWithShopId);
   }
 
-    @override
+  @override
   Future<void> deleteReward(String id) async {
     await remoteDataSource.deleteReward(id);
+  }
+
+  /// NEW: Récupère les images prédéfinies pour la catégorie du magasin connecté
+  @override
+  Future<List<PresetImage>> getPresetImages() async {
+    final currentUser = authRepository.getCurrentUser();
+    if (currentUser == null) throw Exception('Utilisateur non connecté');
+
+    // Récupérer la catégorie du magasin
+    final categoryId = await remoteDataSource.getMagasinCategoryId(currentUser.id);
+    if (categoryId == null) {
+      // Si pas de catégorie, retourner les images par défaut
+      return await remoteDataSource.getPresetImages(0);
+    }
+
+    return await remoteDataSource.getPresetImages(categoryId);
   }
 }

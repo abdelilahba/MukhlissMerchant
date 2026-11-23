@@ -32,9 +32,9 @@ android {
     defaultConfig {
         applicationId = "com.mukhliss.merchant"
         minSdk = flutter.minSdkVersion  // Android 5.0
-        targetSdk = 35  // Android 15
-        versionCode = 1
-        versionName = "1.0.0"
+        targetSdk = 36  // Android 16 (API 36)
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
         
         // Enable multidex for large apps
         multiDexEnabled = true

@@ -95,6 +95,7 @@ class AppBlocProviders {
             addRewardUseCase: getIt(),
             updateRewardUseCase: getIt(),
             deleteRewardUseCase: getIt(),
+            repository: getIt(), // NEW: pour les preset images
           ),
         ),
 

@@ -4,18 +4,23 @@ import 'package:mukhlissmagasin/features/rewards/domain/usecases/delete_shop_rew
 import 'package:mukhlissmagasin/features/rewards/domain/usecases/get_shop_rewards_usecase.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 import 'package:mukhlissmagasin/features/rewards/domain/usecases/update_shop_reward_usecase.dart';
+import 'package:mukhlissmagasin/features/rewards/domain/repositories/reward_repository.dart';
 import 'package:mukhlissmagasin/features/rewards/presentation/cubit/reward_state.dart';
+import 'package:mukhlissmagasin/features/rewards/data/datasources/reward_remote_data_source.dart';
 
 class RewardCubit extends Cubit<RewardState> {
   final GetShopRewardsUseCase getShopRewardsUseCase;
   final AddRewardUseCase addRewardUseCase;
   final UpdateShopRewardUsecase updateRewardUseCase;
   final DeleteRewardUseCase deleteRewardUseCase;
+  final RewardRepository repository; // NEW: pour accéder aux preset images
+
   RewardCubit({
     required this.getShopRewardsUseCase,
     required this.addRewardUseCase,
     required this.updateRewardUseCase,
     required this.deleteRewardUseCase,
+    required this.repository, // NEW
   }) : super(RewardInitial());
 
   Future<void> loadShopRewards() async {
@@ -33,7 +38,7 @@ class RewardCubit extends Cubit<RewardState> {
     required String description,
     required int requiredPoints,
     required bool isactive,
-     // Changé de imageUrl à imagePath
+    String? imageUrl, // NEW
   }) async {
     emit(RewardLoading());
     try {
@@ -41,37 +46,39 @@ class RewardCubit extends Cubit<RewardState> {
         title: title,
         description: description,
         requiredPoints: requiredPoints,
-        isactive: isactive
+        isactive: isactive,
+        imageUrl: imageUrl, // NEW
       );
-      await loadShopRewards(); // Recharge la liste mise à jour
+      await loadShopRewards();
     } catch (e) {
       emit(RewardError('Erreur d\'ajout: ${e.toString()}'));
     }
   }
-Future<void> updateReward({
+
+  Future<void> updateReward({
     required String id,
     required String title,
     required String description,
     required int requiredPoints,
-    required bool isActive ,
-  
+    required bool isActive,
+    String? imageUrl, // NEW
   }) async {
     try {
       emit(RewardLoading());
-      // Call your repository to update the reward
       await updateRewardUseCase.execute(
         id: id,
         title: title,
         description: description,
         requiredPoints: requiredPoints,
-       
-        isActive: isActive
+        isActive: isActive,
+        imageUrl: imageUrl, // NEW
       );
       await loadShopRewards();
     } catch (e) {
       emit(RewardError(e.toString()));
     }
   }
+
   void showRewardDetail(Reward reward) {
     emit(RewardDetailLoaded(reward));
   }
@@ -89,6 +96,15 @@ Future<void> updateReward({
       await loadShopRewards();
     } catch (e) {
       emit(RewardError('Delete error: ${e.toString()}'));
+    }
+  }
+
+  /// NEW: Charge les images prédéfinies pour la catégorie du magasin
+  Future<List<PresetImage>> loadPresetImages() async {
+    try {
+      return await repository.getPresetImages();
+    } catch (e) {
+      return [];
     }
   }
 }
