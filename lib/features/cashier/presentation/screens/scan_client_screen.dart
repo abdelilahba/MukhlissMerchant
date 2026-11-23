@@ -630,17 +630,20 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   Map<String, dynamic> _parseQRCode(String qrCode) {
     debugPrint('QR Data: $qrCode');
     try {
-      final decoded = jsonDecode(qrCode);
-      if (decoded is! Map<String, dynamic>) {
+      final rawDecoded = jsonDecode(qrCode);
+      if (rawDecoded is! Map) {
         throw const FormatException(
           'Ce n\'est pas un QR code Mukhliss. Demandez au client d\'ouvrir l\'application Mukhliss.',
         );
       }
-      if (!decoded.containsKey('user_id')) {
+      final decoded = Map<String, dynamic>.from(rawDecoded);
+      final userId = decoded['user_id'] ?? decoded['id'];
+      if (userId == null || userId.toString().trim().isEmpty) {
         throw const FormatException(
           'QR code non reconnu. Ce QR code n\'appartient pas à l\'application Mukhliss.',
         );
       }
+      decoded['user_id'] = userId;
       return decoded;
     } on FormatException {
       rethrow;
