@@ -10,7 +10,7 @@ class AppLogoSection extends StatelessWidget {
   /// Crée une section logo.
   const AppLogoSection({
     super.key,
-    this.imagePath = 'assets/images/lastone1.jpeg',
+    this.imagePath = 'assets/images/lastone.jpeg',
   });
 
   @override
