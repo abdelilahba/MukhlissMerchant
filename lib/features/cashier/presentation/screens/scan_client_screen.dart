@@ -10,7 +10,7 @@ import 'package:mukhlissmagasin/features/cashier/domain/repositories/caissier_re
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_cubit.dart';
 import 'package:mukhlissmagasin/features/cashier/presentation/cubit/caissier_state.dart';
 import 'package:mukhlissmagasin/l10n/app_localizations.dart';
-import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 enum ScanMode { balance, rewards }
 
@@ -40,15 +40,13 @@ class ScanClientScreen extends StatefulWidget {
 class _ScanClientScreenState extends State<ScanClientScreen>
     with TickerProviderStateMixin {
   // Constants
-  static const _qrDebugLabel = 'QR';
   static const _cutOutSize = 1000.0;
   static const _borderWidth = 10.0;
   static const _borderLength = 100.0;
   // static const _borderRadius = 60.0;
 
   // Controllers and state
-  final GlobalKey _qrKey = GlobalKey(debugLabel: _qrDebugLabel);
-  QRViewController? _controller;
+  late final MobileScannerController _controller;
   final CaissierCubit _cubit = getIt<CaissierCubit>();
   bool _isProcessing = false;
 
@@ -71,6 +69,12 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   @override
   void initState() {
     super.initState();
+    _controller = MobileScannerController(
+      facing: CameraFacing.front,
+      detectionSpeed: DetectionSpeed.normal,
+      detectionTimeoutMs: 250,
+      formats: const [BarcodeFormat.qrCode],
+    );
     _initAnimations();
     //  _initAudioPlayer ();
   }
@@ -170,18 +174,10 @@ class _ScanClientScreenState extends State<ScanClientScreen>
           flex: 3,
           child: Stack(
             children: [
-              QRView(
-                key: _qrKey,
-                onQRViewCreated: _onQRViewCreated,
-                overlay: QrScannerOverlayShape(
-                  borderColor: Colors.transparent,
-                  // borderRadius: _borderRadius,
-                  borderLength: 0,
-                  borderWidth: 0,
-                  cutOutSize: _cutOutSize,
-                ),
-                cameraFacing: CameraFacing.front,
-                formatsAllowed: const [BarcodeFormat.qrcode],
+              MobileScanner(
+                controller: _controller,
+                onDetect: _onDetect,
+                fit: BoxFit.cover,
               ),
               // Custom animated overlay
               _buildAnimatedOverlay(),
@@ -545,22 +541,28 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
-    _controller = controller;
-    controller.scannedDataStream.listen(_handleQRScan);
+  void _onDetect(BarcodeCapture capture) {
+    if (_isProcessing || !mounted) return;
+    for (final barcode in capture.barcodes) {
+      final code = barcode.rawValue;
+      if (code != null && code.isNotEmpty) {
+        _handleQRScan(code);
+        break;
+      }
+    }
   }
 
-  Future<void> _handleQRScan(Barcode scanData) async {
+  Future<void> _handleQRScan(String code) async {
     final l10n = AppLocalizations.of(context);
 
     // Arrêter immédiatement le scanner si un code est détecté
-    if (!_canProcessScan(scanData)) return;
+    if (!_canProcessScan(code)) return;
 
     _setProcessing(true);
     await _pauseCamera(); // Pause la caméra immédiatement
 
     try {
-      await _processQRCode(scanData.code!);
+      await _processQRCode(code);
     } on FormatException catch (e) {
       final msg = (e.message.isNotEmpty && e.message != 'FormatException')
           ? e.message
@@ -575,8 +577,8 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     }
   }
 
-  bool _canProcessScan(Barcode scanData) {
-    return scanData.code != null && mounted && !_isProcessing;
+  bool _canProcessScan(String code) {
+    return code.isNotEmpty && mounted && !_isProcessing;
   }
 
   Future<void> _processQRCode(String qrCode) async {
@@ -736,28 +738,28 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   }
 
   Future<void> _pauseCamera() async {
-    await _controller?.pauseCamera();
+    try {
+      await _controller.stop();
+    } catch (e) {
+      debugPrint('Error pausing camera: $e');
+    }
   }
 
   Future<void> _resumeCamera() async {
-    await _controller?.resumeCamera();
+    try {
+      await _controller.start();
+    } catch (e) {
+      debugPrint('Error resuming camera: $e');
+    }
   }
 
   bool _shouldShowLoading(CaissierState state) {
     return state is CaissierLoading || _isProcessing;
   }
 
-  Future<void> _pauseScanner() async {
-    try {
-      await _controller?.pauseCamera();
-    } catch (e) {
-      debugPrint('Error pausing camera: $e');
-    }
-  }
-
   @override
   void dispose() {
-    _pauseScanner();
+    _controller.dispose();
     _scanLineController.dispose();
     _cornerController.dispose();
     _pulseController.dispose();
