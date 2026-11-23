@@ -36,6 +36,7 @@ class RewardRemoteDataSource {
   // Supprime une récompense
   Future<void> deleteReward(String id) async {
     try {
+      await supabase.from('reward_claims').delete().eq('reward_id', id);
       await supabase.from('rewards').delete().eq('id', id);
     } on PostgrestException catch (e) {
       throw Exception('Database error: ${e.message}');
