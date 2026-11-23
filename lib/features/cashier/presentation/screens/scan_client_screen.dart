@@ -174,10 +174,13 @@ class _ScanClientScreenState extends State<ScanClientScreen>
           flex: 3,
           child: Stack(
             children: [
-              MobileScanner(
-                controller: _controller,
-                onDetect: _onDetect,
-                fit: BoxFit.cover,
+              Transform.scale(
+                scaleX: -1,
+                child: MobileScanner(
+                  controller: _controller,
+                  onDetect: _onDetect,
+                  fit: BoxFit.cover,
+                ),
               ),
               // Custom animated overlay
               _buildAnimatedOverlay(),
