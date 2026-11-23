@@ -27,7 +27,11 @@ class ProfileRemoteDataSource {
 
       // Ensuite, récupérez toutes les données du magasin
       final fullMagasinData =
-          await _client.from('magasins').select().eq('id', magasinId).single();
+          await _client.from('magasins').select().eq('id', magasinId).maybeSingle();
+
+      if (fullMagasinData == null) {
+        return null;
+      }
 
       return MagasinModel.fromJson(fullMagasinData);
     } catch (e) {

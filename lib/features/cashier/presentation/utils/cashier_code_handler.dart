@@ -146,7 +146,11 @@ class CashierCodeHandler {
       );
     } catch (e) {
       AppLogger.error('Erreur processBalanceCode: $e', tag: 'CashierCodeHandler');
-      return CodeProcessResult.error('Erreur: $e');
+      String msg = e.toString();
+      if (msg.startsWith('Exception: ')) {
+        msg = msg.substring(11);
+      }
+      return CodeProcessResult.error(msg);
     }
   }
 
@@ -191,7 +195,11 @@ class CashierCodeHandler {
       );
     } catch (e) {
       AppLogger.error('Erreur processRewardsCode: $e', tag: 'CashierCodeHandler');
-      return CodeProcessResult.error('Erreur: $e');
+      String msg = e.toString();
+      if (msg.startsWith('Exception: ')) {
+        msg = msg.substring(11);
+      }
+      return CodeProcessResult.error(msg);
     }
   }
 
