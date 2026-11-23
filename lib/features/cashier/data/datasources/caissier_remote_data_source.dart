@@ -112,9 +112,19 @@ Future<Client> getClientByCodeUnique({
           .from('clients')
           .select()
           .eq('code_unique', uniqueCode)
-          .single();
+          .maybeSingle();
+
+      if (response == null) {
+        throw Exception(
+          'Code invalide. Aucun client trouvé avec le code $uniqueCode. Vérifiez le code et réessayez.',
+        );
+      }
+
       return Client.fromJson(response);
     } catch (e) {
+      if (e.toString().contains('Code invalide')) {
+        rethrow;
+      }
       throw Exception(
         'Erreur lors de la récupération du client par code unique: ${e.toString()}',
       );

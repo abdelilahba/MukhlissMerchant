@@ -5,7 +5,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 /// 
 /// Test les différents types d'erreurs capturées par Sentry
 class SentryTestScreen extends StatelessWidget {
-  const SentryTestScreen({Key? key}) : super(key: key);
+  const SentryTestScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +98,7 @@ class SentryTestScreen extends StatelessWidget {
                       username: 'Test User',
                     ));
                     scope.setTag('test_type', 'manual');
-                    scope.setExtra('device', 'Flutter Web');
+                    scope.setContexts('device_info', {'name': 'Flutter Web'});
                   });
 
                   await Sentry.captureException(

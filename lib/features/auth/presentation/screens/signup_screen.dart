@@ -107,7 +107,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   if (state is AuthAuthenticated) {
                     // Utilisez le routeur global plutôt que Navigator direct
                     Future.delayed(Duration.zero, () {
-                      if (mounted) {
+                      if (context.mounted) {
                         Navigator.of(
                           context,
                           rootNavigator: true,

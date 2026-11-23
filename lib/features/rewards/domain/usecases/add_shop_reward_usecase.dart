@@ -12,23 +12,24 @@ class AddRewardUseCase {
     required this.authRepository,
   });
 
-Future<void> execute({
+  Future<void> execute({
     required String title,
     required String description,
     required int requiredPoints,
-    required bool isactive
+    required bool isactive,
+    String? imageUrl, // NEW
   }) async {
     final currentUser = authRepository.getCurrentUser();
     if (currentUser == null) throw Exception('Utilisateur non authentifié');
     if (requiredPoints <= 0) throw ArgumentError('Les points doivent être > 0');
 
     final reward = Reward(
-     id: const Uuid().v4(),
+      id: const Uuid().v4(),
       name: title,
       requiredPoints: requiredPoints,
+      imageUrl: imageUrl, // NEW
       shopId: currentUser.id,
-       isActive: isactive
-      // imageUrl sera défini par le repository après l'upload
+      isActive: isactive,
     );
 
     await repository.addReward(reward);

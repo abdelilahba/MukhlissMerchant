@@ -577,13 +577,16 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     final currentUser = _getCurrentUser();
     _validateData(clientData, currentUser);
 
-    _lastClientId = clientData['user_id'].toString();
-    _lastMagasinId = currentUser.id;
+    final String clientId = clientData['user_id'].toString();
+    final String magasinId = currentUser.id.toString();
+
+    _lastClientId = clientId;
+    _lastMagasinId = magasinId;
 
     if (widget.mode == ScanMode.balance) {
       await _cubit.ajouterSoldeClient(
-        clientId: _lastClientId!,
-        magasinId: _lastMagasinId!,
+        clientId: clientId,
+        magasinId: magasinId,
         montant: widget.montant!,
       );
       return;
@@ -591,8 +594,8 @@ class _ScanClientScreenState extends State<ScanClientScreen>
 
     // ✅ MODE REWARDS
     final points = await getIt<CaissierRepository>().getClientPoints(
-      clientId: _lastClientId!,
-      magasinId: _lastMagasinId!,
+      clientId: clientId,
+      magasinId: magasinId,
     );
 
     // ✅ JOUER LE SON SANS ATTENDRE
@@ -601,8 +604,8 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     // ✅ Si callback personnalisé fourni
     if (widget.onScanSuccess != null) {
       widget.onScanSuccess!({
-        'clientId': _lastClientId!,
-        'magasinId': _lastMagasinId!,
+        'clientId': clientId,
+        'magasinId': magasinId,
         'clientPoints': points,
         'scanMode': 'rewards',
       });
@@ -616,8 +619,8 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     // ✅ Comportement par défaut - FERMER IMMÉDIATEMENT
     if (mounted) {
       Navigator.pop(context, {
-        'clientId': _lastClientId!,
-        'magasinId': _lastMagasinId!,
+        'clientId': clientId,
+        'magasinId': magasinId,
         'clientPoints': points,
         'scanMode': 'rewards',
       });
@@ -626,7 +629,26 @@ class _ScanClientScreenState extends State<ScanClientScreen>
 
   Map<String, dynamic> _parseQRCode(String qrCode) {
     debugPrint('QR Data: $qrCode');
-    return jsonDecode(qrCode) as Map<String, dynamic>;
+    try {
+      final decoded = jsonDecode(qrCode);
+      if (decoded is! Map<String, dynamic>) {
+        throw const FormatException(
+          'Ce n\'est pas un QR code Mukhliss. Demandez au client d\'ouvrir l\'application Mukhliss.',
+        );
+      }
+      if (!decoded.containsKey('user_id')) {
+        throw const FormatException(
+          'QR code non reconnu. Ce QR code n\'appartient pas à l\'application Mukhliss.',
+        );
+      }
+      return decoded;
+    } on FormatException {
+      rethrow;
+    } catch (e) {
+      throw const FormatException(
+        'QR code invalide. Demandez au client d\'ouvrir l\'application Mukhliss et de montrer son QR code.',
+      );
+    }
   }
 
   dynamic _getCurrentUser() {
@@ -644,6 +666,24 @@ class _ScanClientScreenState extends State<ScanClientScreen>
       throw const FormatException(
         'Le QR code ne contient pas de user_id valide',
       );
+    }
+
+    // 🔒 Sécurité Anti-capture d'écran : Vérification de l'expiration du QR code
+    final dynamic rawTimestamp = clientData['timestamp'];
+    if (rawTimestamp != null) {
+      final int? timestampMs = rawTimestamp is int
+          ? rawTimestamp
+          : int.tryParse(rawTimestamp.toString());
+      if (timestampMs != null && timestampMs > 0) {
+        final qrTime = DateTime.fromMillisecondsSinceEpoch(timestampMs);
+        final difference = DateTime.now().difference(qrTime).abs();
+        // Si le QR code a plus de 5 minutes, c'est une ancienne capture d'écran
+        if (difference > const Duration(minutes: 5)) {
+          throw const FormatException(
+            'QR code expiré. Demandez au client d\'ouvrir son application.',
+          );
+        }
+      }
     }
   }
 

@@ -9,7 +9,7 @@ import 'package:mukhlissmagasin/l10n/app_localizations.dart';
 class AddOfferScreen extends StatefulWidget {
   final Offer? offer;
 
-  const AddOfferScreen({Key? key, this.offer}) : super(key: key);
+  const AddOfferScreen({super.key, this.offer});
 
   @override
   State<AddOfferScreen> createState() => _AddOfferScreenState();
@@ -139,7 +139,9 @@ class _AddOfferScreenState extends State<AddOfferScreen>
       if (mounted) {
         _showSuccessMessage(widget.offer != null);
         await Future.delayed(const Duration(milliseconds: 2000));
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
       }
     } catch (e) {
       if (mounted) _showErrorSnackbar(e.toString());

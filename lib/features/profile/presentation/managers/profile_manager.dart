@@ -62,13 +62,17 @@ class ProfileManager {
     try {
       // Note: Cette méthode nécessiterait l'email de l'utilisateur
       final user = supabase.auth.currentUser;
-      if (user == null || user.email == null) {
+      if (user == null) {
+        throw Exception('Utilisateur non connecté');
+      }
+      final email = user.email;
+      if (email == null) {
         throw Exception('Utilisateur non connecté');
       }
 
       // Tentative de connexion avec l'ancien mot de passe pour vérification
       final AuthResponse response = await supabase.auth.signInWithPassword(
-        email: user.email!,
+        email: email,
         password: currentPassword,
       );
 

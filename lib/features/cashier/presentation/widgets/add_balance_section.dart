@@ -282,7 +282,7 @@ class ManualCodeInput extends StatelessWidget {
           // Titre
           const Text(
             'Saisie manuelle',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Color(0xFF374151),

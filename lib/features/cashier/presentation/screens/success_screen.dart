@@ -110,7 +110,7 @@ class FelicitationScreen extends StatelessWidget {
                               iconColor: Color(0xFF10B981),
                               iconBg: Color(0xFFD1FAE5),
                               label: 'Solde',
-                              value: '${soldeRestant!.toStringAsFixed(0)}',
+                              value: soldeRestant!.toStringAsFixed(0),
                               suffix: 'DH',
                             ),
                           ),

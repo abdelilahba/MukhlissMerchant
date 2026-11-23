@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mukhlissmagasin/core/config/app_config.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 import 'package:mukhlissmagasin/core/services/subscription_service.dart';
 import 'package:mukhlissmagasin/core/services/periodic_subscription_checker.dart';
 
@@ -22,6 +22,7 @@ class SubscriptionGuardModern extends StatefulWidget {
 class _SubscriptionGuardModernState extends State<SubscriptionGuardModern> {
   final _subscriptionService = SubscriptionService();
   final _periodicChecker = PeriodicSubscriptionChecker();
+  RealtimeChannel? _subscriptionChannel;
 
   bool _isChecking = true;
   AccessResult? _accessResult;
@@ -30,10 +31,56 @@ class _SubscriptionGuardModernState extends State<SubscriptionGuardModern> {
   void initState() {
     super.initState();
     _checkAccess();
+    _setupRealtimeSubscription();
+    _startPeriodicCheck();
+  }
+
+  /// ⚡ Écoute en direct les changements d'abonnement sans faire de requêtes HTTP
+  void _setupRealtimeSubscription() {
+    try {
+      _subscriptionChannel = SupabaseService.client
+          .channel('sub_guard_${widget.magasinId}')
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'magasin_subscriptions',
+            filter: PostgresChangeFilter(
+              type: PostgresChangeFilterType.eq,
+              column: 'magasin_id',
+              value: widget.magasinId,
+            ),
+            callback: (payload) async {
+              // Changement instantané côté Supabase -> invalider le cache et rafraîchir
+              await _subscriptionService.invalidateCache(widget.magasinId);
+              if (mounted) {
+                await _checkAccess();
+              }
+            },
+          )
+          .subscribe();
+    } catch (_) {
+      // Si Realtime n'est pas disponible, le vérificateur périodique prend le relais
+    }
+  }
+
+  /// 🛡️ Vérificateur périodique de secours (watchdog toutes les 15 minutes)
+  void _startPeriodicCheck() {
+    _periodicChecker.startPeriodicCheck(
+      magasinId: widget.magasinId,
+      interval: const Duration(minutes: 15),
+      onAccessChanged: (result) {
+        if (mounted && _accessResult?.canAccess != result.canAccess) {
+          setState(() {
+            _accessResult = result;
+          });
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
+    _subscriptionChannel?.unsubscribe();
     _periodicChecker.dispose();
     super.dispose();
   }
@@ -88,7 +135,7 @@ class _SubscriptionGuardModernState extends State<SubscriptionGuardModern> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blue.withOpacity(0.3),
+                    color: Colors.blue.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -100,8 +147,8 @@ class _SubscriptionGuardModernState extends State<SubscriptionGuardModern> {
                   height: 50,
                   child: CircularProgressIndicator(
                     strokeWidth: 4,
-                    valueColor: AlwaysStoppedAnimation(Colors.white.withOpacity(0.8)),
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    valueColor: AlwaysStoppedAnimation(Colors.white.withValues(alpha: 0.8)),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
                   ),
                 ),
               ),
@@ -299,7 +346,7 @@ class _ModernAccessDeniedScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             elevation: 5,
-                            shadowColor: Colors.blue.withOpacity(0.3),
+                            shadowColor: Colors.blue.withValues(alpha: 0.3),
                           ),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -368,7 +415,7 @@ class ModernContactCards extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -491,7 +538,7 @@ class ModernContactCards extends StatelessWidget {
             border: Border.all(color: Colors.grey.shade200, width: 1.5),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -508,8 +555,8 @@ class ModernContactCards extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      method.color.withOpacity(0.1),
-                      method.color.withOpacity(0.2),
+                      method.color.withValues(alpha: 0.1),
+                      method.color.withValues(alpha: 0.2),
                     ],
                   ),
                   shape: BoxShape.circle,
@@ -600,7 +647,7 @@ class ContactActionButtons extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
+            color: Colors.blue.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -622,7 +669,7 @@ class ContactActionButtons extends StatelessWidget {
             'Cliquez pour nous contacter directement',
             style: TextStyle(
               fontSize: 13,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
             textAlign: TextAlign.center,
           ),
@@ -666,9 +713,9 @@ class ContactActionButtons extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: Colors.white.withOpacity(0.2)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
             ),
             child: Column(
               children: [
@@ -693,7 +740,7 @@ class ContactActionButtons extends StatelessWidget {
             children: [
               Icon(
                 Icons.access_time_rounded,
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 size: 16,
               ),
               const SizedBox(width: 8),
@@ -724,12 +771,12 @@ class ContactActionButtons extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.15),
+          color: Colors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withOpacity(0.3)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -763,7 +810,7 @@ class ContactActionButtons extends StatelessWidget {
         Icon(
           icon,
           size: 18,
-          color: Colors.white.withOpacity(0.8),
+          color: Colors.white.withValues(alpha: 0.8),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -824,7 +871,7 @@ class ElegantContactDesign extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade300, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -999,9 +1046,9 @@ class ElegantContactDesign extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
-              border: Border.all(color: color.withOpacity(0.2), width: 2),
+              border: Border.all(color: color.withValues(alpha: 0.2), width: 2),
             ),
             child: Icon(
               icon,
@@ -1126,7 +1173,7 @@ class CircularContactDesign extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -1213,12 +1260,12 @@ class CircularContactDesign extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.2),
+                  color: color.withValues(alpha: 0.2),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
               ],
-              border: Border.all(color: color.withOpacity(0.3), width: 2),
+              border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
             ),
             child: Center(
               child: Icon(
@@ -1249,7 +1296,7 @@ class CircularContactDesign extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
