@@ -1,3 +1,4 @@
+import 'package:mukhlissmagasin/core/services/cache_entry.dart';
 import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_entity.dart';
 import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_entity.dart';
@@ -5,20 +6,6 @@ import 'package:mukhlissmagasin/features/cashier/domain/entities/client_magasin_
 import 'package:mukhlissmagasin/features/rewards/domain/entities/reward_entity.dart';
 
 import '../../../profile/domain/entities/magasin_entity.dart';
-
-class CacheEntry<T> {
-  final T data;
-  final DateTime timestamp;
-  final Duration ttl;
-
-  CacheEntry({
-    required this.data,
-    required this.timestamp,
-    required this.ttl,
-  });
-
-  bool get isExpired => DateTime.now().difference(timestamp) > ttl;
-}
 
 class CaissierRemoteDataSource {
   final supabase = SupabaseService.client;

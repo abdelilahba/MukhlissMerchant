@@ -22,6 +22,7 @@ RETURNS TABLE (
     magasin_id UUID,
     solde NUMERIC,
     cumulpoint NUMERIC,
+    points_added NUMERIC,
     created_at TIMESTAMPTZ
 )
 LANGUAGE plpgsql
@@ -36,7 +37,8 @@ BEGIN
         RAISE EXCEPTION 'Le montant doit être supérieur à 0';
     END IF;
 
-    -- 2. Recherche de l'offre active du magasin
+    -- 2. Recherche de la meilleure offre active éligible
+    -- Condition stricte : p_montant >= min_amount (min_amount <= p_montant)
     SELECT points_given
     INTO v_points_to_add
     FROM offers
@@ -46,6 +48,7 @@ BEGIN
     ORDER BY offers.min_amount DESC, offers.points_given DESC
     LIMIT 1;
 
+    -- Si aucune offre n'est éligible (ex: 25 DH < 32 DH), 0 point attribué !
     IF v_points_to_add IS NULL THEN
         v_points_to_add := 0;
     END IF;
@@ -67,9 +70,9 @@ BEGIN
         VALUES (p_client_id, p_magasin_id, p_montant, v_points_to_add);
     END IF;
 
-    -- 4. Retourner l'enregistrement à jour
+    -- 4. Retourner l'enregistrement à jour avec les points ajoutés sur cette transaction
     RETURN QUERY
-    SELECT cm.id, cm.client_id, cm.magasin_id, cm.solde, cm.cumulpoint, cm.created_at
+    SELECT cm.id, cm.client_id, cm.magasin_id, cm.solde, cm.cumulpoint, v_points_to_add AS points_added, cm.created_at
     FROM clientmagasin cm
     WHERE cm.client_id = p_client_id 
       AND cm.magasin_id = p_magasin_id;
