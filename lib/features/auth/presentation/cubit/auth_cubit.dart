@@ -1,37 +1,63 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 import 'package:mukhlissmagasin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mukhlissmagasin/features/auth/domain/usecases/login_usecase.dart';
 import 'package:mukhlissmagasin/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:mukhlissmagasin/core/services/subscription_service.dart';
 import 'package:mukhlissmagasin/core/services/magasin_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final SignUpUseCase signUpUseCase;
   final LoginUseCase loginUseCase;
-  final AuthRepository repository; // Ajoutez cette ligne
+  final AuthRepository repository;
+  StreamSubscription<supa.AuthState>? _authSubscription;
 
   AuthCubit({
     required this.signUpUseCase,
     required this.loginUseCase,
-    required this.repository, // Ajoutez ce paramètre
+    required this.repository,
   }) : super(AuthInitial()) {
+    _initAuthListener();
     checkAuthStatus();
+  }
+
+  void _initAuthListener() {
+    try {
+      _authSubscription =
+          SupabaseService.client.auth.onAuthStateChange.listen((data) {
+        if (data.event == supa.AuthChangeEvent.signedOut) {
+          if (!isClosed) emit(AuthUnauthenticated());
+        } else if (data.event == supa.AuthChangeEvent.tokenRefreshed) {
+          final user = repository.getCurrentUser();
+          if (user != null && state is! AuthAuthenticated) {
+            if (!isClosed) emit(AuthAuthenticated(user: user));
+          }
+        }
+      });
+    } catch (_) {}
   }
 
   Future<void> checkAuthStatus() async {
     emit(AuthLoading());
     try {
-      final currentUser = repository
-          .getCurrentUser(); // Implémentez cette méthode dans votre repository
+      // 1. S'assurer que le token JWT est valide ou renouvelé
+      final hasValidSession = await SupabaseService.ensureValidSession();
+      if (!hasValidSession) {
+        emit(AuthUnauthenticated());
+        return;
+      }
+
+      final currentUser = repository.getCurrentUser();
       if (currentUser != null) {
         emit(AuthAuthenticated(user: currentUser));
       } else {
         emit(AuthUnauthenticated());
       }
     } catch (e) {
-      emit(
-          AuthUnauthenticated()); // En cas d'erreur, considérez comme non connecté
+      emit(AuthUnauthenticated());
     }
   }
 
@@ -123,5 +149,11 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> logout() async {
     await repository.logout();
     emit(AuthUnauthenticated());
+  }
+
+  @override
+  Future<void> close() {
+    _authSubscription?.cancel();
+    return super.close();
   }
 }

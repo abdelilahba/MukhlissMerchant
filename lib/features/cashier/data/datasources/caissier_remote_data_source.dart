@@ -396,24 +396,26 @@ Future<Client> getClientByCodeUnique({
   }
 
 Future<MagasinModel> currentMagazin() async {
-  // Récupère l'utilisateur connecté
-  final user = supabase.auth.currentUser;
-  if (user == null) {
-    throw Exception('Aucun utilisateur connecté');
-  }
-  
-  // Utilise l'ID de l'utilisateur pour récupérer le magasin
-  final response = await supabase
-      .from('magasins')
-      .select()
-      .eq('id', user.id)
-      .maybeSingle();
-  
-  if (response == null) {
-    throw Exception('Aucun magasin trouvé pour l\'utilisateur connecté (${user.id})');
-  }
+  return await SupabaseService.withValidSession(() async {
+    // Récupère l'utilisateur connecté
+    final user = supabase.auth.currentUser;
+    if (user == null) {
+      throw Exception('Aucun utilisateur connecté');
+    }
+    
+    // Utilise l'ID de l'utilisateur pour récupérer le magasin
+    final response = await supabase
+        .from('magasins')
+        .select()
+        .eq('id', user.id)
+        .maybeSingle();
+    
+    if (response == null) {
+      throw Exception('Aucun magasin trouvé pour l\'utilisateur connecté (${user.id})');
+    }
 
-  return MagasinModel.fromJson(response);
+    return MagasinModel.fromJson(response);
+  });
 }
 
 // ================================================================================

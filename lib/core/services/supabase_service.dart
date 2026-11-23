@@ -99,6 +99,59 @@ class SupabaseService {
     }
   }
   
+  /// Vérifie si la session actuelle est valide.
+  /// Si le token JWT est expiré, le renouvelle automatiquement avec le refresh token.
+  /// Retourne true si une session valide est active, false sinon.
+  static Future<bool> ensureValidSession() async {
+    if (!_initialized) return false;
+
+    try {
+      final session = client.auth.currentSession;
+      if (session == null) {
+        return false;
+      }
+
+      if (session.isExpired) {
+        AppLogger.info('🔄 Token JWT expiré, renouvellement automatique...', tag: 'Supabase');
+        final response = await client.auth.refreshSession();
+        if (response.session != null) {
+          AppLogger.info('✅ Token JWT renouvelé avec succès', tag: 'Supabase');
+          return true;
+        } else {
+          AppLogger.warning('⚠️ Impossible de renouveler la session', tag: 'Supabase');
+          return false;
+        }
+      }
+
+      return true;
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        '❌ Erreur lors du rafraîchissement du token',
+        error: e,
+        stackTrace: stackTrace,
+        tag: 'Supabase',
+      );
+      return false;
+    }
+  }
+
+  /// Exécute une action avec renouvellement automatique en cas de JWT expiré.
+  static Future<T> withValidSession<T>(Future<T> Function() action) async {
+    try {
+      return await action();
+    } catch (e) {
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('jwt') || errorStr.contains('token expired') || errorStr.contains('pgrst301')) {
+        AppLogger.warning('🔄 Token expiré détecté, tentative de rafraîchissement...', tag: 'Supabase');
+        final refreshed = await ensureValidSession();
+        if (refreshed) {
+          return await action(); // Réessayer avec le nouveau token
+        }
+      }
+      rethrow;
+    }
+  }
+
   /// Vérifie si Supabase est initialisé et la connexion fonctionne
   /// 
   /// Returns true si tout est OK, false sinon

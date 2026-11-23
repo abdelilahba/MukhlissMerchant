@@ -1,3 +1,4 @@
+import 'package:mukhlissmagasin/core/services/supabase_service.dart';
 import 'package:mukhlissmagasin/features/profile/domain/entities/magasin_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -5,6 +6,7 @@ class ProfileRemoteDataSource {
   final SupabaseClient _client = Supabase.instance.client;
 
   Future<MagasinModel?> getCurrentMagasin() async {
+    await SupabaseService.ensureValidSession();
     final user = _client.auth.currentUser;
     if (user == null) {
       return null;

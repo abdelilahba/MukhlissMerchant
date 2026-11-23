@@ -36,8 +36,17 @@ class RewardRemoteDataSource {
   // Supprime une récompense
   Future<void> deleteReward(String id) async {
     try {
+      await SupabaseService.ensureValidSession();
       await supabase.from('rewards').delete().eq('id', id);
     } on PostgrestException catch (e) {
+      // 23503: foreign_key_violation (récompense déjà réclamée par des clients)
+      if (e.code == '23503' ||
+          e.message.toLowerCase().contains('foreign key') ||
+          e.message.toLowerCase().contains('reward_claims')) {
+        // Désactivation automatique au lieu d'une suppression destructrice
+        await supabase.from('rewards').update({'is_active': false}).eq('id', id);
+        return;
+      }
       throw Exception('Database error: ${e.message}');
     } catch (e) {
       throw Exception('Unexpected error: $e');
