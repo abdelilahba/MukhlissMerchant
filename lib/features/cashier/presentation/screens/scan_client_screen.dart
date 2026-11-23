@@ -562,9 +562,16 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     try {
       await _processQRCode(scanData.code!);
     } on FormatException catch (e) {
-      _handleScanError(l10n.qrcodeinvalide, e);
+      final msg = (e.message.isNotEmpty && e.message != 'FormatException')
+          ? e.message
+          : l10n.qrcodeinvalide;
+      _handleScanError(msg, e);
     } catch (e) {
-      _handleScanError('${l10n.erreurtraitement}: ${e.toString()}', e);
+      String msg = e.toString();
+      if (msg.startsWith('Exception: ')) {
+        msg = msg.substring(11);
+      }
+      _handleScanError(msg, e);
     }
   }
 
@@ -573,11 +580,20 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   }
 
   Future<void> _processQRCode(String qrCode) async {
-    final clientData = _parseQRCode(qrCode);
+    final clientData = await _parseQRCode(qrCode);
     final currentUser = _getCurrentUser();
     _validateData(clientData, currentUser);
 
-    final String clientId = clientData['user_id'].toString();
+    String clientId = clientData['user_id']?.toString() ?? '';
+
+    // Si le QR code contenait un code unique numérique au lieu d'un user_id direct
+    if (clientId.isEmpty && clientData['unique_code'] != null) {
+      final client = await getIt<CaissierRepository>().getClientByCodeUnique(
+        uniqueCode: clientData['unique_code'] as int,
+      );
+      clientId = client.id;
+    }
+
     final String magasinId = currentUser.id.toString();
 
     _lastClientId = clientId;
@@ -627,24 +643,38 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     }
   }
 
-  Map<String, dynamic> _parseQRCode(String qrCode) {
-    debugPrint('QR Data: $qrCode');
+  Future<Map<String, dynamic>> _parseQRCode(String qrCode) async {
+    final trimmed = qrCode.trim();
+    debugPrint('QR Data: $trimmed');
+
+    // 1. Cas UUID brut
+    final uuidRegex = RegExp(
+      r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
+    );
+    if (uuidRegex.hasMatch(trimmed)) {
+      return {'user_id': trimmed};
+    }
+
+    // 2. Cas code unique numérique brut (ex: 244908)
+    final numericCode = int.tryParse(trimmed);
+    if (numericCode != null && trimmed.length >= 4 && trimmed.length <= 10) {
+      return {'unique_code': numericCode, 'user_id': ''};
+    }
+
+    // 3. Cas JSON (format standard Mukhliss v1.0 ou v2.0)
     try {
-      final rawDecoded = jsonDecode(qrCode);
-      if (rawDecoded is! Map) {
-        throw const FormatException(
-          'Ce n\'est pas un QR code Mukhliss. Demandez au client d\'ouvrir l\'application Mukhliss.',
-        );
+      final rawDecoded = jsonDecode(trimmed);
+      if (rawDecoded is Map) {
+        final decoded = Map<String, dynamic>.from(rawDecoded);
+        final userId = decoded['user_id'] ?? decoded['id'];
+        if (userId != null && userId.toString().trim().isNotEmpty) {
+          decoded['user_id'] = userId.toString().trim();
+          return decoded;
+        }
       }
-      final decoded = Map<String, dynamic>.from(rawDecoded);
-      final userId = decoded['user_id'] ?? decoded['id'];
-      if (userId == null || userId.toString().trim().isEmpty) {
-        throw const FormatException(
-          'QR code non reconnu. Ce QR code n\'appartient pas à l\'application Mukhliss.',
-        );
-      }
-      decoded['user_id'] = userId;
-      return decoded;
+      throw const FormatException(
+        'Ce n\'est pas un QR code Mukhliss. Demandez au client d\'ouvrir l\'application Mukhliss.',
+      );
     } on FormatException {
       rethrow;
     } catch (e) {
@@ -665,9 +695,10 @@ class _ScanClientScreenState extends State<ScanClientScreen>
       throw Exception('Aucun magasin connecté');
     }
     final userId = clientData['user_id'];
-    if (userId == null || userId.toString().isEmpty) {
+    final uniqueCode = clientData['unique_code'];
+    if ((userId == null || userId.toString().isEmpty) && uniqueCode == null) {
       throw const FormatException(
-        'Le QR code ne contient pas de user_id valide',
+        'Le QR code ne contient pas d\'identifiant client valide',
       );
     }
 
@@ -680,8 +711,15 @@ class _ScanClientScreenState extends State<ScanClientScreen>
       if (timestampMs != null && timestampMs > 0) {
         final qrTime = DateTime.fromMillisecondsSinceEpoch(timestampMs);
         final difference = DateTime.now().difference(qrTime).abs();
-        // Si le QR code a plus de 5 minutes, c'est une ancienne capture d'écran
-        if (difference > const Duration(minutes: 5)) {
+
+        // Tolérance étendue : 30 minutes pour online (évite les décalages d'horloge entre téléphone et tablette), 24h pour offline/cached
+        final bool isOffline =
+            clientData['is_offline'] == true || clientData['is_cached'] == true;
+        final maxDuration = isOffline
+            ? const Duration(hours: 24)
+            : const Duration(minutes: 30);
+
+        if (difference > maxDuration) {
           throw const FormatException(
             'QR code expiré. Demandez au client d\'ouvrir son application.',
           );
