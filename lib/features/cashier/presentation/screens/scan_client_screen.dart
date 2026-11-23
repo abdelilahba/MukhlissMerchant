@@ -413,8 +413,7 @@ class _ScanClientScreenState extends State<ScanClientScreen>
   void _handleStateChanges(BuildContext context, CaissierState state) {
     switch (state) {
       case SoldeAjoute():
-        // ✅ Utiliser les points réellement gagnés lors de cette transaction
-        final pointsGagnes = state.clientMagasin.pointsAdded;
+        final pointsGagnes = state.clientMagasin.cumulePoint;
         final soldeRestant = state.clientMagasin.solde;
         _handleBalanceAdded(pointsGagnes, soldeRestant);
         break;
@@ -451,12 +450,9 @@ class _ScanClientScreenState extends State<ScanClientScreen>
     // ✅ MODE NAVIGATION - FERMER IMMÉDIATEMENT
     if (mounted) {
       final l10n = AppLocalizations.of(context);
-      final pts = pointsGagnes.toInt();
-      final msg = pts > 0
-          ? '${l10n.felicitation} ! $pts ${l10n.pts} gagnés'
-          : 'Solde ajouté avec succès (0 pt gagné)';
       _showSuccessToast(
-        message: msg,
+        message:
+            '${l10n.felicitation} ! ${pointsGagnes.toInt()} ${l10n.pts} gagnés',
         solde: soldeRestant,
       );
     }
